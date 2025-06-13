@@ -31,5 +31,4 @@ pnpm build
 - Vite
 
 ## TODO
-- add shadcn/ui
-- landing page
+- improve landing page
