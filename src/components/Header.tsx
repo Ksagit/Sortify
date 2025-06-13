@@ -1,6 +1,6 @@
 import { Button } from "./ui/button";
 
-export function Header() {
+export const Header = () => {
   return (
     <header className="relative z-10 px-6 py-6 backdrop-blur-sm bg-white/5 border-b border-white/10">
       <nav className="flex items-center justify-between max-w-7xl mx-auto">

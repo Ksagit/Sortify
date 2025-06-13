@@ -1,7 +1,6 @@
-export function BackgroundEffects() {
+export const BackgroundEffects = () => {
   return (
     <>
-      {/* Animated background elements */}
       <div className="absolute inset-0">
         <div className="absolute top-20 left-10 w-32 h-32 bg-primary/10 rounded-full blur-xl animate-pulse"></div>
         <div
@@ -17,8 +16,6 @@ export function BackgroundEffects() {
           style={{ animationDuration: "4s", animationDelay: "2s" }}
         ></div>
       </div>
-
-      {/* Enhanced Background Effects */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-primary/30 to-cerulean/20 rounded-full blur-3xl animate-pulse"></div>
         <div
@@ -32,4 +29,4 @@ export function BackgroundEffects() {
       </div>
     </>
   );
-}
+};

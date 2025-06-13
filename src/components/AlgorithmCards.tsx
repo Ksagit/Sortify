@@ -1,4 +1,4 @@
-export function AlgorithmCards() {
+export const AlgorithmCards = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
       <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
@@ -19,7 +19,6 @@ export function AlgorithmCards() {
           <div className="text-white/60 text-sm">Beginner</div>
         </div>
       </div>
-
       <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
         <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-green-500 rounded-2xl mb-6 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:rotate-6">
           <span className="text-white font-bold text-xl">MS</span>
@@ -38,7 +37,6 @@ export function AlgorithmCards() {
           <div className="text-white/60 text-sm">Intermediate</div>
         </div>
       </div>
-
       <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
         <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl mb-6 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:rotate-6">
           <span className="text-white font-bold text-xl">QS</span>

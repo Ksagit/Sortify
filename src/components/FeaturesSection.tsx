@@ -1,4 +1,4 @@
-export function FeaturesSection() {
+export const FeaturesSection = () => {
   return (
     <div className="text-left">
       <div className="inline-block px-4 py-2 bg-primary/20 border border-primary/30 rounded-full text-primary text-sm font-medium mb-6 backdrop-blur-sm">

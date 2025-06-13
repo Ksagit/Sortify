@@ -1,10 +1,10 @@
-import type { Route } from ".react-router/types/src/app/routes/+types/home";
-import { Header } from "../../components/Header";
-import { HeroSection } from "../../components/HeroSection";
-import { AlgorithmCards } from "../../components/AlgorithmCards";
-import { FeaturesSection } from "../../components/FeaturesSection";
-import { AlgorithmPreview } from "../../components/AlgorithmPreview";
-import { BackgroundEffects } from "../../components/BackgroundEffects";
+import { Header } from "src/components/Header";
+import { HeroSection } from "src/components/HeroSection";
+import { AlgorithmCards } from "src/components/AlgorithmCards";
+import { FeaturesSection } from "src/components/FeaturesSection";
+import { AlgorithmPreview } from "src/components/AlgorithmPreview";
+import { BackgroundEffects } from "src/components/BackgroundEffects";
+import type { Route } from ".react-router/types/src/app/routes/+types/LandingPage";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -19,7 +19,7 @@ export function meta({}: Route.MetaArgs) {
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-accent to-secondary relative overflow-hidden pbpa-10">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-accent to-secondary relative overflow-hidden pb-10">
       <BackgroundEffects />
       <Header />
       <HeroSection />

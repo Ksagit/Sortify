@@ -1,10 +1,9 @@
 import { Button } from "./ui/button";
 
-export function HeroSection() {
+export const HeroSection = () => {
   return (
     <main className="relative z-10 px-6 pt-20 pb-32">
       <div className="max-w-7xl mx-auto text-center">
-        {/* Hero Text */}
         <div className="mb-20">
           <div className="mb-8">
             <div className="inline-block px-4 py-2 bg-primary/20 border border-primary/30 rounded-full text-primary text-sm font-medium mb-6 backdrop-blur-sm">
@@ -45,4 +44,4 @@ export function HeroSection() {
       </div>
     </main>
   );
-}
+};

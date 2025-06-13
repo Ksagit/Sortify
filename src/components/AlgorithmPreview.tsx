@@ -1,4 +1,4 @@
-export function AlgorithmPreview() {
+export const AlgorithmPreview = () => {
   return (
     <div className="relative">
       <div className="bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-10 shadow-2xl">
