@@ -17,8 +17,7 @@ export const FeaturesSection = () => {
               Step-by-step execution
             </h3>
             <p className="text-muted-foreground">
-              Watch algorithms unfold one step at a time with detailed
-              explanations
+              Watch algorithms unfold one step at a time
             </p>
           </div>
         </div>
@@ -30,9 +29,7 @@ export const FeaturesSection = () => {
             <h3 className="mb-1 text-lg font-semibold text-foreground">
               Adjustable speed
             </h3>
-            <p className="text-muted-foreground">
-              Control animation speed to match your learning pace
-            </p>
+            <p className="text-muted-foreground">Control animation speed</p>
           </div>
         </div>
         <div className="group flex items-start space-x-4">
@@ -57,7 +54,7 @@ export const FeaturesSection = () => {
               Performance comparison
             </h3>
             <p className="text-muted-foreground">
-              Compare algorithms side-by-side with detailed metrics
+              Compare algorithms side-by-side
             </p>
           </div>
         </div>

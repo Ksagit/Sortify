@@ -1,19 +1,20 @@
+import type { Route } from '.react-router/types/src/app/routes/+types/LandingPage'
+
+export function meta(_: Route.MetaArgs) {
+  return [
+    { title: 'Sortify - Dashboard' },
+    {
+      name: 'description',
+      content:
+        'Visualize and understand sorting algorithms with interactive animations. Learn bubble sort, merge sort, quick sort and more!',
+    },
+  ]
+}
+
 export default function Home() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-muted to-background pb-10">
-      <div className="container mx-auto px-6 py-20">
-        <h1 className="mb-8 text-center text-4xl font-bold text-foreground md:text-6xl">
-          Sorting Algorithm Visualizer
-        </h1>
-        <p className="mx-auto mb-12 max-w-2xl text-center text-xl text-muted-foreground">
-          Choose a sorting algorithm below to start visualizing how it works
-        </p>
-        <div className="text-center">
-          <p className="text-muted-foreground/60">
-            Algorithm selection coming soon...
-          </p>
-        </div>
-      </div>
+    <div className="relative flex min-h-screen flex-1 items-center justify-center overflow-hidden bg-gradient-to-br from-muted to-background pb-10">
+      <h1 className="text-9xl text-primary">Coming soon...</h1>
     </div>
   )
 }

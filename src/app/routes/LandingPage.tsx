@@ -6,7 +6,7 @@ import type { Route } from '.react-router/types/src/app/routes/+types/LandingPag
 
 export function meta(_: Route.MetaArgs) {
   return [
-    { title: 'Sortify - Interactive Sorting Algorithm Visualizer' },
+    { title: 'Sortify - Landing Page' },
     {
       name: 'description',
       content:

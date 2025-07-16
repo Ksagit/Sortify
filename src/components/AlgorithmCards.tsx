@@ -5,7 +5,7 @@ export const AlgorithmCards = () => {
         <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-chart-1 to-destructive shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:shadow-xl">
           <span className="text-xl font-bold text-white">BS</span>
         </div>
-        <h3 className="mb-3 text-2xl font-bold text-card-foreground transition-colors group-hover:text-chart-1">
+        <h3 className="mb-3 text-2xl font-bold text-card-foreground transition-colors">
           Bubble Sort
         </h3>
         <p className="mb-4 leading-relaxed text-muted-foreground">
@@ -22,7 +22,7 @@ export const AlgorithmCards = () => {
         <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-chart-2 to-chart-3 shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:shadow-xl">
           <span className="text-xl font-bold text-white">MS</span>
         </div>
-        <h3 className="mb-3 text-2xl font-bold text-card-foreground transition-colors group-hover:text-chart-2">
+        <h3 className="mb-3 text-2xl font-bold text-card-foreground transition-colors">
           Merge Sort
         </h3>
         <p className="mb-4 leading-relaxed text-muted-foreground">
@@ -39,7 +39,7 @@ export const AlgorithmCards = () => {
         <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-chart-4 shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:shadow-xl">
           <span className="text-xl font-bold text-primary-foreground">QS</span>
         </div>
-        <h3 className="mb-3 text-2xl font-bold text-card-foreground transition-colors group-hover:text-primary">
+        <h3 className="mb-3 text-2xl font-bold text-card-foreground transition-colors">
           Quick Sort
         </h3>
         <p className="mb-4 leading-relaxed text-muted-foreground">

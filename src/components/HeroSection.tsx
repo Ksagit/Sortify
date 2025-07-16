@@ -21,7 +21,7 @@ export const HeroSection = () => {
           <Link to="/Dashboard">
             <Button
               size="lg"
-              className="min-w-[200px] transform bg-gradient-to-r from-primary to-chart-1 px-8 py-6 text-lg font-semibold text-primary-foreground shadow-2xl transition-all duration-300 hover:scale-105 hover:from-chart-1 hover:to-chart-4 hover:shadow-primary/25"
+              className="min-w-[200px] transform bg-gradient-to-r from-primary to-chart-1 px-8 py-6 text-lg font-semibold text-primary-foreground shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-primary/25"
             >
               Start Visualizing
             </Button>
