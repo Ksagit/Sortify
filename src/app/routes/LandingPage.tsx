@@ -17,7 +17,7 @@ export function meta(_: Route.MetaArgs) {
 
 export default function LandingPage() {
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-900 via-accent to-secondary pb-10">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-muted to-background pb-10">
       <HeroSection />
       <div className="relative z-10 px-6">
         <div className="mx-auto max-w-7xl">
