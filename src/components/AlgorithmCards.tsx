@@ -1,60 +1,60 @@
 export const AlgorithmCards = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
-      <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
-        <div className="w-16 h-16 bg-gradient-to-br from-red-400 to-orange-500 rounded-2xl mb-6 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:rotate-6">
-          <span className="text-white font-bold text-xl">BS</span>
+    <div className="mb-24 grid grid-cols-1 gap-8 md:grid-cols-3">
+      <div className="group rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-8 backdrop-blur-md transition-all duration-500 hover:scale-105 hover:from-white/15 hover:to-white/10 hover:shadow-2xl">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-red-400 to-orange-500 shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:shadow-xl">
+          <span className="text-xl font-bold text-white">BS</span>
         </div>
-        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors">
+        <h3 className="mb-3 text-2xl font-bold text-white transition-colors group-hover:text-primary">
           Bubble Sort
         </h3>
-        <p className="text-white/70 mb-4 leading-relaxed">
+        <p className="mb-4 leading-relaxed text-white/70">
           Simple comparison-based algorithm. Perfect for beginners to understand
           the basics of sorting.
         </p>
         <div className="flex items-center justify-between">
-          <div className="text-sm text-orange-400 font-semibold bg-orange-400/20 px-3 py-1 rounded-full">
+          <div className="rounded-full bg-orange-400/20 px-3 py-1 text-sm font-semibold text-orange-400">
             O(n²) complexity
           </div>
-          <div className="text-white/60 text-sm">Beginner</div>
+          <div className="text-sm text-white/60">Beginner</div>
         </div>
       </div>
-      <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
-        <div className="w-16 h-16 bg-gradient-to-br from-emerald-400 to-green-500 rounded-2xl mb-6 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:rotate-6">
-          <span className="text-white font-bold text-xl">MS</span>
+      <div className="group rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-8 backdrop-blur-md transition-all duration-500 hover:scale-105 hover:from-white/15 hover:to-white/10 hover:shadow-2xl">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-green-500 shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:shadow-xl">
+          <span className="text-xl font-bold text-white">MS</span>
         </div>
-        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors">
+        <h3 className="mb-3 text-2xl font-bold text-white transition-colors group-hover:text-primary">
           Merge Sort
         </h3>
-        <p className="text-white/70 mb-4 leading-relaxed">
+        <p className="mb-4 leading-relaxed text-white/70">
           Divide and conquer algorithm with consistent performance across all
           inputs. Highly efficient.
         </p>
         <div className="flex items-center justify-between">
-          <div className="text-sm text-green-400 font-semibold bg-green-400/20 px-3 py-1 rounded-full">
+          <div className="rounded-full bg-green-400/20 px-3 py-1 text-sm font-semibold text-green-400">
             O(n log n) complexity
           </div>
-          <div className="text-white/60 text-sm">Intermediate</div>
+          <div className="text-sm text-white/60">Intermediate</div>
         </div>
       </div>
-      <div className="group bg-gradient-to-br from-white/10 to-white/5 backdrop-blur-md border border-white/20 rounded-2xl p-8 hover:from-white/15 hover:to-white/10 transition-all duration-500 hover:scale-105 hover:shadow-2xl">
-        <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-2xl mb-6 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 group-hover:rotate-6">
-          <span className="text-white font-bold text-xl">QS</span>
+      <div className="group rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 to-white/5 p-8 backdrop-blur-md transition-all duration-500 hover:scale-105 hover:from-white/15 hover:to-white/10 hover:shadow-2xl">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-400 to-pink-500 shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:shadow-xl">
+          <span className="text-xl font-bold text-white">QS</span>
         </div>
-        <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-primary transition-colors">
+        <h3 className="mb-3 text-2xl font-bold text-white transition-colors group-hover:text-primary">
           Quick Sort
         </h3>
-        <p className="text-white/70 mb-4 leading-relaxed">
+        <p className="mb-4 leading-relaxed text-white/70">
           Efficient in-place algorithm, widely used in practice with good
           average performance.
         </p>
         <div className="flex items-center justify-between">
-          <div className="text-sm text-purple-400 font-semibold bg-purple-400/20 px-3 py-1 rounded-full">
+          <div className="rounded-full bg-purple-400/20 px-3 py-1 text-sm font-semibold text-purple-400">
             O(n log n) average
           </div>
-          <div className="text-white/60 text-sm">Advanced</div>
+          <div className="text-sm text-white/60">Advanced</div>
         </div>
       </div>
     </div>
-  );
+  )
 }
