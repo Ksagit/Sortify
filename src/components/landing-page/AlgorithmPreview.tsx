@@ -17,7 +17,7 @@ export const AlgorithmPreview = () => {
                     className="rounded-t-xl bg-gradient-to-t from-chart-1 to-chart-4 shadow-lg transition-all duration-1000 ease-in-out hover:scale-110 hover:shadow-primary/30"
                     style={{
                       height: `${height}px`,
-                      width: '20px',
+                      width: "20px",
                       animationDelay: `${index * 150}ms`,
                     }}
                   />

@@ -1,14 +1,14 @@
-import { Link } from 'react-router'
-import { Button } from './ui/button'
+import { Link } from "react-router"
+import { Button } from "src/components/ui/button"
 
 export const HeroSection = () => {
   return (
     <section className="relative z-10 px-6 pt-20 pb-32">
       <div className="mx-auto max-w-4xl text-center">
         <h1 className="mb-6 text-5xl leading-tight font-bold text-foreground md:text-7xl">
-          Visualize{' '}
+          Visualize{" "}
           <span className="bg-primary bg-clip-text text-transparent">
-            Sorting{' '}
+            Sorting{" "}
           </span>
           <br />
           <span className="text-foreground/90">Algorithms</span>
