@@ -22,6 +22,7 @@ export type UseSortingResult = {
   index: number
   steps: SortStep[]
   isPlaying: boolean
+  isDone: boolean
   speed: number
   // controls
   play: () => void
@@ -268,6 +269,8 @@ export function useSorting(
   const [isPlaying, setIsPlaying] = useState(autoplay)
   const [intervalMs, setIntervalMs] = useState(speed)
   const timer = useRef<number | null>(null)
+  const lastIndex = Math.max(0, steps.length - 1)
+  const isDone = index >= lastIndex && steps.length > 0
 
   // recompute when base array changes
   useEffect(() => {
@@ -282,7 +285,14 @@ export function useSorting(
 
     timer.current = window.setInterval(
       () => {
-        setIndex((i) => (i + 1) % steps.length)
+        setIndex((i) => {
+          if (i >= steps.length - 1) {
+            // reached the end; stop autoplay and stay at last step
+            setIsPlaying(false)
+            return steps.length - 1
+          }
+          return i + 1
+        })
       },
       Math.max(50, intervalMs)
     )
@@ -296,8 +306,18 @@ export function useSorting(
   const play = () => setIsPlaying(true)
   const pause = () => setIsPlaying(false)
   const toggle = () => setIsPlaying((p) => !p)
-  const next = () => setIndex((i) => (i + 1) % steps.length)
-  const prev = () => setIndex((i) => (i - 1 + steps.length) % steps.length)
+  const next = () =>
+    setIndex((i) => {
+      if (!steps.length) return 0
+      if (i >= steps.length - 1) return steps.length - 1
+      return i + 1
+    })
+  const prev = () =>
+    setIndex((i) => {
+      if (!steps.length) return 0
+      if (i <= 0) return 0
+      return i - 1
+    })
   const setSpeed = (ms: number) => setIntervalMs(ms)
   const restart = () => setIndex(0)
   const shuffle = () => setArray(randomArray(size, min, max))
@@ -307,6 +327,7 @@ export function useSorting(
     index,
     steps,
     isPlaying,
+  isDone,
     speed: intervalMs,
     play,
     pause,
