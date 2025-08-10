@@ -5,7 +5,6 @@ import {
   Card,
   CardAction,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
   CardFooter,
@@ -16,7 +15,7 @@ import {
   useQuickSort,
   useMergeSort,
   useHeapSort,
-} from "src/ahooks/useSorting"
+} from "src/hooks/useSorting"
 
 export function meta() {
   return [
@@ -69,17 +68,13 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-muted to-background p-6">
-      <div className="mx-auto max-w-7xl">
-        <h1 className="mb-2 text-center text-5xl font-semibold text-primary">
+    <div className="h-screen overflow-hidden bg-gradient-to-br from-muted to-background p-4">
+      <div className="mx-auto flex h-full max-w-7xl flex-col">
+        <h1 className="mb-2 text-center text-3xl font-semibold text-primary">
           Sortify
         </h1>
-        <p className="mx-auto mb-8 max-w-2xl text-center text-muted-foreground">
-          Compare sorting algorithms in real-time. Pause, tweak speed, and
-          shuffle the data to see different runs.
-        </p>
 
-        <div className="mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2">
             <Button
               onClick={() => {
@@ -111,8 +106,8 @@ export default function Home() {
               <Shuffle className="mr-1.5" /> Shuffle
             </Button>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="text-sm text-muted-foreground">Speed</span>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground">Speed</span>
             <input
               type="range"
               min={50}
@@ -127,21 +122,18 @@ export default function Home() {
                 merge.setSpeed(v)
                 heap.setSpeed(v)
               }}
-              className="h-2 w-48 cursor-pointer appearance-none rounded bg-muted accent-primary"
+              className="h-1.5 w-40 cursor-pointer appearance-none rounded bg-muted accent-primary"
             />
-            <span className="text-xs text-muted-foreground tabular-nums">
+            <span className="text-[10px] text-muted-foreground tabular-nums">
               {speed} ms
             </span>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <div className="grid flex-1 grid-cols-1 gap-4 overflow-hidden lg:grid-cols-2">
           <Card>
-            <CardHeader className="border-b">
-              <CardTitle>Bubble Sort</CardTitle>
-              <CardDescription>
-                Simple, quadratic-time algorithm.
-              </CardDescription>
+            <CardHeader className="border-b py-2">
+              <CardTitle className="text-base">Bubble Sort</CardTitle>
               <CardAction className="text-xs text-muted-foreground">
                 Step {bubble.index + 1}/{Math.max(bubble.steps.length, 1)}
               </CardAction>
@@ -154,10 +146,10 @@ export default function Home() {
                 swapColor="#ef4444"
                 sortedColor="#10b981"
                 pivotColor="#3b82f6"
-                height={260}
+                height={160}
               />
             </CardContent>
-            <CardFooter className="border-t">
+            <CardFooter className="border-t py-2">
               <div className="text-xs text-muted-foreground">
                 n = {bubble.step.values.length}
               </div>
@@ -165,11 +157,8 @@ export default function Home() {
           </Card>
 
           <Card>
-            <CardHeader className="border-b">
-              <CardTitle>Quick Sort</CardTitle>
-              <CardDescription>
-                Divide and conquer with pivot partitioning.
-              </CardDescription>
+            <CardHeader className="border-b py-2">
+              <CardTitle className="text-base">Quick Sort</CardTitle>
               <CardAction className="text-xs text-muted-foreground">
                 Step {quick.index + 1}/{Math.max(quick.steps.length, 1)}
               </CardAction>
@@ -182,10 +171,10 @@ export default function Home() {
                 swapColor="#ef4444"
                 sortedColor="#10b981"
                 pivotColor="#3b82f6"
-                height={260}
+                height={160}
               />
             </CardContent>
-            <CardFooter className="border-t">
+            <CardFooter className="border-t py-2">
               <div className="text-xs text-muted-foreground">
                 n = {quick.step.values.length}
               </div>
@@ -193,11 +182,8 @@ export default function Home() {
           </Card>
 
           <Card>
-            <CardHeader className="border-b">
-              <CardTitle>Merge Sort</CardTitle>
-              <CardDescription>
-                Stable, O(n log n) with merge combine.
-              </CardDescription>
+            <CardHeader className="border-b py-2">
+              <CardTitle className="text-base">Merge Sort</CardTitle>
               <CardAction className="text-xs text-muted-foreground">
                 Step {merge.index + 1}/{Math.max(merge.steps.length, 1)}
               </CardAction>
@@ -210,10 +196,10 @@ export default function Home() {
                 swapColor="#ef4444"
                 sortedColor="#10b981"
                 pivotColor="#3b82f6"
-                height={260}
+                height={160}
               />
             </CardContent>
-            <CardFooter className="border-t">
+            <CardFooter className="border-t py-2">
               <div className="text-xs text-muted-foreground">
                 n = {merge.step.values.length}
               </div>
@@ -221,11 +207,8 @@ export default function Home() {
           </Card>
 
           <Card>
-            <CardHeader className="border-b">
-              <CardTitle>Heap Sort</CardTitle>
-              <CardDescription>
-                In-place O(n log n) using a heap.
-              </CardDescription>
+            <CardHeader className="border-b py-2">
+              <CardTitle className="text-base">Heap Sort</CardTitle>
               <CardAction className="text-xs text-muted-foreground">
                 Step {heap.index + 1}/{Math.max(heap.steps.length, 1)}
               </CardAction>
@@ -238,10 +221,10 @@ export default function Home() {
                 swapColor="#ef4444"
                 sortedColor="#10b981"
                 pivotColor="#3b82f6"
-                height={260}
+                height={160}
               />
             </CardContent>
-            <CardFooter className="border-t">
+            <CardFooter className="border-t py-2">
               <div className="text-xs text-muted-foreground">
                 n = {heap.step.values.length}
               </div>

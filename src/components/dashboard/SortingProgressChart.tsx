@@ -7,7 +7,7 @@ import {
   type ChartConfig,
 } from "src/components/ui/chart"
 
-type SortingProgress = {
+export type SortingProgress = {
   values: number[]
   comparing?: number[]
   swapping?: number[]
@@ -15,7 +15,7 @@ type SortingProgress = {
   sorted?: number[]
 }
 
-type SortingProgressChartProps = {
+export type SortingProgressChartProps = {
   title?: string
   progress: SortingProgress
   barColor?: string
@@ -28,6 +28,18 @@ type SortingProgressChartProps = {
 
 const config: ChartConfig = {
   value: { label: "Value", color: "var(--color-chart-1)" },
+}
+
+const LegendDot = ({ color, label }: { color: string; label: string }) => {
+  return (
+    <span className="inline-flex items-center gap-2">
+      <span
+        className="h-2.5 w-2.5 rounded-sm"
+        style={{ backgroundColor: color }}
+      />
+      {label}
+    </span>
+  )
 }
 
 export const SortingProgressChart = memo(function SortingProgressChart({
@@ -106,17 +118,3 @@ export const SortingProgressChart = memo(function SortingProgressChart({
     </div>
   )
 })
-
-function LegendDot({ color, label }: { color: string; label: string }) {
-  return (
-    <span className="inline-flex items-center gap-2">
-      <span
-        className="h-2.5 w-2.5 rounded-sm"
-        style={{ backgroundColor: color }}
-      />
-      {label}
-    </span>
-  )
-}
-
-export type { SortingProgress, SortingProgressChartProps }

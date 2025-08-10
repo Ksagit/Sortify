@@ -1,7 +1,16 @@
 import { AlgorithmCards } from "src/components/landing-page/AlgorithmCards"
-import { AlgorithmPreview } from "src/components/landing-page/AlgorithmPreview"
 import { FeaturesSection } from "src/components/landing-page/FeaturesSection"
 import { HeroSection } from "src/components/landing-page/HeroSection"
+import { SortingProgressChart } from "src/components/dashboard/SortingProgressChart"
+import { useQuickSort } from "src/hooks/useSorting"
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "src/components/ui/card"
 
 export function meta() {
   return [
@@ -15,6 +24,13 @@ export function meta() {
 }
 
 export default function LandingPage() {
+  const quick = useQuickSort({
+    size: 28,
+    min: 10,
+    max: 120,
+    autoplay: true,
+    speed: 180,
+  })
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-muted to-background pb-10">
       <HeroSection />
@@ -23,7 +39,30 @@ export default function LandingPage() {
           <AlgorithmCards />
           <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
             <FeaturesSection />
-            <AlgorithmPreview />
+            <Card>
+              <CardHeader className="border-b py-2">
+                <CardTitle className="text-base">Quick Sort</CardTitle>
+                <CardAction className="text-xs text-muted-foreground">
+                  Step {quick.index + 1}/{Math.max(quick.steps.length, 1)}
+                </CardAction>
+              </CardHeader>
+              <CardContent>
+                <SortingProgressChart
+                  title=""
+                  progress={quick.step}
+                  compareColor="#f59e0b"
+                  swapColor="#ef4444"
+                  sortedColor="#10b981"
+                  pivotColor="#3b82f6"
+                  height={160}
+                />
+              </CardContent>
+              <CardFooter className="border-t py-2">
+                <div className="text-xs text-muted-foreground">
+                  n = {quick.step.values.length}
+                </div>
+              </CardFooter>
+            </Card>
           </div>
         </div>
       </div>
