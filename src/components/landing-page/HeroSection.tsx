@@ -5,13 +5,11 @@ export const HeroSection = () => {
   return (
     <section className="relative z-10 px-6 pt-20 pb-32">
       <div className="mx-auto max-w-4xl text-center">
-        <h1 className="mb-6 text-5xl leading-tight font-bold text-foreground md:text-7xl">
+        <h1 className="mb-6 text-5xl font-semibold leading-tight text-foreground md:text-7xl">
           Visualize{" "}
-          <span className="bg-primary bg-clip-text text-transparent">
-            Sorting{" "}
+          <span className="bg-gradient-to-r from-primary via-sky-500 to-purple-500 bg-clip-text text-transparent">
+            Sorting Algorithms
           </span>
-          <br />
-          <span className="text-foreground/90">Algorithms</span>
         </h1>
         <p className="mx-auto mb-12 max-w-3xl text-xl leading-relaxed text-muted-foreground md:text-2xl">
           Interactive animations that make complex sorting algorithms easy to

@@ -109,9 +109,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative h-screen overflow-hidden bg-background">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.12),_transparent_60%)]" />
-      <div className="pointer-events-none absolute bottom-[-35%] left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+    <div className="relative h-screen overflow-hidden bg-gradient-to-br from-muted to-background">
       <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-4 py-6 sm:px-6 lg:px-8">
         <header className="mb-4 text-center md:text-left">
           <h1 className="mt-2 text-3xl font-semibold text-foreground sm:text-4xl">
