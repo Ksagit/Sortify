@@ -40,10 +40,7 @@ export default function Home() {
   const [isPlaying, setIsPlaying] = useState(true)
   const [delay, setDelay] = useState(200)
 
-  const sliderValue = useMemo(
-    () => SPEED_MIN + SPEED_MAX - delay,
-    [delay]
-  )
+  const sliderValue = useMemo(() => SPEED_MIN + SPEED_MAX - delay, [delay])
 
   const algorithms = [
     {
