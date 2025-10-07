@@ -133,6 +133,13 @@ export function quickSortSteps(input: number[]): SortStep[] {
     if (left < i - 1) stack.push({ left, right: i - 1 })
     if (i + 1 < right) stack.push({ left: i + 1, right })
   }
+
+  if (sorted.size < a.length) {
+    for (let idx = 0; idx < a.length; idx++) {
+      sorted.add(idx)
+    }
+    steps.push({ values: [...a], sorted: [...sorted] })
+  }
   return steps
 }
 

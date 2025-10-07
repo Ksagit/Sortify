@@ -45,7 +45,7 @@ const LegendDot = ({ color, label }: { color: string; label: string }) => {
 export const SortingProgressChart = memo(function SortingProgressChart({
   title = "Sorting Progress",
   progress,
-  barColor = "hsl(var(--primary))",
+  barColor = "#1f2937",
   compareColor = "#f59e0b", // amber-500
   swapColor = "#ef4444", // red-500
   pivotColor = "#3b82f6", // blue-500

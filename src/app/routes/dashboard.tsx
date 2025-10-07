@@ -1,5 +1,5 @@
 import { SortingProgressChart } from "src/components/dashboard/SortingProgressChart"
-import { useEffect, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { Button } from "src/components/ui/button"
 import {
   Card,
@@ -28,6 +28,9 @@ export function meta() {
   ]
 }
 
+const SPEED_MIN = 50
+const SPEED_MAX = 600
+
 export default function Home() {
   const bubble = useBubbleSort({ size: 32, min: 10, max: 120, autoplay: true })
   const quick = useQuickSort({ size: 32, min: 10, max: 120, autoplay: true })
@@ -35,7 +38,12 @@ export default function Home() {
   const heap = useHeapSort({ size: 32, min: 10, max: 120, autoplay: true })
 
   const [isPlaying, setIsPlaying] = useState(true)
-  const [speed, setSpeed] = useState(200)
+  const [delay, setDelay] = useState(200)
+
+  const sliderValue = useMemo(
+    () => SPEED_MIN + SPEED_MAX - delay,
+    [delay]
+  )
 
   const algorithms = [
     {
@@ -88,11 +96,11 @@ export default function Home() {
         merge.next()
         heap.next()
       },
-      Math.max(50, speed)
+      Math.max(SPEED_MIN, delay)
     )
 
     return () => window.clearInterval(id)
-  }, [isPlaying, speed, bubble, quick, merge, heap])
+  }, [isPlaying, delay, bubble, quick, merge, heap])
 
   function restart() {
     bubble.restart()
@@ -148,22 +156,23 @@ export default function Home() {
                 <span className="text-xs text-muted-foreground">Speed</span>
                 <input
                   type="range"
-                  min={50}
-                  max={600}
+                  min={SPEED_MIN}
+                  max={SPEED_MAX}
                   step={10}
-                  value={speed}
+                  value={sliderValue}
                   onChange={(event) => {
                     const value = Number(event.target.value)
-                    setSpeed(value)
-                    bubble.setSpeed(value)
-                    quick.setSpeed(value)
-                    merge.setSpeed(value)
-                    heap.setSpeed(value)
+                    const nextDelay = SPEED_MIN + SPEED_MAX - value
+                    setDelay(nextDelay)
+                    bubble.setSpeed(nextDelay)
+                    quick.setSpeed(nextDelay)
+                    merge.setSpeed(nextDelay)
+                    heap.setSpeed(nextDelay)
                   }}
                   className="h-1.5 w-40 cursor-pointer appearance-none rounded bg-muted accent-primary"
                 />
                 <span className="text-[10px] text-muted-foreground tabular-nums">
-                  {speed} ms
+                  {delay} ms
                 </span>
               </div>
             </div>
