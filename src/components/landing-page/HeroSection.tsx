@@ -5,7 +5,7 @@ export const HeroSection = () => {
   return (
     <section className="relative z-10 px-6 pt-20 pb-32">
       <div className="mx-auto max-w-4xl text-center">
-        <h1 className="mb-6 text-5xl font-semibold leading-tight text-foreground md:text-7xl">
+        <h1 className="mb-6 text-5xl leading-tight font-semibold text-foreground md:text-7xl">
           Visualize{" "}
           <span className="bg-gradient-to-r from-primary via-sky-500 to-purple-500 bg-clip-text text-transparent">
             Sorting Algorithms
