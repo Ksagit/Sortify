@@ -62,9 +62,13 @@ export const SortingProgressChart = memo(function SortingProgressChart({
 
   const data = useMemo(() => values.map((v, i) => ({ i, value: v })), [values])
 
-  const isComparing = (i: number) => comparing.includes(i)
-  const isSwapping = (i: number) => swapping.includes(i)
-  const isSorted = (i: number) => sorted.includes(i)
+  const comparingSet = useMemo(() => new Set(comparing), [comparing])
+  const swappingSet = useMemo(() => new Set(swapping), [swapping])
+  const sortedSet = useMemo(() => new Set(sorted), [sorted])
+
+  const isComparing = (i: number) => comparingSet.has(i)
+  const isSwapping = (i: number) => swappingSet.has(i)
+  const isSorted = (i: number) => sortedSet.has(i)
   const isPivot = (i: number) => pivot === i
 
   return (
@@ -100,8 +104,8 @@ export const SortingProgressChart = memo(function SortingProgressChart({
               let fill = barColor
               if (isSorted(i)) fill = sortedColor
               else if (isSwapping(i)) fill = swapColor
-              else if (isComparing(i)) fill = compareColor
               else if (isPivot(i)) fill = pivotColor
+              else if (isComparing(i)) fill = compareColor
 
               return <Cell key={`cell-${i}`} fill={fill} />
             })}

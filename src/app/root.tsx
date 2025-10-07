@@ -6,9 +6,9 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router"
-import type { Route } from ".react-router/types/src/app/+types/root"
 import "./app.css"
 import { Analytics } from "@vercel/analytics/react"
+import type { Route } from "./+types/root"
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },

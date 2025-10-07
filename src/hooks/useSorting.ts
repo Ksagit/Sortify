@@ -144,13 +144,17 @@ export function mergeSortSteps(input: number[]): SortStep[] {
   function merge(l: number, m: number, r: number) {
     const left = a.slice(l, m + 1)
     const right = a.slice(m + 1, r + 1)
+
     let i = 0
     let j = 0
     let k = l
+    const isFinalMerge = l === 0 && r === a.length - 1
+
     while (i < left.length && j < right.length) {
       const li = l + i
       const rj = m + 1 + j
       steps.push({ values: [...a], comparing: [li, rj], sorted: [...sorted] })
+
       if (left[i] <= right[j]) {
         a[k] = left[i]
         steps.push({ values: [...a], swapping: [k, li], sorted: [...sorted] })
@@ -162,6 +166,7 @@ export function mergeSortSteps(input: number[]): SortStep[] {
       }
       k++
     }
+
     while (i < left.length) {
       const li = l + i
       a[k] = left[i]
@@ -169,6 +174,7 @@ export function mergeSortSteps(input: number[]): SortStep[] {
       i++
       k++
     }
+
     while (j < right.length) {
       const rj = m + 1 + j
       a[k] = right[j]
@@ -176,18 +182,18 @@ export function mergeSortSteps(input: number[]): SortStep[] {
       j++
       k++
     }
-    for (let idx = l; idx <= r; idx++) sorted.add(idx)
+
+    if (isFinalMerge) {
+      for (let idx = l; idx <= r; idx++) {
+        sorted.add(idx)
+      }
+    }
+
     steps.push({ values: [...a], sorted: [...sorted] })
   }
 
   function sort(l: number, r: number) {
-    if (l >= r) {
-      if (l === r) {
-        sorted.add(l)
-        steps.push({ values: [...a], sorted: [...sorted] })
-      }
-      return
-    }
+    if (l >= r) return
     const m = Math.floor((l + r) / 2)
     sort(l, m)
     sort(m + 1, r)
