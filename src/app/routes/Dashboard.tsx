@@ -5,16 +5,16 @@ import {
   Card,
   CardAction,
   CardContent,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "src/components/ui/card"
 import { Pause, Play, RotateCcw, Shuffle } from "lucide-react"
 import {
   useBubbleSort,
-  useQuickSort,
-  useMergeSort,
   useHeapSort,
+  useMergeSort,
+  useQuickSort,
 } from "src/hooks/useSorting"
 
 export function meta() {
@@ -29,19 +29,59 @@ export function meta() {
 }
 
 export default function Home() {
-  // Live sorting visualizations via hooks
   const bubble = useBubbleSort({ size: 32, min: 10, max: 120, autoplay: true })
   const quick = useQuickSort({ size: 32, min: 10, max: 120, autoplay: true })
   const merge = useMergeSort({ size: 32, min: 10, max: 120, autoplay: true })
   const heap = useHeapSort({ size: 32, min: 10, max: 120, autoplay: true })
 
   const [isPlaying, setIsPlaying] = useState(true)
-  const [speed, setSpeed] = useState(200) // ms per step
+  const [speed, setSpeed] = useState(200)
 
-  // Single timer controlling all charts
+  const algorithms = [
+    {
+      name: "Bubble Sort",
+      data: bubble,
+      accent: "from-amber-500/70 via-amber-500/20 to-transparent",
+    },
+    {
+      name: "Quick Sort",
+      data: quick,
+      accent: "from-sky-500/70 via-sky-500/20 to-transparent",
+    },
+    {
+      name: "Merge Sort",
+      data: merge,
+      accent: "from-emerald-500/70 via-emerald-500/20 to-transparent",
+    },
+    {
+      name: "Heap Sort",
+      data: heap,
+      accent: "from-purple-500/70 via-purple-500/20 to-transparent",
+    },
+  ] as const
+
+  useEffect(() => {
+    if (isPlaying) {
+      bubble.play()
+      quick.play()
+      merge.play()
+      heap.play()
+    } else {
+      bubble.pause()
+      quick.pause()
+      merge.pause()
+      heap.pause()
+    }
+  }, [isPlaying, bubble, quick, merge, heap])
+
   useEffect(() => {
     if (!isPlaying) return
-    const id = setInterval(
+    if (bubble.isDone && quick.isDone && merge.isDone && heap.isDone) {
+      setIsPlaying(false)
+      return
+    }
+
+    const id = window.setInterval(
       () => {
         bubble.next()
         quick.next()
@@ -50,7 +90,8 @@ export default function Home() {
       },
       Math.max(50, speed)
     )
-    return () => clearInterval(id)
+
+    return () => window.clearInterval(id)
   }, [isPlaying, speed, bubble, quick, merge, heap])
 
   function restart() {
@@ -68,168 +109,162 @@ export default function Home() {
   }
 
   return (
-    <div className="h-screen overflow-hidden bg-gradient-to-br from-muted to-background p-4">
-      <div className="mx-auto flex h-full max-w-7xl flex-col">
-        <h1 className="mb-2 text-center text-3xl font-semibold text-primary">
-          Sortify
-        </h1>
-
-        <div className="mb-4 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-center gap-2">
-            <Button
-              onClick={() => {
-                setIsPlaying((p) => !p)
-                if (isPlaying) {
-                  bubble.pause()
-                  quick.pause()
-                  merge.pause()
-                  heap.pause()
-                } else {
-                  bubble.play()
-                  quick.play()
-                  merge.play()
-                  heap.play()
-                }
-              }}
-            >
-              {isPlaying ? (
-                <Pause className="mr-1.5" />
-              ) : (
-                <Play className="mr-1.5" />
-              )}{" "}
-              {isPlaying ? "Pause" : "Play"}
-            </Button>
-            <Button variant="outline" onClick={restart}>
-              <RotateCcw className="mr-1.5" /> Restart
-            </Button>
-            <Button variant="outline" onClick={shuffle}>
-              <Shuffle className="mr-1.5" /> Shuffle
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-muted-foreground">Speed</span>
-            <input
-              type="range"
-              min={50}
-              max={600}
-              step={10}
-              value={speed}
-              onChange={(e) => {
-                const v = Number(e.target.value)
-                setSpeed(v)
-                bubble.setSpeed(v)
-                quick.setSpeed(v)
-                merge.setSpeed(v)
-                heap.setSpeed(v)
-              }}
-              className="h-1.5 w-40 cursor-pointer appearance-none rounded bg-muted accent-primary"
-            />
-            <span className="text-[10px] text-muted-foreground tabular-nums">
-              {speed} ms
+    <div className="relative h-screen overflow-hidden bg-background">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(59,130,246,0.12),_transparent_60%)]" />
+      <div className="pointer-events-none absolute bottom-[-35%] left-1/2 h-[520px] w-[520px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
+      <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col px-4 py-6 sm:px-6 lg:px-8">
+        <header className="mb-4 text-center md:text-left">
+          <h1 className="mt-2 text-3xl font-semibold text-foreground sm:text-4xl">
+            Visualize{" "}
+            <span className="bg-gradient-to-r from-primary via-sky-500 to-purple-500 bg-clip-text text-transparent">
+              Sorting Algorithms
             </span>
-          </div>
-        </div>
+          </h1>
+          <p className="mt-2 text-sm text-muted-foreground md:max-w-xl">
+            Compare four classic strategies side-by-side. Adjust the speed,
+            shuffle the data, and watch how each algorithm organizes the same
+            array in real time.
+          </p>
+        </header>
 
-        <div className="grid flex-1 grid-cols-1 gap-4 overflow-hidden lg:grid-cols-2">
-          <Card>
-            <CardHeader className="border-b py-2">
-              <CardTitle className="text-base">Bubble Sort</CardTitle>
-              <CardAction className="text-xs text-muted-foreground">
-                Step {bubble.index + 1}/{Math.max(bubble.steps.length, 1)}
-              </CardAction>
-            </CardHeader>
-            <CardContent>
-              <SortingProgressChart
-                title=""
-                progress={bubble.step}
-                compareColor="#f59e0b"
-                swapColor="#ef4444"
-                sortedColor="#10b981"
-                pivotColor="#3b82f6"
-                height={160}
-              />
-            </CardContent>
-            <CardFooter className="border-t py-2">
-              <div className="text-xs text-muted-foreground">
-                n = {bubble.step.values.length}
+        <Card className="border-border/60 bg-background/80 shadow-lg backdrop-blur">
+          <CardContent className="flex flex-col gap-4 p-4 sm:p-5">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex flex-wrap gap-2">
+                <Button onClick={() => setIsPlaying((prev) => !prev)}>
+                  {isPlaying ? (
+                    <Pause className="mr-1.5" />
+                  ) : (
+                    <Play className="mr-1.5" />
+                  )}{" "}
+                  {isPlaying ? "Pause" : "Play"}
+                </Button>
+                <Button variant="outline" onClick={restart}>
+                  <RotateCcw className="mr-1.5" /> Restart
+                </Button>
+                <Button variant="outline" onClick={shuffle}>
+                  <Shuffle className="mr-1.5" /> Shuffle
+                </Button>
               </div>
-            </CardFooter>
-          </Card>
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">Speed</span>
+                <input
+                  type="range"
+                  min={50}
+                  max={600}
+                  step={10}
+                  value={speed}
+                  onChange={(event) => {
+                    const value = Number(event.target.value)
+                    setSpeed(value)
+                    bubble.setSpeed(value)
+                    quick.setSpeed(value)
+                    merge.setSpeed(value)
+                    heap.setSpeed(value)
+                  }}
+                  className="h-1.5 w-40 cursor-pointer appearance-none rounded bg-muted accent-primary"
+                />
+                <span className="text-[10px] text-muted-foreground tabular-nums">
+                  {speed} ms
+                </span>
+              </div>
+            </div>
 
-          <Card>
-            <CardHeader className="border-b py-2">
-              <CardTitle className="text-base">Quick Sort</CardTitle>
-              <CardAction className="text-xs text-muted-foreground">
-                Step {quick.index + 1}/{Math.max(quick.steps.length, 1)}
-              </CardAction>
-            </CardHeader>
-            <CardContent>
-              <SortingProgressChart
-                title=""
-                progress={quick.step}
-                compareColor="#f59e0b"
-                swapColor="#ef4444"
-                sortedColor="#10b981"
-                pivotColor="#3b82f6"
-                height={160}
-              />
-            </CardContent>
-            <CardFooter className="border-t py-2">
-              <div className="text-xs text-muted-foreground">
-                n = {quick.step.values.length}
-              </div>
-            </CardFooter>
-          </Card>
+            <div className="grid gap-2 text-xs sm:grid-cols-2 lg:grid-cols-4">
+              {algorithms.map(({ name, data }) => {
+                const status = data.isDone
+                  ? "Completed"
+                  : data.isPlaying
+                    ? "Sorting"
+                    : "Paused"
+                const badgeClasses = data.isDone
+                  ? "bg-emerald-500/15 text-emerald-400"
+                  : data.isPlaying
+                    ? "bg-primary/15 text-primary"
+                    : "bg-amber-500/15 text-amber-500"
 
-          <Card>
-            <CardHeader className="border-b py-2">
-              <CardTitle className="text-base">Merge Sort</CardTitle>
-              <CardAction className="text-xs text-muted-foreground">
-                Step {merge.index + 1}/{Math.max(merge.steps.length, 1)}
-              </CardAction>
-            </CardHeader>
-            <CardContent>
-              <SortingProgressChart
-                title=""
-                progress={merge.step}
-                compareColor="#f59e0b"
-                swapColor="#ef4444"
-                sortedColor="#10b981"
-                pivotColor="#3b82f6"
-                height={160}
-              />
-            </CardContent>
-            <CardFooter className="border-t py-2">
-              <div className="text-xs text-muted-foreground">
-                n = {merge.step.values.length}
-              </div>
-            </CardFooter>
-          </Card>
+                return (
+                  <div
+                    key={name}
+                    className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-3 py-2"
+                  >
+                    <span className="font-medium text-foreground">{name}</span>
+                    <span
+                      className={`flex items-center gap-1 rounded-full px-2 py-1 ${badgeClasses}`}
+                    >
+                      <span
+                        className={`size-1.5 rounded-full bg-current ${
+                          data.isDone ? "" : "animate-pulse"
+                        }`}
+                      />
+                      {status}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
 
-          <Card>
-            <CardHeader className="border-b py-2">
-              <CardTitle className="text-base">Heap Sort</CardTitle>
-              <CardAction className="text-xs text-muted-foreground">
-                Step {heap.index + 1}/{Math.max(heap.steps.length, 1)}
-              </CardAction>
-            </CardHeader>
-            <CardContent>
-              <SortingProgressChart
-                title=""
-                progress={heap.step}
-                compareColor="#f59e0b"
-                swapColor="#ef4444"
-                sortedColor="#10b981"
-                pivotColor="#3b82f6"
-                height={160}
-              />
-            </CardContent>
-            <CardFooter className="border-t py-2">
-              <div className="text-xs text-muted-foreground">
-                n = {heap.step.values.length}
-              </div>
-            </CardFooter>
-          </Card>
+        <div className="grid flex-1 grid-cols-1 gap-4 overflow-hidden pt-2 lg:grid-cols-2">
+          {algorithms.map(({ name, data, accent }) => {
+            const status = data.isDone
+              ? "Completed"
+              : data.isPlaying
+                ? "Sorting"
+                : "Paused"
+            const statusColor = data.isDone
+              ? "text-emerald-400"
+              : data.isPlaying
+                ? "text-primary"
+                : "text-amber-500"
+            const dotColor = data.isDone
+              ? "bg-emerald-400"
+              : data.isPlaying
+                ? "bg-primary"
+                : "bg-amber-500"
+
+            return (
+              <Card
+                key={name}
+                className="relative overflow-hidden border-border/60 bg-background/80 shadow-lg backdrop-blur"
+              >
+                <div
+                  className={`pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${accent}`}
+                />
+                <CardHeader className="border-b border-border/60 py-2">
+                  <CardTitle className="text-base">{name}</CardTitle>
+                  <CardAction className="text-xs text-muted-foreground">
+                    Step {data.index + 1}/{Math.max(data.steps.length, 1)}
+                  </CardAction>
+                </CardHeader>
+                <CardContent className="pt-4">
+                  <SortingProgressChart
+                    title=""
+                    progress={data.step}
+                    compareColor="#f59e0b"
+                    swapColor="#ef4444"
+                    sortedColor="#10b981"
+                    pivotColor="#3b82f6"
+                    height={160}
+                  />
+                </CardContent>
+                <CardFooter className="border-t border-border/60 py-2">
+                  <div className="flex w-full items-center justify-between text-xs text-muted-foreground">
+                    <span>n = {data.step.values.length}</span>
+                    <span className={`flex items-center gap-1 ${statusColor}`}>
+                      <span
+                        className={`size-1.5 rounded-full ${dotColor} ${
+                          data.isDone ? "" : "animate-pulse"
+                        }`}
+                      />
+                      {status}
+                    </span>
+                  </div>
+                </CardFooter>
+              </Card>
+            )
+          })}
         </div>
       </div>
     </div>

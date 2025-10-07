@@ -31,6 +31,7 @@ export default function LandingPage() {
     autoplay: true,
     speed: 180,
   })
+
   return (
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-muted to-background pb-10">
       <HeroSection />

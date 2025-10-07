@@ -327,7 +327,7 @@ export function useSorting(
     index,
     steps,
     isPlaying,
-  isDone,
+    isDone,
     speed: intervalMs,
     play,
     pause,
