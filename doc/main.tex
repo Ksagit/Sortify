@@ -5,6 +5,7 @@
 \usepackage{fontspec}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage[polish]{babel}
 \frenchspacing
@@ -61,7 +62,8 @@
     numberstyle=\tiny\color{gray},
     numbersep=5pt,
     tabsize=2,
-    showstringspaces=false
+    showstringspaces=false,
+    float=htbp
 }
 
 \setmainfont{Times New Roman}
@@ -118,15 +120,15 @@
 \pagenumbering{arabic}
 \setcounter{page}{1}
 
-
-\chapter{Wstęp}
+\chapter*{Wstęp}
+\addcontentsline{toc}{chapter}{Wstęp}
 Dynamiczny rozwój technologii internetowych oraz rosnące oczekiwania użytkowników wobec szybkości, interaktywności i responsywności aplikacji webowych sprawiają, że wydajność renderowania staje się jednym z kluczowych wyzwań współczesnego frontendu. Wraz z ewolucją od prostych, statycznych stron HTML do wysoce złożonych aplikacji jednosesyjnych (SPA), znacząco wzrosła zarówno złożoność logiki interfejsu użytkownika, jak i liczba aktualizacji widoku wykonywanych w bardzo krótkich interwałach czasowych. W tym kontekście kluczowego znaczenia nabierają nowoczesne frameworki frontendowe, takie jak React oraz Angular, które, mimo wspólnego celu, oferują fundamentalnie odmienne podejścia architektoniczne i mechanizmy synchronizacji stanu z modelem dokumentu (DOM). Zrozumienie tych różnic jest niezbędne nie tylko z punktu widoku teoretycznego, ale przede wszystkim dla inżynierów oprogramowania dążących do budowy skalowalnych i wydajnych systemów webowych.
 
 Rosnąca złożoność współczesnych aplikacji frontendowych wynika z przenoszenia coraz większej liczby operacji z warstwy serwerowej bezpośrednio do przeglądarki klienta. Mechanizmy takie jak dynamiczne komponenty, rozbudowane drzewa zależności stanu, interaktywne animacje czy obsługa danych w czasie rzeczywistym wymagają wysokowydajnych metod aktualizacji widoku. React i Angular podchodzą do tych wyzwań w różny sposób: React opiera się na deklaratywnym modelu komponentów i mechanizmie wirtualnego drzewa widoku (Virtual DOM), podczas gdy Angular implementuje kompleksową architekturę z silnym systemem wstrzykiwania zależności oraz strukturalnym podejściem do detekcji zmian. Wybór między tymi technologiami często determinuje nie tylko wydajność końcową produktu, ale także ergonomię pracy deweloperów oraz łatwość utrzymania kodu w długim terminie.
 
-Celem niniejszej pracy jest przeprowadzenie dogłębnej analizy i porównania podejść do renderowania interfejsu użytkownika w frameworkach React i Angular, ze szczególnym uwzględnieniem aspektów wydajnościowych, architektonicznych oraz ergonomii programistycznej. Wybór wizualizatora algorytmów sortowania jako głównego studium przypadku podyktowany jest specyfiką tego rodzaju aplikacji — wymagają one bardzo wysokiej częstotliwości aktualizacji widoku przy jednoczesnej manipulacji dużą liczbą elementów graficznych. Taka charakterystyka pracy pozwala na precyzyjne przetestowanie granic wydajności silników renderujących oraz mechanizmów detekcji zmian w obu technologiach.
+Celem niniejszej pracy jest przeprowadzenie dogłębnej analizy i porównania podejść do renderowania interfejsu użytkownika w frameworkach React i Angular, ze szczególnym uwzględnieniem aspektów wydajnościowych, architektonicznych oraz ergonomii programistycznej. Wybór wizualizatora algorytmów sortowania jako głównego studium przypadku podyktowany jest specyfiką tego rodzaju aplikacji — wymagają one bardzo wysokiej częstotliwości aktualizacji widoku przy jednoczesnej manipulacji dużą liczbą elementów graficznych. Każda operacja zamiany elementów lub ich porównania generuje zdarzenie, które musi zostać odzwierciedlone w modelu dokumentu, co stawia ekstremalne wymagania przed mechanizmami detekcji zmian i procesem reconciliation. Taka charakterystyka pracy pozwala na precyzyjne przetestowanie granic wydajności silników renderujących oraz mechanizmów detekcji zmian w obu technologiach.
 
-W pracy przygotowano autorski wizualizator algorytmów sortowania, zaimplementowany równolegle w obu technologiach. Ma on służyć jako platforma badawcza do systematycznego i porównywalnego testowania efektywności renderowania, zużycia zasobów procesora oraz płynności interfejsu podczas intensywnych operacji na danych. Dzięki temu możliwe jest sformułowanie merytorycznych wniosków dotyczących mocnych i słabych stron przeanalizowanych frameworków w kontekście nowoczesnych, wysokowydajnych aplikacji frontendowych.
+W pracy przygotowano autorski wizualizator algorytmów sortowania, zaimplementowany równolegle w obu technologiach. Ma on służyć jako platforma badawcza do systematycznego i porównywalnego testowania efektywności renderowania, zużycia zasobów procesora oraz płynności interfejsu podczas intensywnych operacji na danych. Wizualizacja procesów algorytmicznych w czasie rzeczywistym jest wyzwaniem nie tylko ze względu na liczbę operacji DOM, ale także konieczność zachowania wysokiej częstotliwości odświeżania (FPS), co bezpośrednio przekłada się na percepcję płynności ruchu przez użytkownika. Dzięki temu możliwe jest sformułowanie merytorycznych wniosków dotyczących mocnych i słabych stron przeanalizowanych frameworków w kontekście nowoczesnych, wysokowydajnych aplikacji frontendowych.
 
 Cele szczegółowe pracy obejmują:
 
@@ -162,7 +164,7 @@ Dynamiczny rozwój technologii frontendowych doprowadził do powstania aplikacji
 
 W tym kontekście istotnego znaczenia nabrały nowoczesne frameworki frontendowe, takie jak React i Angular, które proponują odmienne podejścia architektoniczne do organizacji kodu, zarządzania stanem oraz aktualizacji interfejsu użytkownika. React, oparty na koncepcji deklaratywnego programowania i wykorzystaniu wirtualnego drzewa DOM, znacząco zmienił sposób myślenia o komponowaniu interfejsu oraz odświeżaniu widoku. Angular natomiast rozwija architekturę opartą na komponentach, modułach i mechanizmach detekcji zmian, zapewniając ustrukturyzowane środowisko do tworzenia rozbudowanych aplikacji o dużej skali.
 
-Równocześnie użytkownicy zaczęli oczekiwać od aplikacji webowych płynności i jakości działania porównywalnych z natywnymi aplikacjami mobilnymi czy desktopowymi. Oznacza to konieczność minimalizacji opóźnień, redukcji liczby niepotrzebnych renderów oraz optymalnego zarządzania stanem aplikacji. Wydajność renderowania stała się więc kluczowym aspektem doświadczenia użytkownika, a jednocześnie jednym z najważniejszych kryteriów przy wyborze technologii frontendowych. W wielu współczesnych projektach to właśnie sposób aktualizacji interfejsu oraz efektywność wykonywania operacji renderujących wpływają na ogólną jakość aplikacji, jej skalowalność oraz koszty utrzymania.
+Równocześnie użytkownicy zaczęli oczekiwać od aplikacji webowych płynności i jakości działania porównywalnych z natywnymi aplikacjami mobilnymi czy desktopowymi. Oznacza to konieczność minimalizacji opóźnień, redukcji liczby niepotrzebnych renderów oraz optymalnego zarządzania stanem aplikacji. Wydajność renderowania stała się więc kluczowym aspektem doświadczenia użytkownika, a jednocześnie jednym z najważniejszych kryteriów przy wyborze technologii frontendowych. Zbiór metryk takich jak \textit{Core Web Vitals} pozwala na obiektywną ocenę jakości interakcji użytkownika z witryną \cite{Web_Vitals}. W wielu współczesnych projektach to właśnie sposób aktualizacji interfejsu oraz efektywność wykonywania operacji renderujących wpływają na ogólną jakość aplikacji, jej skalowalność oraz koszty utrzymania.
 
 Znaczenie nowoczesnych aplikacji webowych wykracza poza typowe strony internetowe — obejmuje systemy biznesowe, narzędzia analityczne, aplikacje edukacyjne, panele administracyjne, a także interaktywne wizualizacje danych. W tych zastosowaniach renderowanie elementów interfejsu często odbywa się wielokrotnie w krótkich odstępach czasu, co zwiększa potrzebę stosowania wydajnych mechanizmów aktualizacji widoku. Z tego względu zrozumienie różnic pomiędzy podejściami oferowanymi przez React i Angular jest istotne nie tylko z perspektywy teoretycznej, ale również praktycznej i projektowej.
 
@@ -219,7 +221,7 @@ Fundamentem wydajności Reacta jest mechanizm Virtual DOM. Jest to lekka repreze
     \label{fig:react-vdom}
 \end{figure}
 
-Wraz z wprowadzeniem architektury React Fiber przebudowano wewnętrzny mechanizm odpowiedzialny za przetwarzanie aktualizacji komponentów. Fiber stanowi asynchroniczny, priorytetowy model renderowania, który umożliwia dzielenie procesu odświeżania na mniejsze części oraz nadawanie priorytetów poszczególnym aktualizacjom. Dzięki temu React może bardziej efektywnie reagować na interakcje użytkownika oraz zapewniać płynność działania nawet wtedy, gdy aplikacja wykonuje złożone operacje w tle.
+Wraz z wprowadzeniem architektury React Fiber przebudowano wewnętrzny mechanizm odpowiedzialny za przetwarzanie aktualizacji komponentów. Fiber stanowi asynchroniczny, priorytetowy model renderowania, który umożliwia dzielenie procesu odświeżania na mniejsze części oraz nadawanie priorytetów poszczególnym aktualizacjom \cite{React_Concurrent_Docs}. Dzięki temu React może bardziej efektywnie reagować na interakcje użytkownika oraz zapewniać płynność działania nawet wtedy, gdy aplikacja wykonuje złożone operacje w tle.
 
 Istotnym elementem architektury Reacta jest również cykl życia komponentów, który definiuje, w jakich momentach aplikacja może odwołać się do logiki zewnętrznej lub wykonać działania związane z odświeżaniem widoku. Wraz z wprowadzeniem hooków cykl życia został uproszczony i ujednolicony, co znacząco zwiększyło elastyczność zarządzania stanem oraz zachowaniami komponentów. Hooki, takie jak \textit{useState}, \textit{useEffect} czy \textit{useRef}, pozwalają na precyzyjne kontrolowanie efektów ubocznych, aktualizacji stanu oraz interakcji z elementami DOM.
 
@@ -324,7 +326,30 @@ Drugim istotnym narzędziem są hooki \texttt{useMemo} oraz \texttt{useCallback}
 
 Optymalizacja może obejmować również odpowiednie zarządzanie strukturą stanu. Przechowywanie zbyt dużej liczby danych w stanie globalnym lub dzielenie się stanem pomiędzy zbyt wieloma komponentami prowadzi do nadmiarowych renderów. Z tego względu stan aplikacji powinien być możliwie jak najbardziej lokalny, a dane globalne należy wykorzystywać tylko wtedy, gdy faktycznie są współdzielone pomiędzy różnymi częściami interfejsu. Pomocne mogą być także techniki takie jak dzielenie komponentów na mniejsze elementy, aby ograniczyć zakres renderowania tylko do tych fragmentów, które faktycznie uległy zmianie.
 
-W aplikacjach wymagających wysokiej wydajności warto również stosować mechanizmy kolejkowania i opóźniania aktualizacji, dostępne poprzez \texttt{useTransition} lub \texttt{useDeferredValue}. Funkcje te wprowadzono w wersjach Reacta wspierających renderowanie współbieżne, co pozwala na priorytetyzowanie aktualizacji i zapewnia płynność interfejsu nawet w warunkach dużego obciążenia.
+W aplikacjach wymagających wysokiej wydajności warto również stosować mechanizmy kolejkowania i opóźniania aktualizacji, dostępne poprzez \texttt{useTransition} lub \texttt{useDeferredValue}. Funkcje te wprowadzono w wersjach Reacta wspierających renderowanie współbieżne (Concurrent Mode), co pozwala na priorytetyzowanie aktualizacji i zapewnia płynność interfejsu nawet w warunkach dużego obciążenia. Przykładowo, \texttt{useTransition} pozwala oznaczyć mniej priorytetowe operacje (np. odświeżenie wizualizacji algorytmu), dzięki czemu interakcje użytkownika (np. suwak prędkości) pozostają responsywne.
+
+\begin{lstlisting}[language=tsx, caption={Wykorzystanie hooków \texttt{useTransition} i \texttt{useDeferredValue} do zarządzania priorytetami renderowania.}, label={lst:react-concurrent}]
+import { useState, useTransition, useDeferredValue } from 'react';
+
+function SortingVisualizer({ data }) {
+  const [isPending, startTransition] = useTransition();
+  const deferredData = useDeferredValue(data);
+
+  const handleUpdate = (newData) => {
+    startTransition(() => {
+      // Operacja o niższym priorytecie
+      setSortState(newData);
+    });
+  };
+
+  return (
+    <div style={{ opacity: isPending ? 0.8 : 1 }}>
+      {/* Wizualizacja na podstawie odroczonych danych */}
+      <Bars items={deferredData} />
+    </div>
+  );
+}
+\end{lstlisting}
 
 Oprócz narzędzi programistycznych React udostępnia także profiler, umożliwiający analizę czasu renderowania poszczególnych komponentów. Profilowanie jest kluczowym elementem optymalizacji, ponieważ pozwala precyzyjnie ustalić, które elementy interfejsu generują nadmiarowe aktualizacje lub wykonują kosztowne operacje podczas renderowania.
 
@@ -342,15 +367,141 @@ Integracja z TypeScriptem wpływa również na proces budowy i utrzymania aplika
 
 Podsumowując, React w połączeniu z TypeScriptem stanowi wydajne i przewidywalne środowisko do tworzenia nowoczesnych aplikacji webowych. Integracja mechanizmów typowania, obsługi plików TSX oraz zaawansowanych narzędzi analizy statycznej pozwala na budowę skalowalnych i dobrze zorganizowanych projektów, w których elementy interfejsu oraz logika biznesowa są jasno zdefiniowane i łatwe do utrzymania.
 
-\section{Charakterystyka Angular}
-\subsection{Architektura i kluczowe koncepcje}
+\section{Ekosystem Angular i optymalizacja detekcji zmian}
+Angular to kompleksowa platforma i framework programistyczny typu open source, rozwijany przez firmę Google, przeznaczony do budowy rozbudowanych, skalowalnych aplikacji webowych. W przeciwieństwie do Reacta, Angular oferuje pełny, zintegrowany ekosystem narzędzi (\textit{batteries-included approach}), dostarczając ustandaryzowane rozwiązania dla DI (Dependency Injection), obsługi formularzy, routingu oraz komunikacji asynchronicznej.
+
+\subsection{Architektura komponentowa i nowoczesne mechanizmy reaktywności}
+Architektura Angulara opiera się na hierarchii komponentów i ścisłej separacji logiki od widoku. Współczesny Angular (od wersji 17+) przeszedł rewolucję dzięki wprowadzeniu Sygnałów (\textit{Signals}). Sygnały pozwalają frameworkowi na precyzyjne śledzenie zależności (\textit{fine-grained reactivity}), co oznacza, że Angular wie dokładnie, która część szablonu zależy od której wartości stanu.
+
+Tradycyjny model detekcji zmian oparty na \texttt{Zone.js} monitorował wszystkie asynchroniczne zdarzenia i sprawdzał całe drzewa komponentów. Podejście oparte na Sygnałach pozwala na budowę aplikacji typu \textit{Zoneless}, gdzie proces aktualizacji widoku jest wyzwalany tylko tam, gdzie faktycznie nastąpiła zmiana danych, co drastycznie redukuje narzut obliczeniowy w aplikacjach o wysokiej dynamice, takich jak wizualizery algorytmów.
+
+\begin{lstlisting}[language=tsx, caption={Zarządzanie stanem w Angularze z wykorzystaniem mechanizmu Sygnałów (\textit{Signals}).}, label={lst:angular-signals}]
+@Component({
+  selector: 'app-visualizer',
+  standalone: true,
+  template: `<div>Wartość: {{ count() }}</div>`
+})
+export class VisualizerComponent {
+  // Definicja sygnału
+  count = signal(0);
+  
+  // Wartość pochodna automatycznie aktualizowana
+  doubleCount = computed(() => this.count() * 2);
+
+  increment() {
+    this.count.update(v => v + 1);
+  }
+}
+\end{lstlisting}
+
+Kluczową koncepcją organizacyjną do niedawna były moduły (\textit{NgModules}), które grupowały logicznie powiązane komponenty, dyrektywy, potoki i serwisy. Moduły pozwalały na precyzyjne zarządzanie widocznością elementów oraz optymalizację procesu ładowania aplikacji poprzez technologię \textit{lazy loading}. W najnowszych wersjach frameworka wprowadzono tzw. \textit{Standalone Components}, które upraszczają architekturę, eliminując konieczność definiowania modułów dla każdego elementu, co redukuje tzw. \textit{boilerplate code}.
+
+Fundamentalnym mechanizmem Angulara, determinującym jego wydajność, jest system detekcji zmian (\textit{Change Detection}). Framework monitoruje stan aplikacji i automatycznie aktualizuje widok, gdy wykryje zmiany w modelach danych. Przez lata mechanizm ten opierał się na bibliotece \textit{Zone.js}, która monitoruje asynchroniczne zdarzenia i uruchamia proces sprawdzania całego drzewa komponentów. Rewolucją jest wprowadzenie mechanizmu \textit{Signals} (Sygnałów), który pozwala frameworkowi na precyzyjne śledzenie zależności. Sygnały informują Angulara dokładnie o tym, która część szablonu wymaga odświeżenia, co umożliwia budowę aplikacji typu \textit{Zoneless}, znacząco redukując narzut obliczeniowy, szczególnie w aplikacjach z dużą liczbą dynamicznych aktualizacji, takich jak wizualizery algorytmów.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.85\textwidth]{images/angular-change-detection.png}
+    \caption{Tradycyjny model detekcji zmian w Angularze oparty na Zone.js (sprawdzanie od góry drzewa).}
+    \label{fig:angular-cd}
+\end{figure}
+
 \subsection{Zarządzanie stanem w Angular}
+Zarządzanie stanem w Angularze jest nierozerwalnie związane z programowaniem reaktywnym i biblioteką RxJS. Framework ten promuje model asynchronicznego przepływu danych, gdzie serwisy pełnią rolę "magazynów stanu". Wykorzystują one obiekty typu \texttt{Subject} lub \texttt{BehaviorSubject} do emitowania aktualnych wartości, które są konsumowane przez komponenty za pomocą subskrypcji.
+
+Podejście oparte na RxJS pozwala na potężną manipulację strumieniami danych poprzez operatory takie jak \texttt{map}, \texttt{filter} czy \texttt{switchMap} \cite{RxJS_Action}. Jest to kluczowe w wizualizatorach algorytmów, gdzie kroki sortowania mogą być emitowane jako strumień, który następnie jest "spowolniany", aby zapewnić czytelną animację.
+
+\begin{lstlisting}[language=tsx, caption={Przykład zaawansowanego serwisu w Angularze wykorzystującego RxJS do zarządzania stanem wizualizacji.}, label={lst:angular-service-v2}]
+@Injectable({ providedIn: 'root' })
+export class SortingStateService {
+  private barsSubject = new BehaviorSubject<number[]>([]);
+  bars$ = this.barsSubject.asObservable();
+
+  updateState(newBars: number[]) {
+    this.barsSubject.next([...newBars]);
+  }
+}
+\end{lstlisting}
+
+Nowoczesny Angular wprowadza Sygnały jako alternatywę dla stanu synchronicznego. Sygnały eliminują potrzebę ręcznego zarządzania subskrypcjami i oferują naturalną składnię dla operacji takich jak obliczanie wartości pochodnych (\texttt{computed}) czy wywoływanie efektów (\texttt{effect}). W bardzo dużych aplikacjach stosuje się NgRx, który implementuje wzorzec Redux, zapewniając pełną przewidywalność zmian stanu i ułatwiając debugowanie.
+
 \subsection{Optymalizacja wydajności w aplikacjach Angular}
+Wydajność w Angularze zależy przede wszystkim od efektywności procesu detekcji zmian. Kluczową techniką jest strategia \texttt{OnPush} (\textit{ChangeDetectionStrategy.OnPush}), która instruuje framework, aby sprawdzał komponent tylko wtedy, gdy zmienią się referencje jego wejściowych właściwości (\texttt{@Input()}) lub zostanie wyemitowane zdarzenie. Zastosowanie \texttt{OnPush} w połączeniu z niezmiennością danych (\textit{immutability}) pozwala na drastyczne zredukowanie liczby operacji detekcji zmian, co jest krytyczne dla zachowania płynności animacji w wizualizatorze.
+
+Inne techniki optymalizacji obejmują:
+\begin{itemize}
+    \item \textbf{Kompilator Ivy:} Generuje mniejsze pakiety danych dzięki mechanizmowi \textit{tree-shaking} oraz przyspiesza proces uruchamiania aplikacji.
+    \item \textbf{TrackBy:} Podczas renderowania list, funkcja \texttt{trackBy} pozwala Angularowi zidentyfikować, które elementy DOM odpowiadają rekordom w danych, unikając niszczenia i ponownego tworzenia całego DOM-u przy każdej zmianie w tablicy.
+    \item \textbf{Deferrable Views:} Nowa funkcja umożliwiająca deklaratywne opóźnianie ładowania i renderowania fragmentów szablonu do czasu, gdy np. stają się widoczne na ekranie (\textit{viewport visibility}).
+    \item \textbf{Pure Pipes:} Stosowanie czystych potoków, które są uruchamiane tylko wtedy, gdy ich wejście ulegnie zmianie, co oszczędza cykle procesora na transformacje danych.
+\end{itemize}
+
 \subsection{Angular i TypeScript – natywna integracja}
+Angular to framework zbudowany "przez TypeScript i dla TypeScripta". To partnerstwo zaowocowało modelem programowania, w którym cechy języka są fundamentem działania frameworka. Wszystkie kluczowe mechanizmy — komponenty, serwisy, moduły — są definiowanymi jako klasy TypeScript z dekoratorami (np. \texttt{@Component}, \texttt{@Injectable}). Dekoratory dołączają metadane do klas, informując kompilator o ich przeznaczeniu, co pozwala na wyraźne oddzielenie konfiguracji od logiki biznesowej.
+
+Statyczne typowanie w Angularze przynosi korzyści w postaci:
+\begin{itemize}
+    \item \textbf{Type-safe Dependency Injection:} System DI wykorzystuje typy parametrów w konstruktorze do identyfikacji zależności, co zapobiega błędom w czasie uruchomienia.
+    \item \textbf{Strict Template Checking:} Kompilator Angulara potrafi sprawdzić poprawność typów wewnątrz szablonów HTML, co drastycznie redukuje liczbę błędów typu \textit{undefined}.
+    \item \textbf{Zaawansowane narzędzia IDE:} Dzięki statycznej analizie kodu, deweloperzy mogą korzystać z błyskawicznej nawigacji i automatycznej refaktoryzacji nawet w bardzo rozbudowanych projektach.
+\end{itemize}
+
+Podsumowując, natywna integracja z TypeScriptem sprawia, że Angular jest frameworkiem wyjątkowo stabilnym i skalowalnym, idealnym do budowy złożonych systemów wymagających wysokiej precyzji i wydajności.
 
 \section{Podstawy algorytmów sortujących i ich wizualizacji}
+Algorytmy sortowania stanowią jeden z fundamentalnych obszarów informatyki, służąc do porządkowania elementów w zbiorze według określonej relacji \cite{Cormen_Intro}. W kontekście niniejszej pracy pełnią one rolę generatora intensywnego obciążenia dla silników renderujących, ponieważ proces ich wykonywania wiąże się z sekwencją licznych porównań i zamian miejsc elementów zbioru.
+
 \subsection{Klasyfikacja i charakterystyka wybranych algorytmów sortujących}
+Algorytmy sortujące można klasyfikować według wielu kryteriów, z których najważniejszymi są złożoność czasowa oraz stabilność. Złożoność czasowa określa, jak czas wykonania algorytmu rośnie wraz ze wzrostem liczby elementów ($n$). Wyróżniamy złożoność optymistyczną, średnią oraz pesymistyczną, przy czym ta ostatnia jest kluczowa dla określenia granic wydajności systemu.
+
+Kolejnym ważnym parametrem jest złożoność pamięciowa (\textit{space complexity}), określająca ilość dodatkowej pamięci potrzebnej do wykonania operacji. Algorytmy działające w miejscu (\textit{in-place}) są preferowane w środowiskach o ograniczonych zasobach, takich jak przeglądarki mobilne. Stabilność algorytmu natomiast informuje o tym, czy zachowuje on relatywną kolejność elementów o tych samych kluczach, co może być istotne przy sortowaniu obiektów o wielu atrybutach.
+
+W pracy wybrano reprezentatywne algorytmy o różnej charakterystyce wydajnościowej i architektonicznej:
+\begin{itemize}
+    \item \textbf{Sortowanie bąbelkowe (Bubble Sort):} Jeden z najprostszych algorytmów iteracyjnych o złożoności $O(n^2)$. Choć nieefektywny dla dużych zbiorów, jest idealny do demonstracji mechanizmów detekcji zmian ze względu na bardzo regularną strukturę operacji zamiany (\textit{swap}). W wizualizacji pozwala on na obserwację "wypływania" największych elementów na koniec tablicy, co jest czytelne dla użytkownika, ale obciążające dla renderera przez dużą liczbę drobnych aktualizacji.
+    \item \textbf{Sortowanie przez wstawianie (Insertion Sort):} Algorytm o złożoności $O(n^2)$, który buduje posortowaną część tablicy, wstawiając do niej kolejne elementy. W przeciwieństwie do Bubble Sort, znacznie rzadziej wykonuje operacje zamiany miejsc, co pozwala na porównanie, jak frameworki radzą sobie z przesuwaniem większych bloków danych w strukturze DOM.
+    \item \textbf{Sortowanie szybkie (Quick Sort):} Algorytm typu "dziel i zwyciężaj" o złożoności średniej $O(n \log n)$. Wykorzystuje element osiowy (pivot) do partycjonowania tablicy. Z punktu widzenia wizualizacji jest on wyzwaniem, ponieważ operacje następują w różnych, często odległych od siebie miejscach tablicy, co wymusza na silnikach renderujących częste zmiany w rozproszonych gałęziach drzewa widoku. Jest on kluczowy do testowania wydajności przy operacjach o wysokiej dynamice.
+    \item \textbf{Sortowanie przez scalanie (Merge Sort):} Algorytm o stabilnej złożoności $O(n \log n)$, który rekurencyjnie dzieli zbiór na mniejsze części i scala je w uporządkowany sposób. Merge Sort wymaga dodatkowej pamięci ($O(n)$), co w wizualizatorze często wiąże się z koniecznością wyświetlenia "tablic pomocniczych" lub animowania procesu kopiowania danych. Pozwala to na testowanie wydajności renderowania przy dynamicznym tworzeniu i niszczeniu elementów interfejsu.
+    \item \textbf{Sortowanie stogowe (Heap Sort):} Algorytm wykorzystujący strukturę kopca binarnego o złożoności $O(n \log n)$. Jego wizualizacja jest specyficzna, ponieważ wymaga odwzorowania liniowej tablicy jako struktury drzewiastej. Pozwala to na analizę, jak frameworki radzą sobie z prezentacją tych samych danych w dwóch różnych formach graficznych jednocześnie.
+\end{itemize}
+
+\begin{lstlisting}[language=tsx, caption={Szkielet asynchronicznego algorytmu sortowania (Bubble Sort) przygotowanego pod wizualizację.}, label={lst:algo-skeleton}]
+async function bubbleSort(array: number[], update: (arr: number[]) => void) {
+  const n = array.length;
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < n - i - 1; j++) {
+      if (array[j] > array[j + 1]) {
+        // Zamiana elementów
+        [array[j], array[j + 1]] = [array[j + 1], array[j]];
+        
+        // Aktualizacja stanu i wymuszenie przerwy dla renderera
+        update([...array]);
+        await new Promise(resolve => setTimeout(resolve, 10));
+      }
+    }
+  }
+}
+\end{lstlisting}
+
 \subsection{Metody wizualizacji algorytmów}
+Wizualizacja algorytmów sortowania w aplikacjach webowych sprowadza się do graficznej reprezentacji elementów zbioru (najczęściej jako słupków o różnej wysokości, gdzie wysokość odpowiada wartości elementu) oraz dynamicznej aktualizacji ich wyglądu w czasie rzeczywistym.
+
+Efektywna wizualizacja musi uwzględniać nie tylko techniczne aspekty renderowania, ale również percepcję użytkownika. Oznacza to konieczność wprowadzenia opóźnień (\textit{delays}) między krokami algorytmu, aby proces był widoczny dla ludzkiego oka, przy jednoczesnym zachowaniu płynności animacji przejść.
+
+Istnieją dwie główne architektury synchronizacji logiki algorytmu z widokiem:
+\begin{itemize}
+    \item \textbf{Podejście oparte na migawkach (Snapshot-based):} Algorytm jest wykonywany w izolacji od warstwy widoku, a każdy jego "krok" (porównanie, zamiana) jest zapisywany jako stan tablicy w dedykowanej kolejce (historii ruchów). Po zakończeniu obliczeń, framework odtwarza historię, renderując stany jeden po drugim z określonym interwałem. Metoda ta gwarantuje stabilność interfejsu, ale opóźnia rozpoczęcie wizualizacji do zakończenia obliczeń, co przy rekordowo dużych zbiorach może być odczuwalne.
+    \item \textbf{Podejście asynchroniczne w czasie rzeczywistym (Real-time Async):} Algorytm jest wykonywany bezpośrednio w głównej nitce (lub w Web Workerze), a po każdej operacji następuje asynchroniczne przerwanie (\texttt{await sleep(ms)}). Podczas tej pauzy, stan jest aktualizowany w frameworku, co wyzwala natychmiastowe renderowanie. Jest to podejście bardziej zbliżone do rzeczywistych aplikacji interaktywnych i pozwala na testowanie reaktywności frameworka pod ciągłym obciążeniem.
+\end{itemize}
+
+Wizualizacja wymaga również precyzyjnego zarządzania atrybutami graficznymi. Kluczowe jest oznaczanie kolorami:
+\begin{itemize}
+    \item \textbf{Wybór i porównanie:} Elementy aktualnie porównywane są zazwyczaj wyróżniane kontrastowym kolorem (np. czerwonym).
+    \item \textbf{Zamiana:} Elementy zmieniające pozycję mogą pulsować lub zmieniać nasycenie koloru.
+    \item \textbf{Uporządkowanie:} Fragmenty tablicy, które algorytm uznał za ostatecznie posortowane, są oznaczane kolorem "bezpiecznym" (np. zielonym).
+\end{itemize}
+Płynność tych zmian jest determinowana przez to, jak szybko framework potrafi zidentyfikować zmienione atrybuty CSS (komponentów lub elementów DOM) i przesłać je do silnika kompozycji przeglądarki. Optymalizacja tych przejść (np. poprzez użycie \textit{CSS Transitions} lub \textit{Transforms} zamiast zmiany szerokości/pozycji \textit{top/left}) jest niezbędna dla uniknięcia zjawiska \textit{layout thrashing}.
+
+W dalszej części pracy, oba te podejścia zostaną zaimplementowane i poddane testom obciążeniowym, co pozwoli na ocenę, jak architektura Reacta (Virtual DOM) oraz Angulara (Signals/OnPush) radzi sobie z zarządzaniem setkami dynamicznie zmieniających się obiektów graficznych.
 
 
 \chapter{Metodyka badań i implementacja aplikacji}

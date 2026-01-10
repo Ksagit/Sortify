@@ -8,7 +8,14 @@
 *.xdv
 *.blg
 *.bbl
-doc/main.pdf
+*.synctex.gz
+*.lof
+*.lot
+*.idx
+*.ilg
+*.ind
+*.run.xml
+*.bcf
 
 # OS junk
 .DS_Store
