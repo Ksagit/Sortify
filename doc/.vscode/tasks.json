@@ -1,0 +1,23 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "LaTeX: Build with XeLaTeX",
+			"type": "shell",
+			"command": "latexmk -xelatex -interaction=nonstopmode main.tex",
+			"problemMatcher": [
+				"$xelatex"
+			],
+			"group": {
+				"kind": "build",
+				"isDefault": true
+			}
+		},
+		{
+			"label": "LaTeX: Clean",
+			"type": "shell",
+			"command": "latexmk -c",
+			"problemMatcher": []
+		}
+	]
+}
