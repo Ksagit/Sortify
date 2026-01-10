@@ -1,6 +1,17 @@
-.DS_Store
-/node_modules/
+# LaTeX build artifacts
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.toc
+*.xdv
+*.blg
+*.bbl
+doc/main.pdf
 
-# React Router
-/.react-router/
-/build/
+# OS junk
+.DS_Store
+
+# IDEs
+.vscode/
