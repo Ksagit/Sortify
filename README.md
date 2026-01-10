@@ -1,15 +1,19 @@
-# Sortify
+# Master's Thesis
+
+This repository contains my Master's Thesis as well as project created during writing it.
+
+## Sortify - React
 
 Interactive sorting algorithm visualizer built with React Router v7 and Tailwind CSS.
 
-## Features
+### Features
 
 - Visual representation of sorting algorithms
 - Step-by-step execution
 - Adjustable animation speed
 - Multiple sorting algorithms (Bubble Sort, Merge Sort, Quick Sort)
 
-## Getting Started
+### Getting Started
 
 ```bash
 # Install dependencies
@@ -22,13 +26,10 @@ pnpm dev
 pnpm build
 ```
 
-## Tech Stack
+### Tech Stack
 
 - React 19
 - React Router v7
 - Tailwind CSS v4
 - TypeScript
 - Vite
-
-## TODO
-- improve landing page
