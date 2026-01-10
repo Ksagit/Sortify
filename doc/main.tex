@@ -1,3 +1,4 @@
+% !TEX program = xelatex
 \documentclass[12pt,openright]{report}
 \usepackage{geometry}
 \usepackage{titlesec}
@@ -5,9 +6,17 @@
 \usepackage{fontspec}
 \usepackage{listings}
 \usepackage{xcolor}
+\usepackage{etoolbox}
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage[polish]{babel}
+
+\BeforeBeginEnvironment{lstlisting}{\begin{minipage}{\linewidth}}
+\AfterEndEnvironment{lstlisting}{\end{minipage}}
+
+\widowpenalty=10000
+\clubpenalty=10000
+
 \frenchspacing
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
@@ -54,6 +63,7 @@
 \lstset{
     frame=single,
     breaklines=true,
+    columns=flexible,
     basicstyle=\ttfamily\small,
     keywordstyle=\color{blue},
     commentstyle=\color{green!60!black},
@@ -63,10 +73,15 @@
     numbersep=5pt,
     tabsize=2,
     showstringspaces=false,
-    float=htbp
+    extendedchars=true,
+    inputencoding=utf8,
+    keepspaces=true,
+    literate={ą}{ą}1 {ć}{ć}1 {ę}{ę}1 {ł}{ł}1 {ń}{ń}1 {ó}{ó}1 {ś}{ś}1 {ź}{ź}1 {ż}{ż}1
+             {Ą}{Ą}1 {Ć}{Ć}1 {Ę}{Ę}1 {Ł}{Ł}1 {Ń}{Ń}1 {Ó}{Ó}1 {Ś}{Ś}1 {Ź}{Ź}1 {Ż}{Ż}1
 }
 
 \setmainfont{Times New Roman}
+\setmonofont{Courier New}
 
 \begin{document}
 
@@ -192,7 +207,7 @@ Angular natomiast łączy elementy podejścia deklaratywnego z architekturą opa
 
 Wspólną cechą większości współczesnych frameworków JavaScript jest dążenie do minimalizacji kosztów związanych z aktualizacją widoku. Mechanizmy takie jak Virtual DOM w React, strefy i detekcja zmian w Angularze, reaktywny przepływ danych czy zaawansowane modele kolejkowania operacji renderujących zostały zaprojektowane po to, aby unikać niepotrzebnych odświeżeń interfejsu. Dzięki temu możliwe jest budowanie aplikacji reagujących na częste zmiany stanu i przetwarzających duże ilości danych przy zachowaniu płynnej i stabilnej pracy.
 
-Paradygmaty i architektury wykorzystywane przez współczesne frameworki mają bezpośredni wpływ na wydajność aplikacji oraz wygodę pracy programisty. Różnice w sposobie zarządzania stanem, obsługi cyklu życia komponentów oraz reagowania na zmiany danych sprawiają, że React i Angular sprawdzają się inaczej w zależności od charakteru projektu i wymagań użytkownika. Zrozumienie tych podejść jest kluczowe dla dalszej analizy technik renderowania oraz porównania obu frameworków w kontekście implementacji wizualizatora algorytmów sortowania.
+Paradygmaty i architektury wykorzystywane przez współczesne frameworki mają bezpośredni wpływ na wydajność aplikacji oraz wygodę pracy programisty. Różnice w sposobie zarządzania stanem, obsługi cyklu życia komponentów oraz reagowania na zmiany danych sprawiają, że React i Angular sprawdzają się inaczej w zależności od charakteru projektu i wymagań użytkownika. Zrozumienie tych podejść jest kluczowe dla dalszej analizy technik renderowania oraz porównania obu frameworków w kontekście implementacji wizualizatora algorytmów \mbox{sortowania}.
 
 \section{Charakterystyka React}
 React jest jedną z najpopularniejszych bibliotek frontendowych wykorzystywanych do budowy interfejsów użytkownika we współczesnych aplikacjach webowych. Został opracowany przez Facebooka w 2013 roku jako odpowiedź na rosnącą złożoność warstwy prezentacji w dużych systemach internetowych oraz potrzebę efektywnego zarządzania licznymi aktualizacjami widoku. React szybko zyskał szerokie zastosowanie w przemyśle dzięki swojej prostocie, modularności oraz nowatorskiemu podejściu do renderowania komponentów.
@@ -231,7 +246,7 @@ Zarządzanie stanem jest jednym z kluczowych elementów programowania w React, p
 
 Podstawowym narzędziem do zarządzania stanem w komponentach funkcjonalnych jest hook useState, który umożliwia przechowywanie oraz aktualizację lokalnego stanu komponentu. Zmiana wartości stanu powoduje ponowne renderowanie komponentu, a React dba o to, aby zaktualizować jedynie te fragmenty interfejsu, które faktycznie uległy zmianie. Hook useState jest łatwy w użyciu, lecz odpowiedni głównie dla prostych przypadków, gdzie stan jest lokalny i nie wymaga udostępniania innym komponentom.
 
-\begin{lstlisting}[language=tsx, caption={Przykład zarządzania stanem lokalnym za pomocą hooka \texttt{useState}.}, label={lst:react-usestate}]
+\begin{lstlisting}[language=tsx, caption={Example of local state management using the \texttt{useState} hook.}, label={lst:react-usestate}]
 import { useState } from 'react';
 
 function Counter() {
@@ -251,7 +266,7 @@ function Counter() {
 
 W bardziej złożonych scenariuszach wykorzystywany jest hook useReducer, który pozwala zarządzać stanem w sposób przypominający wzorzec Redux, oparty na zdefiniowanych akcjach i funkcji redukującej. Rozwiązanie to sprawdza się szczególnie w sytuacjach, gdy logika modyfikacji stanu jest złożona lub wymaga obsługi wielu różnych typów aktualizacji.
 
-\begin{lstlisting}[language=tsx, caption={Zastosowanie hooka \texttt{useReducer} w przypadku złożonej logiki aktualizacji stanu.}, label={lst:react-usereducer}]
+\begin{lstlisting}[language=tsx, caption={Using the \texttt{useReducer} hook for complex state update logic.}, label={lst:react-usereducer}]
 import { useReducer } from 'react';
 
 function reducer(state, action) {
@@ -283,7 +298,7 @@ function Counter() {
 
 W przypadku gdy stan musi być współdzielony pomiędzy wieloma komponentami, React oferuje mechanizm kontekstu (Context API). Pozwala on na przekazywanie danych pomiędzy odległymi elementami drzewa komponentów bez konieczności ręcznego przekazywania ich przez kolejne poziomy hierarchii. Mechanizm ten jest przydatny m.in. do obsługi ustawień aplikacji, motywów graficznych czy globalnych danych, jednak jego nadmierne stosowanie może prowadzić do niepotrzebnych renderów, jeśli struktura kontekstu nie została odpowiednio zaprojektowana.
 
-\begin{lstlisting}[language=tsx, caption={Podstawowy przykład wykorzystania Context API do współdzielenia stanu.}, label={lst:react-context}]
+\begin{lstlisting}[language=tsx, caption={Basic example of using the Context API for state sharing.}, label={lst:react-context}]
 import { createContext, useState } from 'react';
 
 export const AppContext = createContext({
@@ -306,7 +321,7 @@ W przypadku dużych aplikacji lub projektów o skomplikowanej logice wymiany dan
 
 Zarządzanie stanem ma bezpośredni wpływ na wydajność aplikacji React. Niewłaściwie zaprojektowana struktura stanów lub nadmierne ich współdzielenie może prowadzić do wielokrotnych i niepotrzebnych renderów komponentów, co negatywnie wpływa na płynność działania interfejsu. Z tego względu niezwykle istotne jest świadome korzystanie z hooków, optymalizacja zakresu kontekstu oraz unikanie przechowywania danych globalnych, które nie muszą być dostępne we wszystkich komponentach. React oferuje również narzędzia umożliwiające optymalizację renderowania, takie jak useMemo, useCallback czy React.memo, które pozwalają ograniczyć liczbę aktualizacji poprzez zapamiętywanie wyników obliczeń lub renderów komponentów.
 
-\begin{lstlisting}[language=tsx, caption={Przykład optymalizacji renderowania komponentu z użyciem \texttt{useMemo} oraz \texttt{React.memo}.}, label={lst:react-memo}]
+\begin{lstlisting}[language=tsx, caption={Example of component rendering optimization using \texttt{useMemo} and \texttt{React.memo}.}, label={lst:react-memo}]
 import { memo, useMemo } from 'react';
 
 const Result = memo(function Result({ items }) {
@@ -328,7 +343,7 @@ Optymalizacja może obejmować również odpowiednie zarządzanie strukturą sta
 
 W aplikacjach wymagających wysokiej wydajności warto również stosować mechanizmy kolejkowania i opóźniania aktualizacji, dostępne poprzez \texttt{useTransition} lub \texttt{useDeferredValue}. Funkcje te wprowadzono w wersjach Reacta wspierających renderowanie współbieżne (Concurrent Mode), co pozwala na priorytetyzowanie aktualizacji i zapewnia płynność interfejsu nawet w warunkach dużego obciążenia. Przykładowo, \texttt{useTransition} pozwala oznaczyć mniej priorytetowe operacje (np. odświeżenie wizualizacji algorytmu), dzięki czemu interakcje użytkownika (np. suwak prędkości) pozostają responsywne.
 
-\begin{lstlisting}[language=tsx, caption={Wykorzystanie hooków \texttt{useTransition} i \texttt{useDeferredValue} do zarządzania priorytetami renderowania.}, label={lst:react-concurrent}]
+\begin{lstlisting}[language=tsx, caption={Using \texttt{useTransition} and \texttt{useDeferredValue} hooks to manage rendering priorities.}, label={lst:react-concurrent}]
 import { useState, useTransition, useDeferredValue } from 'react';
 
 function SortingVisualizer({ data }) {
@@ -337,14 +352,14 @@ function SortingVisualizer({ data }) {
 
   const handleUpdate = (newData) => {
     startTransition(() => {
-      // Operacja o niższym priorytecie
+      // Lower priority operation
       setSortState(newData);
     });
   };
 
   return (
     <div style={{ opacity: isPending ? 0.8 : 1 }}>
-      {/* Wizualizacja na podstawie odroczonych danych */}
+      {/* Visualization based on deferred data */}
       <Bars items={deferredData} />
     </div>
   );
@@ -375,17 +390,17 @@ Architektura Angulara opiera się na hierarchii komponentów i ścisłej separac
 
 Tradycyjny model detekcji zmian oparty na \texttt{Zone.js} monitorował wszystkie asynchroniczne zdarzenia i sprawdzał całe drzewa komponentów. Podejście oparte na Sygnałach pozwala na budowę aplikacji typu \textit{Zoneless}, gdzie proces aktualizacji widoku jest wyzwalany tylko tam, gdzie faktycznie nastąpiła zmiana danych, co drastycznie redukuje narzut obliczeniowy w aplikacjach o wysokiej dynamice, takich jak wizualizery algorytmów.
 
-\begin{lstlisting}[language=tsx, caption={Zarządzanie stanem w Angularze z wykorzystaniem mechanizmu Sygnałów (\textit{Signals}).}, label={lst:angular-signals}]
+\begin{lstlisting}[language=tsx, caption={State management in Angular using the Signals mechanism.}, label={lst:angular-signals}]
 @Component({
   selector: 'app-visualizer',
   standalone: true,
-  template: `<div>Wartość: {{ count() }}</div>`
+  template: `<div>Value: {{ count() }}</div>`
 })
 export class VisualizerComponent {
-  // Definicja sygnału
+  // Signal definition
   count = signal(0);
   
-  // Wartość pochodna automatycznie aktualizowana
+  // Computed value automatically updated
   doubleCount = computed(() => this.count() * 2);
 
   increment() {
@@ -410,7 +425,7 @@ Zarządzanie stanem w Angularze jest nierozerwalnie związane z programowaniem r
 
 Podejście oparte na RxJS pozwala na potężną manipulację strumieniami danych poprzez operatory takie jak \texttt{map}, \texttt{filter} czy \texttt{switchMap} \cite{RxJS_Action}. Jest to kluczowe w wizualizatorach algorytmów, gdzie kroki sortowania mogą być emitowane jako strumień, który następnie jest "spowolniany", aby zapewnić czytelną animację.
 
-\begin{lstlisting}[language=tsx, caption={Przykład zaawansowanego serwisu w Angularze wykorzystującego RxJS do zarządzania stanem wizualizacji.}, label={lst:angular-service-v2}]
+\begin{lstlisting}[language=tsx, caption={Example of an advanced service in Angular using RxJS for visualization state management.}, label={lst:angular-service-v2}]
 @Injectable({ providedIn: 'root' })
 export class SortingStateService {
   private barsSubject = new BehaviorSubject<number[]>([]);
@@ -464,16 +479,16 @@ W pracy wybrano reprezentatywne algorytmy o różnej charakterystyce wydajności
     \item \textbf{Sortowanie stogowe (Heap Sort):} Algorytm wykorzystujący strukturę kopca binarnego o złożoności $O(n \log n)$. Jego wizualizacja jest specyficzna, ponieważ wymaga odwzorowania liniowej tablicy jako struktury drzewiastej. Pozwala to na analizę, jak frameworki radzą sobie z prezentacją tych samych danych w dwóch różnych formach graficznych jednocześnie.
 \end{itemize}
 
-\begin{lstlisting}[language=tsx, caption={Szkielet asynchronicznego algorytmu sortowania (Bubble Sort) przygotowanego pod wizualizację.}, label={lst:algo-skeleton}]
+\begin{lstlisting}[language=tsx, caption={Skeleton of an asynchronous sorting algorithm (Bubble Sort) prepared for visualization.}, label={lst:algo-skeleton}]
 async function bubbleSort(array: number[], update: (arr: number[]) => void) {
   const n = array.length;
   for (let i = 0; i < n; i++) {
     for (let j = 0; j < n - i - 1; j++) {
       if (array[j] > array[j + 1]) {
-        // Zamiana elementów
+        // Swap elements
         [array[j], array[j + 1]] = [array[j + 1], array[j]];
         
-        // Aktualizacja stanu i wymuszenie przerwy dla renderera
+        // State update and forcing a break for the renderer
         update([...array]);
         await new Promise(resolve => setTimeout(resolve, 10));
       }
@@ -507,12 +522,61 @@ W dalszej części pracy, oba te podejścia zostaną zaimplementowane i poddane 
 \chapter{Metodyka badań i implementacja aplikacji}
 
 \section{Założenia projektowe i wymagania funkcjonalne dla wizualizatora algorytmów}
+Głównym założeniem projektowym platformy badawczej jest stworzenie dwóch funkcjonalnie identycznych aplikacji, które umożliwią obiektywne porównanie wydajności renderowania w frameworkach React i Angular. Wizualizator musi sprostać wyzwaniu płynnego wyświetlania setek operacji na danych przy zachowaniu wysokiej interaktywności interfejsu.
+
+Do kluczowych wymagań funkcjonalnych zaliczono:
+\begin{itemize}
+    \item \textbf{Wielowątkowość logiczna:} Możliwość jednoczesnej wizualizacji wielu algorytmów (Bubble Sort, Quick Sort, Merge Sort, Heap Sort) w celu porównania ich dynamiki pracy.
+    \item \textbf{Sterowanie czasem rzeczywistym:} Użytkownik musi mieć możliwość płynnej regulacji prędkości animacji (opóźnienia między krokami) w zakresie od 50 ms do 600 ms.
+    \item \textbf{Interaktywność:} Możliwość wstrzymywania (Pause), wznawiania (Play), restartowania oraz losowania nowych danych (Shuffle) bez konieczności przeładowywania aplikacji.
+    \item \textbf{Precyzja wizualna:} Wyraźne rozróżnienie stanów elementów poprzez kolory: porównywanie (amber), zamiana (red), oś podziału/pivot (blue) oraz elementy posortowane (emerald).
+    \item \textbf{Responsywność:} Interfejs wykonany w podejściu \textit{Responsive Web Design}, zapewniający czytelność wizualizacji zarówno na ekranach desktopowych, jak i urządzeniach mobilnych.
+\end{itemize}
+
+Projekt techniczny zakłada wykorzystanie TypeScriptu jako nadrzędnego języka programowania, co zapewnia spójność typów pomiędzy logiką algorytmów a komponentami interfejsu użytkownika.
 
 \section{Opis implementacji aplikacji wizualizującej w React}
+Aplikacja w wersji React została zbudowana z wykorzystaniem najnowszych standardów biblioteki (wersja 19) oraz nowoczesnych narzędzi ekosystemu JavaScript.
+
 \subsection{Struktura projektu i kluczowe komponenty}
+Architektura aplikacji opiera się na separacji logiki biznesowej od warstwy prezentacji. Główne elementy struktury to:
+\begin{itemize}
+    \item \textbf{Routy aplikacji:} Wykorzystanie React Router v7 do obsługi nawigacji między stroną powitalną (\textit{Landing Page}) a głównym panelem badawczym (\textit{Dashboard}).
+    \item \textbf{Komponenty UI:} Zastosowanie modułowej biblioteki komponentów (opartej na Tailwind CSS), co zapewnia spójność wizualną i szybki czas budowy interfejsu.
+    \item \textbf{SortingProgressChart:} Centralny komponent wizualizacji, odpowiedzialny za renderowanie słupków danych z wykorzystaniem biblioteki Recharts.
+\end{itemize}
+
 \subsection{Wykorzystane biblioteki i narzędzia}
+W projekcie wykorzystano następujący stos technologiczny:
+\begin{itemize}
+    \item \textbf{Vite:} Jako szybki system budowania i serwer deweloperski.
+    \item \textbf{Tailwind CSS v4:} Do stylizacji z wykorzystaniem nowoczesnych funkcji takich jak \textit{glassmorphism} i zaawansowane gradienty.
+    \item \textbf{Lucide React:} Zbiór ikon do elementów sterujących.
+    \item \textbf{Recharts:} Do efektywnego renderowania wykresów słupkowych przy częstych aktualizacjach stanu.
+\end{itemize}
+
 \subsection{Podejście do zarządzania stanem}
+Zarządzanie stanem wizualizacji zrealizowano za pomocą autorskiego hooka \texttt{useSorting}. Implementacja opiera się na podejściu opartym na migawkach (\textit{Snapshot-based}). Algorytmy generują listę kroków (\texttt{SortStep}), gdzie każdy krok zawiera aktualny stan tablicy oraz informacje o porównywanych indeksach.
+
+\begin{lstlisting}[language=tsx, caption={Interface structure describing a visualization step in React.}, label={lst:react-step-interface}]
+export type SortingProgress = {
+  values: number[];
+  comparing?: number[];
+  swapping?: number[];
+  pivot?: number | null;
+  sorted?: number[];
+}
+\end{lstlisting}
+
+Hook \texttt{useSorting} zarządza indeksem aktywnego kroku oraz interwałem czasowym za pomocą \texttt{window.setInterval}, co pozwala na odseparowanie tempa animacji od szybkości renderowania samej biblioteki React.
+
 \subsection{Specyficzne techniki optymalizacyjne}
+Aby zapewnić płynność wizualizacji przy setkach aktualizacji na sekundę, zastosowano następujące techniki:
+\begin{itemize}
+    \item \textbf{React.memo:} Komponent \texttt{SortingProgressChart} został opakowany w \texttt{memo}, dzięki czemu nie jest on renderowany ponownie, jeśli dane wizualizacji nie uległy zmianie.
+    \item \textbf{useMemo dla zbiorów danych:} Indeksy porównywane i zamieniane są konwertowane na obiekty typu \texttt{Set} za pomocą \texttt{useMemo}. Pozwala to na uzyskanie złożoności $O(1)$ przy sprawdzaniu koloru każdego słupka podczas renderowania.
+    \item \textbf{Separacja logiki:} Obliczanie wszystkich kroków algorytmu odbywa się przed rozpoczęciem animacji, co odciąża główny wątek podczas procesu renderowania.
+\end{itemize}
 
 \section{Opis implementacji aplikacji wizualizującej w Angular}
 \subsection{Struktura projektu i moduły}
