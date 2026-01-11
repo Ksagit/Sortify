@@ -1,6 +1,6 @@
 # Master's Thesis
 
-This repository contains my Master's Thesis as well as project created during writing it.
+This repository contains my Master's Thesis as well as the projects created during writing it.
 
 ## Sortify - React
 
