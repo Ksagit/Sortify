@@ -1,6 +1,6 @@
 % !TEX program = xelatex
-\documentclass[12pt,openright]{report}
-\usepackage{geometry}
+\documentclass[12pt,openright,twoside]{report}
+\usepackage[a4paper]{geometry}
 \usepackage{titlesec}
 \usepackage{graphicx}
 \usepackage{fontspec}
@@ -10,12 +10,61 @@
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage[polish]{babel}
+\usepackage{setspace}
+\usepackage{fancyhdr}
 
-\renewcommand{\listfigurename}{Spis rysunków}
-\renewcommand{\lstlistlistingname}{Spis listingów}
+\usepackage{caption}
+\usepackage[htt]{hyphenat}
+
+\onehalfspacing
+
+\newcommand{\source}[1]{{\par\vspace{5pt}\noindent\leftskip=0pt \rightskip=0pt \parfillskip=0pt plus 1fil \small\textit{Źródło: #1}\par}}
+
+\captionsetup{justification=justified,singlelinecheck=false,skip=6pt,belowskip=0pt}
+
+\newcommand{\polishchapterword}[1]{%
+  \ifcase#1\or PIERWSZY\or DRUGI\or TRZECI\or CZWARTY\or PIĄTY\or SZÓSTY\or SIÓDMY\or ÓSMY\or DZIEWIĄTY\or DZIESIĄTY\else \number#1\fi
+}
+
+\titleformat{\chapter}[display]
+  {\bfseries\fontsize{18}{22}\selectfont}
+  {ROZDZIAŁ~\polishchapterword{\thechapter}}
+  {1ex}
+  {}
+
+\titleformat{name=\chapter,numberless}[block]
+  {\bfseries\fontsize{18}{22}\selectfont}
+  {}
+  {0pt}
+  {}
+
+\renewcommand{\listfigurename}{SPIS RYSUNKÓW}
+\renewcommand{\contentsname}{SPIS TREŚCI}
+\renewcommand{\lstlistingname}{Rysunek}
+
+\makeatletter
+\AtBeginDocument{%
+  \let\c@lstlisting\c@figure
+  \let\thelstlisting\thefigure
+  \def\ext@lstlisting{lof}%
+}
+\makeatother
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyfoot[RO,LE]{\thepage}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancypagestyle{plain}{
+  \fancyhf{}
+  \fancyfoot[RO,LE]{\thepage}
+  \renewcommand{\headrulewidth}{0pt}
+  \renewcommand{\footrulewidth}{0pt}
+}
 
 \BeforeBeginEnvironment{lstlisting}{\begin{minipage}{\linewidth}}
-\AfterEndEnvironment{lstlisting}{\end{minipage}}
+\AfterEndEnvironment{lstlisting}{\end{minipage}\vspace{-5pt}}
 
 \widowpenalty=10000
 \clubpenalty=10000
@@ -24,10 +73,11 @@
 \setlength{\parindent}{0pt}
 \setlength{\parskip}{6pt}
 \geometry{
-    top=2.5cm,
-    bottom=2.5cm,
-    left=3cm,
-    right=2.5cm
+    a4paper,
+    top=25mm,
+    bottom=25mm,
+    left=35mm,
+    right=25mm
 }
 
 \lstdefinelanguage{TypeScript}{
@@ -79,6 +129,9 @@
     extendedchars=true,
     inputencoding=utf8,
     keepspaces=true,
+    captionpos=b,
+    belowskip=0pt,
+    belowcaptionskip=0pt,
     literate={ą}{ą}1 {ć}{ć}1 {ę}{ę}1 {ł}{ł}1 {ń}{ń}1 {ó}{ó}1 {ś}{ś}1 {ź}{ź}1 {ż}{ż}1
              {Ą}{Ą}1 {Ć}{Ć}1 {Ę}{Ę}1 {Ł}{Ł}1 {Ń}{Ń}1 {Ó}{Ó}1 {Ś}{Ś}1 {Ź}{Ź}1 {Ż}{Ż}1
 }
@@ -119,6 +172,7 @@
         \Large
         \textbf{Kierunek:} Informatyka\\
         \textbf{Specjalność:} Zaawansowane systemy baz danych\\
+        \textbf{Numer albumu:} 180757\\
     \end{flushleft}
 
     \vspace{1cm}
@@ -128,18 +182,14 @@
     \end{center}
 \end{titlepage}
 
-
-\pagenumbering{roman}
-\section*{Streszczenie}
-\addcontentsline{toc}{chapter}{Streszczenie}
+\chapter*{STRESZCZENIE}
+\addcontentsline{toc}{chapter}{STRESZCZENIE}
 
 
 \tableofcontents
-\pagenumbering{arabic}
-\setcounter{page}{1}
 
-\chapter*{Wstęp}
-\addcontentsline{toc}{chapter}{Wstęp}
+\chapter*{WSTĘP}
+\addcontentsline{toc}{chapter}{WSTĘP}
 Dynamiczny rozwój technologii internetowych oraz rosnące oczekiwania użytkowników wobec szybkości, interaktywności i responsywności aplikacji webowych sprawiają, że wydajność renderowania staje się jednym z kluczowych wyzwań współczesnego frontendu. Wraz z ewolucją od prostych, statycznych stron HTML do wysoce złożonych aplikacji jednosesyjnych (SPA), znacząco wzrosła zarówno złożoność logiki interfejsu użytkownika, jak i liczba aktualizacji widoku wykonywanych w bardzo krótkich interwałach czasowych. W tym kontekście kluczowego znaczenia nabierają nowoczesne frameworki frontendowe, takie jak React oraz Angular, które, mimo wspólnego celu, oferują fundamentalnie odmienne podejścia architektoniczne i mechanizmy synchronizacji stanu z modelem dokumentu (DOM). Zrozumienie tych różnic jest niezbędne nie tylko z punktu widoku teoretycznego, ale przede wszystkim dla inżynierów oprogramowania dążących do budowy skalowalnych i wydajnych systemów webowych.
 
 Rosnąca złożoność współczesnych aplikacji frontendowych wynika z przenoszenia coraz większej liczby operacji z warstwy serwerowej bezpośrednio do przeglądarki klienta. Mechanizmy takie jak dynamiczne komponenty, rozbudowane drzewa zależności stanu, interaktywne animacje czy obsługa danych w czasie rzeczywistym wymagają wysokowydajnych metod aktualizacji widoku. React i Angular podchodzą do tych wyzwań w różny sposób: React opiera się na deklaratywnym modelu komponentów i mechanizmie wirtualnego drzewa widoku (Virtual DOM), podczas gdy Angular implementuje kompleksową architekturę z silnym systemem wstrzykiwania zależności oraz strukturalnym podejściem do detekcji zmian. Wybór między tymi technologiami często determinuje nie tylko wydajność końcową produktu, ale także ergonomię pracy deweloperów oraz łatwość utrzymania kodu w długim terminie.
@@ -211,6 +261,7 @@ function getDiscountedPrice(order: Order): number {
   return order.price * (1 - order.discountRatio);
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 Zarówno JavaScript, jak i TypeScript stanowią fundament rozwoju nowoczesnych narzędzi frontendowych, umożliwiając tworzenie skalowalnych, modularnych i wydajnych aplikacji webowych. Zrozumienie ich kluczowych mechanizmów, takich jak model zdarzeń, moduły ES6, klasy oraz statyczne typowanie, jest niezbędne dla analizy architektury oraz sposobu działania frameworków React i Angular, omówionych w następnych podsekcjach.
 
@@ -246,6 +297,7 @@ const Welcome = ({ name }) => {
   );
 };
 \end{lstlisting}
+\source{Opracowanie własne}
 
 Z perspektywy wydajności istotne znaczenie ma mechanizm ponownego renderowania komponentów, który w React może być optymalizowany poprzez odpowiednie zarządzanie zmianami stanu oraz właściwą organizację struktury komponentowej. Wprowadzenie hooków, takich jak \textit{useState}, \textit{useEffect} czy \textit{useMemo}, umożliwiło bardziej elastyczne zarządzanie cyklem życia komponentów oraz kontrolę nad tym, kiedy i dlaczego następuje ponowne renderowanie. React dostarcza również narzędzia wspierające analizę wydajności, takie jak profiler, co ułatwia identyfikowanie komponentów generujących nadmiarowe odświeżenia.
 
@@ -265,6 +317,7 @@ Fundamentem wydajności Reacta jest mechanizm Virtual DOM. Jest to lekka repreze
     \includegraphics[width=0.8\textwidth]{images/react-dom.png}
     \caption{Schemat procesu aktualizacji Virtual DOM i rzeczywistego DOM w React.}
     \label{fig:react-vdom}
+    \source{}
 \end{figure}
 
 Wraz z wprowadzeniem architektury React Fiber przebudowano wewnętrzny mechanizm odpowiedzialny za przetwarzanie aktualizacji komponentów. Fiber stanowi asynchroniczny, priorytetowy model renderowania, który umożliwia dzielenie procesu odświeżania na mniejsze części oraz nadawanie priorytetów poszczególnym aktualizacjom \cite{React_Concurrent_Docs}. Dzięki temu React może bardziej efektywnie reagować na interakcje użytkownika oraz zapewniać płynność działania nawet wtedy, gdy aplikacja wykonuje złożone operacje w tle.
@@ -294,6 +347,7 @@ function Counter() {
   );
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 W architekturze komponentowej kluczowe znaczenie ma mechanizm przekazywania danych poprzez właściwości (ang. \textit{props}). Komponent nadrzędny może udostępnić fragment swojego stanu komponentom podrzędnym, które otrzymują go jako parametry wejściowe. Komunikacja w przeciwnym kierunku — od komponentu podrzędnego do nadrzędnego — realizowana jest poprzez przekazywanie funkcji zwrotnych (ang. \textit{callback functions}). W przypadku rozbudowanych struktur, gdzie dane muszą zostać przekazane przez wiele pośrednich poziomów, pojawia się wyzwanie określane jako \textit{prop drilling}, co może prowadzić do zmniejszenia czytelności kodu i utrudniać jego konserwację.
 
@@ -330,6 +384,7 @@ function Counter() {
   );
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 W przypadku gdy stan musi być współdzielony pomiędzy wieloma komponentami, React oferuje mechanizm kontekstu (Context API). Pozwala on na przekazywanie danych pomiędzy odległymi elementami drzewa komponentów bez konieczności ręcznego przekazywania ich przez kolejne poziomy hierarchii. Mechanizm ten jest przydatny m.in. do obsługi ustawień aplikacji, motywów graficznych czy globalnych danych, jednak jego nadmierne stosowanie może prowadzić do niepotrzebnych renderów, jeśli struktura kontekstu nie została odpowiednio zaprojektowana.
 
@@ -351,6 +406,7 @@ function AppProvider({ children }) {
   );
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 W przypadku dużych aplikacji lub projektów o skomplikowanej logice wymiany danych często stosowane są zewnętrzne biblioteki do zarządzania stanem, takie jak Redux, MobX lub Zustand. Redux opiera się na koncepcji pojedynczego źródła prawdy (store) oraz niezmienności danych, co zapewnia wysoki stopień przewidywalności i ułatwia debugowanie, lecz wymaga bardziej rozbudowanej konfiguracji. MobX z kolei stosuje podejście reaktywne, automatycznie monitorując zależności i aktualizując widok tylko tam, gdzie zaszły zmiany. Nowsze rozwiązania, takie jak Zustand, upraszczają zarządzanie stanem, wprowadzając prosty i deklaratywny interfejs oparty na hookach.
 
@@ -364,6 +420,7 @@ const Result = memo(function Result({ items }) {
   return <div>{sum}</div>;
 });
 \end{lstlisting}
+\source{Opracowanie własne}
 
 Podsumowując, React dostarcza elastyczne mechanizmy zarządzania stanem, umożliwiające realizację zarówno prostych, jak i bardzo zaawansowanych scenariuszy. Wybór odpowiedniego podejścia zależy od wielkości i charakterystyki aplikacji, jednak świadome wykorzystanie dostępnych narzędzi ma kluczowe znaczenie dla utrzymania przejrzystości kodu oraz zapewnienia wysokiej wydajności renderowania interfejsu.
 
@@ -400,6 +457,7 @@ function SortingVisualizer({ data }) {
   );
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 Oprócz narzędzi programistycznych React udostępnia także profiler, umożliwiający analizę czasu renderowania poszczególnych komponentów. Profilowanie jest kluczowym elementem optymalizacji, ponieważ pozwala precyzyjnie ustalić, które elementy interfejsu generują nadmiarowe aktualizacje lub wykonują kosztowne operacje podczas renderowania.
 
@@ -439,6 +497,7 @@ export class UserComponent {
   updateStatus() { /* logika */ }
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 Współczesny Angular (od wersji 17+) przeszedł rewolucję dzięki wprowadzeniu Sygnałów (\textit{Signals}). Sygnały pozwalają frameworkowi na precyzyjne śledzenie zależności (\textit{fine-grained reactivity}), co oznacza, że Angular wie dokładnie, która część szablonu zależy od której wartości stanu.
 
@@ -453,6 +512,7 @@ Fundamentalnym mechanizmem Angulara, determinującym jego wydajność, jest syst
     \includegraphics[width=0.85\textwidth]{images/angular-change-detection.png}
     \caption{Tradycyjny model detekcji zmian w Angularze oparty na Zone.js (sprawdzanie od góry drzewa).}
     \label{fig:angular-cd}
+    \source{}
 \end{figure}
 
 \subsection{Zarządzanie stanem w Angular}
@@ -471,6 +531,7 @@ export class SortingStateService {
   }
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 Nowoczesny Angular wprowadza Sygnały jako alternatywę dla stanu synchronicznego. Sygnały eliminują potrzebę ręcznego zarządzania subskrypcjami i oferują naturalną składnię dla operacji takich jak obliczanie wartości pochodnych (\texttt{computed}) czy wywoływanie efektów (\texttt{effect}).
 
@@ -492,6 +553,7 @@ export class VisualizerComponent {
   }
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 W bardzo dużych aplikacjach stosuje się NgRx, który implementuje wzorzec Redux, zapewniając pełną przewidywalność zmian stanu i ułatwiając debugowanie.
 
@@ -552,6 +614,7 @@ async function bubbleSort(array: number[], update: (arr: number[]) => void) {
   }
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 \subsection{Metody wizualizacji algorytmów}
 Wizualizacja algorytmów sortowania w aplikacjach webowych sprowadza się do graficznej reprezentacji elementów zbioru (najczęściej jako słupków o różnej wysokości, gdzie wysokość odpowiada wartości elementu) oraz dynamicznej aktualizacji ich wyglądu w czasie rzeczywistym.
@@ -623,6 +686,7 @@ export type SortingProgress = {
   sorted?: number[];
 }
 \end{lstlisting}
+\source{Opracowanie własne}
 
 Hook \texttt{useSorting} zarządza indeksem aktywnego kroku oraz interwałem czasowym za pomocą \texttt{window.setInterval}, co pozwala na odseparowanie tempa animacji od szybkości renderowania samej biblioteki React.
 
@@ -675,6 +739,7 @@ this.sortingState = signal<SortingState>({
   sortedIndices: []
 });
 \end{lstlisting}
+\source{Opracowanie własne}
 
 Aktualizacja widoku odbywa się poprzez metodę \texttt{update()}, która wyzwala asynchroniczny proces detekcji zmian specyficzny dla nowego modelu reaktywności Angulara.
 
@@ -695,7 +760,7 @@ Wszystkie pomiary wydajności zostały przeprowadzone w kontrolowanym środowisk
 \begin{itemize}
     \item \textbf{Sprzęt:} Laptop z procesorem Apple M4 Pro, 24 GB pamięci RAM.
     \item \textbf{System operacyjny:} macOS Tahoe 26.2.
-    \item \textbf{Przeglądarka:} Google Chrome (wersja 126), uruchomiona w trybie incognito bez aktywnych rozszerzeń.
+    \item \textbf{Przeglądarka:} Google Chrome (wersja 143), uruchomiona w trybie incognito bez aktywnych rozszerzeń.
     \item \textbf{Tryb pracy aplikacji:} Wersje produkcyjne (po wykonaniu kompilacji \texttt{npm run build}), serwowane lokalnie za pomocą serwera statycznego.
 \end{itemize}
 
@@ -769,19 +834,14 @@ Synteza tych danych pozwoli na sformułowanie wniosków dotyczących tego, któr
 
 \clearpage
 \phantomsection
-\addcontentsline{toc}{chapter}{Bibliografia}
-\renewcommand{\bibname}{Bibliografia}
+\addcontentsline{toc}{chapter}{BIBLIOGRAFIA}
+\renewcommand{\bibname}{BIBLIOGRAFIA}
 \bibliographystyle{unsrt}
 \bibliography{references}
 
 \clearpage
 \phantomsection
-\addcontentsline{toc}{chapter}{Spis rysunków}
+\addcontentsline{toc}{chapter}{SPIS RYSUNKÓW}
 \listoffigures
-
-\clearpage
-\phantomsection
-\addcontentsline{toc}{chapter}{Spis listingów}
-\lstlistoflistings
 
 \end{document}
