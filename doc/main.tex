@@ -91,8 +91,8 @@
   \renewcommand{\footrulewidth}{0pt}
 }
 
-\BeforeBeginEnvironment{lstlisting}{\begin{minipage}{\linewidth}}
-\AfterEndEnvironment{lstlisting}{\end{minipage}\vspace{-5pt}}
+\BeforeBeginEnvironment{lstlisting}{\vspace{15pt}\begin{minipage}{\linewidth}}
+\AfterEndEnvironment{lstlisting}{\end{minipage}}
 
 \widowpenalty=10000
 \clubpenalty=10000
@@ -158,6 +158,7 @@
     inputencoding=utf8,
     keepspaces=true,
     captionpos=b,
+    aboveskip=0pt,
     belowskip=0pt,
     belowcaptionskip=0pt,
     literate={ą}{ą}1 {ć}{ć}1 {ę}{ę}1 {ł}{ł}1 {ń}{ń}1 {ó}{ó}1 {ś}{ś}1 {ź}{ź}1 {ż}{ż}1
