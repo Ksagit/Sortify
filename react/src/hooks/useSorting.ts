@@ -84,8 +84,10 @@ export function quickSortSteps(input: number[]): SortStep[] {
 		{ left: 0, right: a.length - 1 },
 	];
 
-	while (stack.length) {
-		const { left, right } = stack.pop()!;
+	while (stack.length > 0) {
+		const current = stack.pop();
+		if (!current) continue;
+		const { left, right } = current;
 		if (left >= right) {
 			if (left === right) {
 				sorted.add(left);
@@ -160,15 +162,27 @@ export function mergeSortSteps(input: number[]): SortStep[] {
 		while (i < left.length && j < right.length) {
 			const li = l + i;
 			const rj = m + 1 + j;
-			steps.push({ values: [...a], comparing: [li, rj], sorted: [...sorted] });
+			steps.push({
+				values: [...a],
+				comparing: [li, rj],
+				sorted: [...sorted],
+			});
 
 			if (left[i] <= right[j]) {
 				a[k] = left[i];
-				steps.push({ values: [...a], swapping: [k, li], sorted: [...sorted] });
+				steps.push({
+					values: [...a],
+					swapping: [k, li],
+					sorted: [...sorted],
+				});
 				i++;
 			} else {
 				a[k] = right[j];
-				steps.push({ values: [...a], swapping: [k, rj], sorted: [...sorted] });
+				steps.push({
+					values: [...a],
+					swapping: [k, rj],
+					sorted: [...sorted],
+				});
 				j++;
 			}
 			k++;
@@ -177,7 +191,11 @@ export function mergeSortSteps(input: number[]): SortStep[] {
 		while (i < left.length) {
 			const li = l + i;
 			a[k] = left[i];
-			steps.push({ values: [...a], swapping: [k, li], sorted: [...sorted] });
+			steps.push({
+				values: [...a],
+				swapping: [k, li],
+				sorted: [...sorted],
+			});
 			i++;
 			k++;
 		}
@@ -185,7 +203,11 @@ export function mergeSortSteps(input: number[]): SortStep[] {
 		while (j < right.length) {
 			const rj = m + 1 + j;
 			a[k] = right[j];
-			steps.push({ values: [...a], swapping: [k, rj], sorted: [...sorted] });
+			steps.push({
+				values: [...a],
+				swapping: [k, rj],
+				sorted: [...sorted],
+			});
 			j++;
 			k++;
 		}

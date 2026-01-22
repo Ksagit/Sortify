@@ -32,7 +32,12 @@ const SPEED_MIN = 50;
 const SPEED_MAX = 600;
 
 export default function Home() {
-	const bubble = useBubbleSort({ size: 32, min: 10, max: 120, autoplay: true });
+	const bubble = useBubbleSort({
+		size: 32,
+		min: 10,
+		max: 120,
+		autoplay: true,
+	});
 	const quick = useQuickSort({ size: 32, min: 10, max: 120, autoplay: true });
 	const merge = useMergeSort({ size: 32, min: 10, max: 120, autoplay: true });
 	const heap = useHeapSort({ size: 32, min: 10, max: 120, autoplay: true });
