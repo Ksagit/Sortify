@@ -1,0 +1,16 @@
+[x] -  zrodal do kodu zrodlowego (opracowanie wlasne)
+[x] - cos nie tak z numerami stron
+[x] - 2.1 za krotki - kilka stron 2.2.x tez za krotkie
+
+[x] - usunac streszcenie
+[x] - we wstepie ogolna charakterystyka zrodle
+[x] - ai czy w jakim zakresie 
+[x] - zrodla do 1.1
+[x] - istotnym paradygmantem jest deklaratywne zrodlo generalnie 1.3 
+[x] - 1.4 zrodla
+[x] - str 31 zrodla na poczatku wyliczanki to samo 32
+[x] - zrodla do rysunkow dodac numerek do tytulu rysunku zeby byl w bibliografii
+[x] - acessed w bibliografi na otwarcie czy cos 
+
+[ ] - metodyka moze do przemyslenia tytul rodzial 2
+[ ] - nie pasuje tytul rozdzialu 1 - ale to moze na potem
