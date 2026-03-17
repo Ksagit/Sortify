@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { SortingProgressChart } from "src/components/dashboard/SortingProgressChart";
 import { AlgorithmCards } from "src/components/landing-page/AlgorithmCards";
 import { FeaturesSection } from "src/components/landing-page/FeaturesSection";
@@ -10,7 +11,19 @@ import {
 	CardHeader,
 	CardTitle,
 } from "src/components/ui/card";
-import { useQuickSort } from "src/hooks/useSorting";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "src/components/ui/select";
+import { useSorting } from "src/hooks/useSorting";
+import {
+	SORTING_ALGORITHM_ORDER,
+	SORTING_ALGORITHMS,
+	type SortingAlgorithmKey,
+} from "src/lib/sortingAlgorithms";
 
 export function meta() {
 	return [
@@ -24,13 +37,19 @@ export function meta() {
 }
 
 export default function LandingPage() {
-	const quick = useQuickSort({
+	const [selectedAlgorithm, setSelectedAlgorithm] =
+		useState<SortingAlgorithmKey>("quick");
+	const sorter = useSorting(SORTING_ALGORITHMS[selectedAlgorithm].steps, {
 		size: 28,
 		min: 10,
 		max: 120,
 		autoplay: true,
 		speed: 180,
 	});
+
+	useEffect(() => {
+		sorter.play();
+	}, [selectedAlgorithm, sorter]);
 
 	return (
 		<div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-muted to-background pb-10">
@@ -42,15 +61,41 @@ export default function LandingPage() {
 						<FeaturesSection />
 						<Card>
 							<CardHeader className="border-b py-2">
-								<CardTitle className="text-base">Quick Sort</CardTitle>
+								<div className="flex items-center justify-between gap-2">
+									<CardTitle className="text-base">
+										{SORTING_ALGORITHMS[selectedAlgorithm].label}
+									</CardTitle>
+									<Select
+										value={selectedAlgorithm}
+										onValueChange={(value) =>
+											setSelectedAlgorithm(
+												value as SortingAlgorithmKey,
+											)
+										}
+									>
+										<SelectTrigger
+											className="h-7 w-[150px] text-[11px]"
+											aria-label="Select sorting algorithm"
+										>
+											<SelectValue />
+										</SelectTrigger>
+										<SelectContent>
+											{SORTING_ALGORITHM_ORDER.map((option) => (
+												<SelectItem key={option} value={option}>
+													{SORTING_ALGORITHMS[option].label}
+												</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
 								<CardAction className="text-muted-foreground text-xs">
-									Step {quick.index + 1}/{Math.max(quick.steps.length, 1)}
+									Step {sorter.index + 1}/{Math.max(sorter.steps.length, 1)}
 								</CardAction>
 							</CardHeader>
 							<CardContent>
 								<SortingProgressChart
 									title=""
-									progress={quick.step}
+									progress={sorter.step}
 									compareColor="#f59e0b"
 									swapColor="#ef4444"
 									sortedColor="#10b981"
@@ -60,7 +105,7 @@ export default function LandingPage() {
 							</CardContent>
 							<CardFooter className="border-t py-2">
 								<div className="text-muted-foreground text-xs">
-									n = {quick.step.values.length}
+									n = {sorter.step.values.length}
 								</div>
 							</CardFooter>
 						</Card>

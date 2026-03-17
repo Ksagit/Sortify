@@ -11,11 +11,21 @@ import {
 	CardTitle,
 } from "src/components/ui/card";
 import {
-	useBubbleSort,
-	useHeapSort,
-	useMergeSort,
-	useQuickSort,
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "src/components/ui/select";
+	import {
+	useSorting,
+	type UseSortingResult,
 } from "src/hooks/useSorting";
+import {
+	SORTING_ALGORITHM_ORDER,
+	SORTING_ALGORITHMS,
+	type SortingAlgorithmKey,
+} from "src/lib/sortingAlgorithms";
 
 export function meta() {
 	return [
@@ -32,90 +42,106 @@ const SPEED_MIN = 50;
 const SPEED_MAX = 600;
 
 export default function Home() {
-	const bubble = useBubbleSort({
-		size: 32,
-		min: 10,
-		max: 120,
-		autoplay: true,
-	});
-	const quick = useQuickSort({ size: 32, min: 10, max: 120, autoplay: true });
-	const merge = useMergeSort({ size: 32, min: 10, max: 120, autoplay: true });
-	const heap = useHeapSort({ size: 32, min: 10, max: 120, autoplay: true });
-
 	const [isPlaying, setIsPlaying] = useState(true);
 	const [delay, setDelay] = useState(200);
+	const [selectedAlgorithms, setSelectedAlgorithms] = useState<
+		SortingAlgorithmKey[]
+	>(SORTING_ALGORITHM_ORDER);
+
+	const sorter0 = useSorting(
+		SORTING_ALGORITHMS[selectedAlgorithms[0]].steps,
+		{
+			size: 32,
+			min: 10,
+			max: 120,
+			autoplay: true,
+			speed: delay,
+		},
+	);
+	const sorter1 = useSorting(
+		SORTING_ALGORITHMS[selectedAlgorithms[1]].steps,
+		{
+			size: 32,
+			min: 10,
+			max: 120,
+			autoplay: true,
+			speed: delay,
+		},
+	);
+	const sorter2 = useSorting(
+		SORTING_ALGORITHMS[selectedAlgorithms[2]].steps,
+		{
+			size: 32,
+			min: 10,
+			max: 120,
+			autoplay: true,
+			speed: delay,
+		},
+	);
+	const sorter3 = useSorting(
+		SORTING_ALGORITHMS[selectedAlgorithms[3]].steps,
+		{
+			size: 32,
+			min: 10,
+			max: 120,
+			autoplay: true,
+			speed: delay,
+		},
+	);
+	const sorters: UseSortingResult[] = [sorter0, sorter1, sorter2, sorter3];
 
 	const sliderValue = useMemo(() => SPEED_MIN + SPEED_MAX - delay, [delay]);
-
-	const algorithms = [
-		{
-			name: "Bubble Sort",
-			data: bubble,
-			accent: "from-amber-500/70 via-amber-500/20 to-transparent",
-		},
-		{
-			name: "Quick Sort",
-			data: quick,
-			accent: "from-sky-500/70 via-sky-500/20 to-transparent",
-		},
-		{
-			name: "Merge Sort",
-			data: merge,
-			accent: "from-emerald-500/70 via-emerald-500/20 to-transparent",
-		},
-		{
-			name: "Heap Sort",
-			data: heap,
-			accent: "from-purple-500/70 via-purple-500/20 to-transparent",
-		},
-	] as const;
+	const cards = sorters.map((data, index) => {
+		const key = selectedAlgorithms[index];
+		const algorithm = SORTING_ALGORITHMS[key];
+		return {
+			id: index,
+			key,
+			label: algorithm.label,
+			accent: algorithm.accent,
+			data,
+		};
+	});
 
 	useEffect(() => {
 		if (isPlaying) {
-			bubble.play();
-			quick.play();
-			merge.play();
-			heap.play();
-		} else {
-			bubble.pause();
-			quick.pause();
-			merge.pause();
-			heap.pause();
+			sorters.forEach((sorter) => sorter.play());
+			return;
 		}
-	}, [isPlaying, bubble, quick, merge, heap]);
+		sorters.forEach((sorter) => sorter.pause());
+	}, [isPlaying, sorter0, sorter1, sorter2, sorter3]);
 
 	useEffect(() => {
 		if (!isPlaying) return;
-		if (bubble.isDone && quick.isDone && merge.isDone && heap.isDone) {
+		if (sorters.every((sorter) => sorter.isDone)) {
 			setIsPlaying(false);
 			return;
 		}
 
 		const id = window.setInterval(
 			() => {
-				bubble.next();
-				quick.next();
-				merge.next();
-				heap.next();
+				sorters.forEach((sorter) => sorter.next());
 			},
 			Math.max(SPEED_MIN, delay),
 		);
 
 		return () => window.clearInterval(id);
-	}, [isPlaying, delay, bubble, quick, merge, heap]);
+	}, [isPlaying, delay, sorter0, sorter1, sorter2, sorter3]);
 
 	function restart() {
-		bubble.restart();
-		quick.restart();
-		merge.restart();
-		heap.restart();
+		sorters.forEach((sorter) => sorter.restart());
 	}
 
 	function shuffle() {
-		bubble.shuffle();
-		quick.shuffle();
-		merge.shuffle();
-		heap.shuffle();
+		sorters.forEach((sorter) => sorter.shuffle());
+	}
+
+	function setAlgorithmForCard(index: number, next: SortingAlgorithmKey) {
+		setSelectedAlgorithms((prev) => {
+			const updated = [...prev];
+			updated[index] = next;
+			return updated;
+		});
 	}
 
 	return (
@@ -166,10 +192,7 @@ export default function Home() {
 										const value = Number(event.target.value);
 										const nextDelay = SPEED_MIN + SPEED_MAX - value;
 										setDelay(nextDelay);
-										bubble.setSpeed(nextDelay);
-										quick.setSpeed(nextDelay);
-										merge.setSpeed(nextDelay);
-										heap.setSpeed(nextDelay);
+										sorters.forEach((sorter) => sorter.setSpeed(nextDelay));
 									}}
 									className="h-1.5 w-40 cursor-pointer appearance-none rounded bg-muted accent-primary"
 								/>
@@ -180,7 +203,7 @@ export default function Home() {
 						</div>
 
 						<div className="grid gap-2 text-xs sm:grid-cols-2 lg:grid-cols-4">
-							{algorithms.map(({ name, data }) => {
+							{cards.map(({ id, label, data }) => {
 								const status = data.isDone
 									? "Completed"
 									: data.isPlaying
@@ -194,10 +217,10 @@ export default function Home() {
 
 								return (
 									<div
-										key={name}
+										key={`${id}-${label}`}
 										className="flex items-center justify-between rounded-md border border-border/60 bg-background/60 px-3 py-2"
 									>
-										<span className="font-medium text-foreground">{name}</span>
+										<span className="font-medium text-foreground">{label}</span>
 										<span
 											className={`flex items-center gap-1 rounded-full px-2 py-1 ${badgeClasses}`}
 										>
@@ -216,7 +239,7 @@ export default function Home() {
 				</Card>
 
 				<div className="grid flex-1 grid-cols-1 gap-4 overflow-hidden pt-2 lg:grid-cols-2">
-					{algorithms.map(({ name, data, accent }) => {
+					{cards.map(({ id, label, data, accent, key }) => {
 						const status = data.isDone
 							? "Completed"
 							: data.isPlaying
@@ -235,14 +258,39 @@ export default function Home() {
 
 						return (
 							<Card
-								key={name}
+								key={`${id}-${label}-card`}
 								className="relative overflow-hidden border-border/60 bg-background/80 shadow-lg backdrop-blur"
 							>
 								<div
 									className={`pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${accent}`}
 								/>
 								<CardHeader className="border-border/60 border-b py-2">
-									<CardTitle className="text-base">{name}</CardTitle>
+									<div className="flex items-center justify-between gap-2">
+										<CardTitle className="text-base">{label}</CardTitle>
+										<Select
+											value={key}
+											onValueChange={(value) =>
+												setAlgorithmForCard(
+													id,
+													value as SortingAlgorithmKey,
+												)
+											}
+										>
+											<SelectTrigger
+												className="h-7 w-[150px] text-[11px]"
+												aria-label="Select sorting algorithm"
+											>
+												<SelectValue />
+											</SelectTrigger>
+											<SelectContent>
+												{SORTING_ALGORITHM_ORDER.map((option) => (
+													<SelectItem key={option} value={option}>
+														{SORTING_ALGORITHMS[option].label}
+													</SelectItem>
+												))}
+											</SelectContent>
+										</Select>
+									</div>
 									<CardAction className="text-muted-foreground text-xs">
 										Step {data.index + 1}/{Math.max(data.steps.length, 1)}
 									</CardAction>
