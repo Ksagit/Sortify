@@ -1,0 +1,78 @@
+<div class="landing-page">
+  <div class="landing-glow landing-glow--primary"></div>
+  <div class="landing-glow landing-glow--secondary"></div>
+
+  <section class="hero-section">
+    <div class="content-shell content-shell--narrow hero-copy">
+      <h1>
+        Visualize
+        <span class="gradient-text">Sorting Algorithms</span>
+      </h1>
+      <p>
+        Interactive animations that make complex sorting algorithms easy to understand. Watch data come to life as it gets sorted step by step.
+      </p>
+      <a hlmBtn size="lg" class="hero-button" routerLink="/Dashboard">Start Visualizing</a>
+    </div>
+  </section>
+
+  <section class="content-shell algorithm-grid">
+    @for (card of algorithmCards; track card.title) {
+      <article hlmCard class="feature-card" [class]="'feature-card feature-card--' + card.palette">
+        <div hlmCardHeader class="feature-card__header">
+          <div class="feature-card__badge">{{ card.shortLabel }}</div>
+          <div>
+            <h2 hlmCardTitle>{{ card.title }}</h2>
+          </div>
+        </div>
+        <div hlmCardContent class="feature-card__content">
+          <p>{{ card.description }}</p>
+          <span hlmBadge variant="secondary" class="complexity-badge">{{ card.complexity }}</span>
+        </div>
+      </article>
+    }
+  </section>
+
+  <section class="content-shell insight-grid">
+    <div class="insight-copy">
+      <h2>
+        Learn Through
+        <span>Interactive Experience</span>
+      </h2>
+
+      <div class="insight-list">
+        @for (feature of features; track feature.title) {
+          <div class="insight-item">
+            <div class="insight-item__icon" [class]="'insight-item__icon insight-item__icon--' + feature.palette">
+              {{ feature.icon }}
+            </div>
+            <div>
+              <h3>{{ feature.title }}</h3>
+              <p>{{ feature.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <article hlmCard class="preview-card">
+      <header hlmCardHeader>
+        <h3 hlmCardTitle>Quick Sort</h3>
+        <span>Step {{ quickSortPreview.index() + 1 }}/{{ quickSortStepCount() }}</span>
+      </header>
+
+      <div hlmCardContent class="preview-card__body">
+        <app-sorting-progress-chart
+          [title]="''"
+          [progress]="quickSortPreview.step()"
+          [compareColor]="'#f59e0b'"
+          [swapColor]="'#ef4444'"
+          [sortedColor]="'#10b981'"
+          [pivotColor]="'#3b82f6'"
+          [height]="160"
+        ></app-sorting-progress-chart>
+      </div>
+
+      <footer hlmCardFooter>n = {{ quickSortPreview.step().values.length }}</footer>
+    </article>
+  </section>
+</div>

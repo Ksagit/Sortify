@@ -1,0 +1,32 @@
+<div class="chart-shell">
+  @if (title()) {
+    <h3 class="chart-title">{{ title() }}</h3>
+  }
+
+  <div class="chart-stage" [style.height.px]="height()">
+    @for (line of gridLines; track line) {
+      <span class="grid-line" [style.bottom.%]="line"></span>
+    }
+
+    <div class="bars">
+      @for (bar of bars(); track bar.index) {
+        <div
+          class="bar"
+          [style.height]="bar.height"
+          [style.background]="bar.fill"
+          [attr.aria-label]="'Element ' + bar.index + ', value ' + bar.value"
+          [title]="'Index ' + bar.index + ': ' + bar.value"
+        ></div>
+      }
+    </div>
+  </div>
+
+  <div class="legend">
+    @for (entry of legend(); track entry.label) {
+      <span class="legend-item">
+        <span class="legend-dot" [style.background]="entry.color"></span>
+        {{ entry.label }}
+      </span>
+    }
+  </div>
+</div>

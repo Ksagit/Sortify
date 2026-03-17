@@ -1,0 +1,79 @@
+:host {
+  display: block;
+}
+
+.chart-shell {
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--card) 88%, transparent);
+  padding: 1rem;
+}
+
+.chart-title {
+  margin: 0 0 0.75rem;
+  color: var(--card-foreground);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.chart-stage {
+  position: relative;
+  border-radius: 0.85rem;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--card) 40%, transparent), transparent),
+    color-mix(in srgb, var(--background) 70%, transparent);
+  overflow: hidden;
+  padding: 1rem 0.25rem 0.25rem;
+}
+
+.grid-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.bars {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-auto-flow: column;
+  align-items: end;
+  gap: 0.18rem;
+  height: 100%;
+}
+
+.bar {
+  width: 100%;
+  min-height: 4%;
+  border-radius: 0.35rem 0.35rem 0 0;
+  transition:
+    height 120ms ease,
+    background-color 120ms ease,
+    transform 120ms ease;
+}
+
+.bar:hover {
+  transform: translateY(-2px);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 0.9rem;
+  color: var(--muted-foreground);
+  font-size: 0.72rem;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.legend-dot {
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 0.2rem;
+}

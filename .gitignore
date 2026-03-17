@@ -16,7 +16,7 @@
 *.ind
 *.run.xml
 *.bcf
-*.lol
+*.lol§
 
 # OS junk
 .DS_Store
