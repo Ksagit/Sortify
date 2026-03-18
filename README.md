@@ -1,88 +1,117 @@
-# Master's Thesis
+# Sortify Thesis Workspace
 
-This repository contains my Master's Thesis as well as the projects created during writing it.
+Repozytorium zawiera materiały do pracy magisterskiej oraz dwa porównywane projekty frontendowe: aplikację w React i aplikację w Angularze. Obie implementacje rozwiązują ten sam problem: wizualizację algorytmów sortowania w kontrolowanych, deterministycznych warunkach, tak aby można było porównywać zachowanie frameworków przy intensywnych aktualizacjach interfejsu.
 
-## Workspace Layout
+## Zawartość repozytorium
 
-- `apps/react` - React version of Sortify
-- `apps/angular` - Angular version of Sortify
-- `apps/thesis` - thesis sources
+- `apps/react` – wersja Sortify zbudowana w React 19 i React Router 7
+- `apps/angular` – wersja Sortify zbudowana w Angular 21
+- `apps/thesis` – źródła pracy magisterskiej w LaTeX
 
-## Monorepo Commands
+## Co potrafią aplikacje
 
-```bash
-# Install dependencies for the whole workspace
-pnpm install
+Obie aplikacje są obecnie ujednolicone pod kątem najważniejszych założeń eksperymentu:
 
-# Run both apps through Turbo
-pnpm dev
+- wspólny zestaw algorytmów: Bubble Sort, Quick Sort, Merge Sort, Insertion Sort,
+- deterministyczne dane wejściowe oparte o wspólny seed,
+- wybór wzorca danych wejściowych: `Random`, `Sorted`, `Reverse Sorted`, `Many Duplicates`,
+- regulacja prędkości animacji w zakresie `1–1000 ms`,
+- wybór rozmiaru zbioru danych z poziomu interfejsu,
+- równoległe porównanie czterech przebiegów na dashboardzie,
+- preview algorytmów na landing page,
+- własny renderer słupków oparty o proste elementy DOM, bez zewnętrznej biblioteki wykresów.
 
-# Run only React
-pnpm dev:react
+## Struktura workspace
 
-# Run only Angular
-pnpm dev:angular
+Repozytorium działa jako monorepo `pnpm` z wykorzystaniem `turbo`.
 
-# Build only the thesis PDF
-pnpm build:thesis
-
-# Build all apps
-pnpm build
+```text
+.
+├── apps/
+│   ├── angular/
+│   ├── react/
+│   └── thesis/
+├── package.json
+├── pnpm-workspace.yaml
+└── turbo.json
 ```
 
-## Sortify - React
+## Wymagania
 
-Interactive sorting algorithm visualizer built with React Router v7 and Tailwind CSS.
+Do pracy z repozytorium potrzebne są:
 
-## Sortify - Angular
+- `Node.js` w aktualnej wersji LTS,
+- `pnpm`,
+- kompletne środowisko LaTeX z `xelatex` i `latexmk`, jeśli chcesz budować PDF pracy.
 
-Interactive sorting algorithm visualizer rebuilt in Angular with standalone components, signals and Angular Router.
-
-### Features
-
-- Visual representation of sorting algorithms
-- Step-by-step execution
-- Adjustable animation speed
-- Multiple sorting algorithms (Bubble Sort, Merge Sort, Quick Sort)
-
-### Getting Started
+## Instalacja
 
 ```bash
-# Install dependencies from the repo root
 pnpm install
+```
 
-# Start only the React app
+## Najważniejsze komendy
+
+Z poziomu katalogu głównego:
+
+```bash
+# uruchomienie obu aplikacji równolegle
+pnpm dev
+
+# uruchomienie tylko React
 pnpm dev:react
 
-# Build for production
+# uruchomienie tylko Angular
+pnpm dev:angular
+
+# build całego monorepo
+pnpm build
+
+# build pracy magisterskiej
+pnpm build:thesis
+```
+
+## Uruchamianie poszczególnych części
+
+### React
+
+```bash
+pnpm dev:react
 pnpm --filter @sortify/react build
 ```
 
-### Angular Getting Started
+Stack technologiczny:
+
+- React 19
+- React Router 7
+- TypeScript
+- Vite
+- Tailwind CSS v4
+
+### Angular
 
 ```bash
-# Install dependencies from the repo root
-pnpm install
-
-# Start only the Angular app
 pnpm dev:angular
-
-# Build for production
 pnpm --filter @sortify/angular build
 ```
 
-### Tech Stack
-
-- React 19
-- React Router v7
-- Tailwind CSS v4
-- TypeScript
-- Vite
-
-## Angular Tech Stack
+Stack technologiczny:
 
 - Angular 21
 - Angular Router
 - Angular Signals
 - TypeScript
 - SCSS
+- Tailwind CSS v4
+
+### Praca magisterska
+
+```bash
+pnpm build:thesis
+```
+
+PDF jest generowany w katalogu `apps/thesis/dist`.
+
+## Cel repozytorium
+
+Repozytorium nie jest zwykłym zbiorem dwóch niezależnych demo-aplikacji. Jego celem jest utrzymanie możliwie porównywalnych implementacji tego samego problemu w dwóch frameworkach oraz równoległe dokumentowanie tych decyzji w pracy magisterskiej. Z tego względu wiele decyzji architektonicznych jest świadomie konserwatywnych: mniej chodzi tu o maksymalną rozbudowę funkcji, a bardziej o kontrolę zmiennych wpływających na interpretację zachowania aplikacji.

@@ -53,7 +53,7 @@ export class SortingProgressChartComponent {
   readonly isDense = computed(() => this.barCount() >= 128);
   readonly isUltraDense = computed(() => this.barCount() >= 192);
   readonly gridTemplateColumns = computed(
-    () => `repeat(${Math.max(this.barCount(), 1)}, minmax(0, 1fr))`
+    () => `repeat(${Math.max(this.barCount(), 1)}, minmax(0, 1fr))`,
   );
 
   readonly legend = computed(() => [

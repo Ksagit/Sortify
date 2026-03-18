@@ -17,10 +17,7 @@ export class SortingPlayer {
   readonly step;
   readonly isDone;
 
-  constructor(
-    stepsFactory: SortingStepFactory,
-    options: SortingOptions = {},
-  ) {
+  constructor(stepsFactory: SortingStepFactory, options: SortingOptions = {}) {
     this.settings = {
       size: options.size ?? 32,
       min: options.min ?? 10,

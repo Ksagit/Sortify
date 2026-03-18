@@ -106,7 +106,9 @@ export const SortingProgressChart = memo(function SortingProgressChart({
         ))}
         <div
           className={`sort-chart-bars${isDense ? " sort-chart-bars--dense" : ""}`}
-          style={{ gridTemplateColumns: `repeat(${Math.max(barCount, 1)}, minmax(0, 1fr))` }}
+          style={{
+            gridTemplateColumns: `repeat(${Math.max(barCount, 1)}, minmax(0, 1fr))`,
+          }}
         >
           {bars.map((bar) => (
             <div
