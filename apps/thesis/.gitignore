@@ -1,0 +1,29 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lol
+*.lot
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdv
+
+# Latexmk and editor helpers
+*.synctex(busy)
+*.tmp
+*.temp
+/dist/
+
+# System and editor files
+.DS_Store
+.vscode/

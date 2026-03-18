@@ -1,5 +1,5 @@
 {
-	"name": "react",
+	"name": "@sortify/react",
 	"private": true,
 	"type": "module",
 	"scripts": {

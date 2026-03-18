@@ -1,25 +1,18 @@
-# LaTeX build artifacts
-*.aux
-*.fdb_latexmk
-*.fls
-*.log
-*.out
-*.toc
-*.xdv
-*.blg
-*.bbl
-*.synctex.gz
-*.lof
-*.lot
-*.idx
-*.ilg
-*.ind
-*.run.xml
-*.bcf
-*.lol§
-
 # OS junk
 .DS_Store
+Thumbs.db
 
-# IDEs
+# Editors and IDEs
 .vscode/
+.idea/
+.history/
+
+# Node workspaces
+node_modules/
+.turbo/
+
+# Package manager logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
