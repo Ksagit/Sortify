@@ -61,3 +61,66 @@
 		letter-spacing: var(--tracking-normal);
 	}
 }
+
+.sort-chart-shell {
+	background: color-mix(in srgb, var(--color-card) 88%, transparent);
+}
+
+.sort-chart-stage {
+	position: relative;
+	overflow: hidden;
+	border-radius: 0.85rem;
+	padding: 1rem 0.25rem 0.25rem;
+	background:
+		linear-gradient(180deg, color-mix(in srgb, var(--color-card) 40%, transparent), transparent),
+		color-mix(in srgb, var(--color-background) 70%, transparent);
+}
+
+.sort-chart-stage--dense {
+	padding: 0.85rem 0.1rem 0.2rem;
+}
+
+.sort-chart-grid-line {
+	position: absolute;
+	left: 0;
+	right: 0;
+	border-top: 1px solid color-mix(in srgb, var(--color-border) 80%, transparent);
+}
+
+.sort-chart-bars {
+	position: relative;
+	z-index: 1;
+	display: grid;
+	align-items: end;
+	gap: 0.18rem;
+	height: 100%;
+}
+
+.sort-chart-bars--dense {
+	gap: 0;
+}
+
+.sort-chart-bar {
+	width: 100%;
+	min-height: 4%;
+	border-radius: 0.35rem 0.35rem 0 0;
+	box-shadow: inset 0 0 0 0.5px color-mix(in srgb, white 10%, transparent);
+	transition:
+		height 120ms ease,
+		background-color 120ms ease,
+		transform 120ms ease;
+}
+
+.sort-chart-bar--dense {
+	border-radius: 0.08rem 0.08rem 0 0;
+	min-width: 1px;
+	box-shadow: none;
+}
+
+.sort-chart-bar--ultra-dense {
+	border-radius: 0;
+}
+
+.sort-chart-bar:hover {
+	transform: translateY(-2px);
+}

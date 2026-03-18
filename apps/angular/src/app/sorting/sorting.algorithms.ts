@@ -1,7 +1,46 @@
-import { SortStep } from './sorting.models';
+import { DataPattern, SortStep } from './sorting.models';
 
-export function randomArray(size: number, min = 5, max = 100): number[] {
-  return Array.from({ length: size }, () => Math.floor(Math.random() * (max - min + 1)) + min);
+function createSeededRng(seed: number) {
+  let state = seed >>> 0;
+
+  return () => {
+    state += 0x6d2b79f5;
+    let next = state;
+    next = Math.imul(next ^ (next >>> 15), next | 1);
+    next ^= next + Math.imul(next ^ (next >>> 7), next | 61);
+    return ((next ^ (next >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+export function randomArray(size: number, min = 5, max = 100, seed?: number): number[] {
+  const random = typeof seed === 'number' ? createSeededRng(seed) : () => Math.random();
+
+  return Array.from({ length: size }, () => Math.floor(random() * (max - min + 1)) + min);
+}
+
+export function createInputArray(
+  size: number,
+  min = 5,
+  max = 100,
+  seed?: number,
+  pattern: DataPattern = 'random',
+): number[] {
+  const base = randomArray(size, min, max, seed);
+
+  if (pattern === 'sorted') {
+    return [...base].sort((left, right) => left - right);
+  }
+
+  if (pattern === 'reversed') {
+    return [...base].sort((left, right) => right - left);
+  }
+
+  if (pattern === 'duplicates') {
+    const duplicateRange = Math.max(2, Math.min(8, Math.floor(size / 4) || 2));
+    return randomArray(size, min, Math.min(max, min + duplicateRange - 1), seed);
+  }
+
+  return base;
 }
 
 export function bubbleSortSteps(input: number[]): SortStep[] {
@@ -17,7 +56,7 @@ export function bubbleSortSteps(input: number[]): SortStep[] {
       steps.push({
         values: [...values],
         comparing: [inner, inner + 1],
-        sorted: [...sortedSet]
+        sorted: [...sortedSet],
       });
 
       if (values[inner] > values[inner + 1]) {
@@ -27,7 +66,7 @@ export function bubbleSortSteps(input: number[]): SortStep[] {
         steps.push({
           values: [...values],
           swapping: [inner, inner + 1],
-          sorted: [...sortedSet]
+          sorted: [...sortedSet],
         });
       }
     }
@@ -83,7 +122,7 @@ export function quickSortSteps(input: number[]): SortStep[] {
         values: [...values],
         comparing: [cursor, pivotIndex],
         pivot: pivotIndex,
-        sorted: [...sorted]
+        sorted: [...sorted],
       });
 
       if (values[cursor] < pivotValue) {
@@ -93,7 +132,7 @@ export function quickSortSteps(input: number[]): SortStep[] {
             values: [...values],
             swapping: [partitionIndex, cursor],
             pivot: pivotIndex,
-            sorted: [...sorted]
+            sorted: [...sorted],
           });
         }
 
@@ -106,7 +145,7 @@ export function quickSortSteps(input: number[]): SortStep[] {
       steps.push({
         values: [...values],
         swapping: [partitionIndex, pivotIndex],
-        sorted: [...sorted]
+        sorted: [...sorted],
       });
     }
 
@@ -154,7 +193,7 @@ export function mergeSortSteps(input: number[]): SortStep[] {
       steps.push({
         values: [...values],
         comparing: [leftSource, rightSource],
-        sorted: [...sorted]
+        sorted: [...sorted],
       });
 
       if (left[leftCursor] <= right[rightCursor]) {
@@ -162,7 +201,7 @@ export function mergeSortSteps(input: number[]): SortStep[] {
         steps.push({
           values: [...values],
           swapping: [target, leftSource],
-          sorted: [...sorted]
+          sorted: [...sorted],
         });
         leftCursor += 1;
       } else {
@@ -170,7 +209,7 @@ export function mergeSortSteps(input: number[]): SortStep[] {
         steps.push({
           values: [...values],
           swapping: [target, rightSource],
-          sorted: [...sorted]
+          sorted: [...sorted],
         });
         rightCursor += 1;
       }
@@ -184,7 +223,7 @@ export function mergeSortSteps(input: number[]): SortStep[] {
       steps.push({
         values: [...values],
         swapping: [target, leftSource],
-        sorted: [...sorted]
+        sorted: [...sorted],
       });
       leftCursor += 1;
       target += 1;
@@ -196,7 +235,7 @@ export function mergeSortSteps(input: number[]): SortStep[] {
       steps.push({
         values: [...values],
         swapping: [target, rightSource],
-        sorted: [...sorted]
+        sorted: [...sorted],
       });
       rightCursor += 1;
       target += 1;
@@ -226,65 +265,40 @@ export function mergeSortSteps(input: number[]): SortStep[] {
   return steps;
 }
 
-export function heapSortSteps(input: number[]): SortStep[] {
+export function insertionSortSteps(input: number[]): SortStep[] {
   const values = [...input];
   const steps: SortStep[] = [{ values: [...values], sorted: [] }];
   const sorted = new Set<number>();
-  const length = values.length;
 
-  function heapify(size: number, rootIndex: number) {
-    let largest = rootIndex;
-    const left = rootIndex * 2 + 1;
-    const right = rootIndex * 2 + 2;
-
-    if (left < size) {
-      steps.push({
-        values: [...values],
-        comparing: [left, largest],
-        sorted: [...sorted]
-      });
-
-      if (values[left] > values[largest]) {
-        largest = left;
-      }
-    }
-
-    if (right < size) {
-      steps.push({
-        values: [...values],
-        comparing: [right, largest],
-        sorted: [...sorted]
-      });
-
-      if (values[right] > values[largest]) {
-        largest = right;
-      }
-    }
-
-    if (largest !== rootIndex) {
-      [values[rootIndex], values[largest]] = [values[largest], values[rootIndex]];
-      steps.push({
-        values: [...values],
-        swapping: [rootIndex, largest],
-        sorted: [...sorted]
-      });
-      heapify(size, largest);
-    }
-  }
-
-  for (let index = Math.floor(length / 2) - 1; index >= 0; index -= 1) {
-    heapify(length, index);
-  }
-
-  for (let end = length - 1; end > 0; end -= 1) {
-    [values[0], values[end]] = [values[end], values[0]];
-    steps.push({ values: [...values], swapping: [0, end], sorted: [...sorted] });
-    sorted.add(end);
-    steps.push({ values: [...values], sorted: [...sorted] });
-    heapify(end, 0);
+  if (values.length === 0) {
+    return steps;
   }
 
   sorted.add(0);
   steps.push({ values: [...values], sorted: [...sorted] });
+
+  for (let index = 1; index < values.length; index += 1) {
+    const key = values[index];
+    let cursor = index - 1;
+
+    steps.push({ values: [...values], comparing: [index, cursor], sorted: [...sorted] });
+
+    while (cursor >= 0 && values[cursor] > key) {
+      steps.push({ values: [...values], comparing: [cursor, cursor + 1], sorted: [...sorted] });
+      values[cursor + 1] = values[cursor];
+      steps.push({ values: [...values], swapping: [cursor, cursor + 1], sorted: [...sorted] });
+      cursor -= 1;
+    }
+
+    values[cursor + 1] = key;
+    steps.push({ values: [...values], swapping: [cursor + 1, index], sorted: [...sorted] });
+
+    for (let sortedIndex = 0; sortedIndex <= index; sortedIndex += 1) {
+      sorted.add(sortedIndex);
+    }
+
+    steps.push({ values: [...values], sorted: [...sorted] });
+  }
+
   return steps;
 }

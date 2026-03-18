@@ -56,7 +56,18 @@
 
     <article hlmCard class="preview-card">
       <header hlmCardHeader>
-        <h3 hlmCardTitle>Quick Sort</h3>
+        <div class="preview-card__header-row">
+          <h3 hlmCardTitle>{{ selectedAlgorithmLabel() }}</h3>
+          <select
+            class="preview-card__select"
+            [value]="selectedAlgorithm()"
+            (change)="updatePreviewAlgorithm($any($event.target).value)"
+          >
+            @for (entry of algorithmOptions; track entry.value) {
+              <option [value]="entry.value">{{ entry.label }}</option>
+            }
+          </select>
+        </div>
         <span>Step {{ quickSortPreview.index() + 1 }}/{{ quickSortStepCount() }}</span>
       </header>
 

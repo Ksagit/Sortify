@@ -8,14 +8,46 @@ import { HlmSliderImports } from '@spartan-ng/helm/slider';
 import { SortingPlayer } from '../sorting/sorting-player';
 import {
   bubbleSortSteps,
-  heapSortSteps,
+  insertionSortSteps,
   mergeSortSteps,
   quickSortSteps,
 } from '../sorting/sorting.algorithms';
+import { DATA_PATTERN_LABELS, DataPattern } from '../sorting/sorting.models';
 import { SortingProgressChartComponent } from '../ui/sorting-progress-chart/sorting-progress-chart.component';
 
-const SPEED_MIN = 50;
-const SPEED_MAX = 600;
+const SPEED_MIN = 1;
+const SPEED_MAX = 1000;
+const DASHBOARD_SEED = 20260318;
+const DATASET_SIZE_OPTIONS = [32, 64, 100, 128, 256] as const;
+type SortingAlgorithmKey = 'bubble' | 'quick' | 'merge' | 'insertion';
+
+const SORTING_ALGORITHM_OPTIONS: Record<
+  SortingAlgorithmKey,
+  { label: string; accent: string; steps: typeof bubbleSortSteps }
+> = {
+  bubble: {
+    label: 'Bubble Sort',
+    accent: 'bubble',
+    steps: bubbleSortSteps,
+  },
+  quick: {
+    label: 'Quick Sort',
+    accent: 'quick',
+    steps: quickSortSteps,
+  },
+  merge: {
+    label: 'Merge Sort',
+    accent: 'merge',
+    steps: mergeSortSteps,
+  },
+  insertion: {
+    label: 'Insertion Sort',
+    accent: 'insertion',
+    steps: insertionSortSteps,
+  },
+};
+
+const SORTING_ALGORITHM_ORDER: SortingAlgorithmKey[] = ['bubble', 'quick', 'merge', 'insertion'];
 
 @Component({
   selector: 'app-dashboard',
@@ -32,60 +64,85 @@ const SPEED_MAX = 600;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnDestroy {
+  readonly dataPatternLabels = DATA_PATTERN_LABELS;
+  readonly dataSizeOptions = DATASET_SIZE_OPTIONS;
+  readonly algorithmOptions = SORTING_ALGORITHM_ORDER.map((value) => ({
+    value,
+    label: SORTING_ALGORITHM_OPTIONS[value].label,
+  }));
+  readonly dataPatternOptions = Object.entries(DATA_PATTERN_LABELS).map(([value, label]) => ({
+    value: value as DataPattern,
+    label,
+  }));
   readonly bubble = new SortingPlayer(bubbleSortSteps, {
-    size: 32,
+    size: DATASET_SIZE_OPTIONS[0],
     min: 10,
     max: 120,
+    seed: DASHBOARD_SEED,
+    pattern: 'random',
     autoplay: false,
   });
   readonly quick = new SortingPlayer(quickSortSteps, {
-    size: 32,
+    size: DATASET_SIZE_OPTIONS[0],
     min: 10,
     max: 120,
+    seed: DASHBOARD_SEED,
+    pattern: 'random',
     autoplay: false,
   });
   readonly merge = new SortingPlayer(mergeSortSteps, {
-    size: 32,
+    size: DATASET_SIZE_OPTIONS[0],
     min: 10,
     max: 120,
+    seed: DASHBOARD_SEED,
+    pattern: 'random',
     autoplay: false,
   });
-  readonly heap = new SortingPlayer(heapSortSteps, {
-    size: 32,
+  readonly insertion = new SortingPlayer(insertionSortSteps, {
+    size: DATASET_SIZE_OPTIONS[0],
     min: 10,
     max: 120,
+    seed: DASHBOARD_SEED,
+    pattern: 'random',
     autoplay: false,
   });
   readonly speedBounds = { min: SPEED_MIN, max: SPEED_MAX };
 
   readonly isPlaying = signal(true);
   readonly delay = signal(200);
+  readonly datasetSize = signal<(typeof DATASET_SIZE_OPTIONS)[number]>(DATASET_SIZE_OPTIONS[0]);
+  readonly dataPattern = signal<DataPattern>('random');
+  readonly selectedAlgorithms = signal<SortingAlgorithmKey[]>([...SORTING_ALGORITHM_ORDER]);
   readonly sliderValue = computed(() => [SPEED_MIN + SPEED_MAX - this.delay()]);
+  readonly chartHeight = computed(() => {
+    const size = this.datasetSize();
 
-  readonly algorithms = [
-    {
-      name: 'Bubble Sort',
-      player: this.bubble,
-      accent: 'bubble',
-    },
-    {
-      name: 'Quick Sort',
-      player: this.quick,
-      accent: 'quick',
-    },
-    {
-      name: 'Merge Sort',
-      player: this.merge,
-      accent: 'merge',
-    },
-    {
-      name: 'Heap Sort',
-      player: this.heap,
-      accent: 'heap',
-    },
-  ] as const;
+    if (size >= 256) {
+      return 112;
+    }
 
-  private readonly players = [this.bubble, this.quick, this.merge, this.heap];
+    if (size >= 128) {
+      return 124;
+    }
+
+    if (size >= 100) {
+      return 136;
+    }
+
+    return 148;
+  });
+
+  private readonly players = [this.bubble, this.quick, this.merge, this.insertion];
+  readonly algorithms = computed(() =>
+    this.selectedAlgorithms().map((key, index) => ({
+      id: index,
+      key,
+      name: SORTING_ALGORITHM_OPTIONS[key].label,
+      accent: SORTING_ALGORITHM_OPTIONS[key].accent,
+      player: this.players[index],
+    })),
+  );
+  private currentSeed = DASHBOARD_SEED;
   private timerId: number | null = null;
 
   constructor() {
@@ -109,10 +166,60 @@ export class DashboardComponent implements OnDestroy {
   }
 
   shuffle() {
-    this.players.forEach((player) => player.shuffle());
+    this.currentSeed += 1;
+    this.players.forEach((player) => player.shuffle(this.currentSeed, this.dataPattern()));
 
     if (this.isPlaying()) {
       this.players.forEach((player) => player.play());
+      this.restartTimer();
+    }
+  }
+
+  updateDataPattern(pattern: string) {
+    const nextPattern = pattern as DataPattern;
+
+    this.dataPattern.set(nextPattern);
+    this.players.forEach((player) => player.shuffle(this.currentSeed, nextPattern));
+
+    if (this.isPlaying()) {
+      this.players.forEach((player) => player.play());
+      this.restartTimer();
+    }
+  }
+
+  updateDatasetSize(size: string) {
+    const nextSize = Number(size) as (typeof DATASET_SIZE_OPTIONS)[number];
+
+    this.datasetSize.set(nextSize);
+    this.players.forEach((player) =>
+      player.reconfigure({ size: nextSize, seed: this.currentSeed, pattern: this.dataPattern() }),
+    );
+
+    if (this.isPlaying()) {
+      this.players.forEach((player) => player.play());
+      this.restartTimer();
+    }
+  }
+
+  updateAlgorithm(index: number, key: string) {
+    const nextKey = key as SortingAlgorithmKey;
+
+    this.selectedAlgorithms.update((current) => {
+      const next = [...current];
+      next[index] = nextKey;
+      return next;
+    });
+
+    const player = this.players[index];
+    player.setStepsFactory(SORTING_ALGORITHM_OPTIONS[nextKey].steps);
+    player.reconfigure({
+      size: this.datasetSize(),
+      seed: this.currentSeed,
+      pattern: this.dataPattern(),
+    });
+
+    if (this.isPlaying()) {
+      player.play();
       this.restartTimer();
     }
   }
@@ -186,7 +293,7 @@ export class DashboardComponent implements OnDestroy {
           this.clearTimer();
         }
       },
-      Math.max(SPEED_MIN, this.delay()),
+      Math.max(1, this.delay()),
     );
   }
 

@@ -3,15 +3,17 @@
     <h3 class="chart-title">{{ title() }}</h3>
   }
 
-  <div class="chart-stage" [style.height.px]="height()">
+  <div class="chart-stage" [class.chart-stage--dense]="isDense()" [style.height.px]="height()">
     @for (line of gridLines; track line) {
       <span class="grid-line" [style.bottom.%]="line"></span>
     }
 
-    <div class="bars">
+    <div class="bars" [class.bars--dense]="isDense()" [style.grid-template-columns]="gridTemplateColumns()">
       @for (bar of bars(); track bar.index) {
         <div
           class="bar"
+          [class.bar--dense]="isDense()"
+          [class.bar--ultra-dense]="isUltraDense()"
           [style.height]="bar.height"
           [style.background]="bar.fill"
           [attr.aria-label]="'Element ' + bar.index + ', value ' + bar.value"

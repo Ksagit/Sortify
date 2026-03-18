@@ -21,12 +21,24 @@
         </div>
 
         <label class="range-control">
+          <span>Size</span>
+          <select class="pattern-select pattern-select--size" [value]="datasetSize()" (change)="updateDatasetSize($any($event.target).value)">
+            @for (size of dataSizeOptions; track size) {
+              <option [value]="size">n = {{ size }}</option>
+            }
+          </select>
+          <span>Input</span>
+          <select class="pattern-select" [value]="dataPattern()" (change)="updateDataPattern($any($event.target).value)">
+            @for (entry of dataPatternOptions; track entry.value) {
+              <option [value]="entry.value">{{ entry.label }}</option>
+            }
+          </select>
           <span>Speed</span>
           <hlm-slider
             class="range-slider"
             [min]="speedBounds.min"
             [max]="speedBounds.max"
-            [step]="10"
+            [step]="1"
             [value]="sliderValue()"
             (valueChange)="updateSpeed($event)"
           />
@@ -35,7 +47,7 @@
       </div>
 
       <div class="status-grid">
-        @for (algorithm of algorithms; track algorithm.name) {
+        @for (algorithm of algorithms(); track algorithm.id) {
           <section hlmCard size="sm" class="status-card">
             <span>{{ algorithm.name }}</span>
             <span
@@ -53,14 +65,25 @@
     </section>
 
     <section class="charts-grid">
-      @for (algorithm of algorithms; track algorithm.name) {
+      @for (algorithm of algorithms(); track algorithm.id) {
         <article hlmCard class="chart-card surface-card">
           <div class="chart-card__accent" [class]="'chart-card__accent chart-card__accent--' + algorithm.accent"></div>
           <header hlmCardHeader class="chart-card__header">
-            <div>
+            <div class="chart-card__title-group">
               <h2 hlmCardTitle>{{ algorithm.name }}</h2>
             </div>
-            <span>Step {{ algorithm.player.index() + 1 }}/{{ stepCount(algorithm.player) }}</span>
+            <div class="chart-card__controls">
+              <select
+                class="pattern-select pattern-select--algorithm"
+                [value]="algorithm.key"
+                (change)="updateAlgorithm(algorithm.id, $any($event.target).value)"
+              >
+                @for (entry of algorithmOptions; track entry.value) {
+                  <option [value]="entry.value">{{ entry.label }}</option>
+                }
+              </select>
+              <span>Step {{ algorithm.player.index() + 1 }}/{{ stepCount(algorithm.player) }}</span>
+            </div>
           </header>
 
           <div hlmCardContent class="chart-card__content">
@@ -71,12 +94,13 @@
               [swapColor]="'#ef4444'"
               [sortedColor]="'#10b981'"
               [pivotColor]="'#3b82f6'"
-              [height]="160"
+              [height]="chartHeight()"
             ></app-sorting-progress-chart>
           </div>
 
           <footer hlmCardFooter class="chart-card__footer">
-            <span>n = {{ algorithm.player.step().values.length }}</span>
+            <span>n = {{ datasetSize() }}</span>
+            <span>{{ dataPatternLabels[dataPattern()] }}</span>
             <span
               hlmBadge
               [variant]="statusVariant(algorithm.player)"

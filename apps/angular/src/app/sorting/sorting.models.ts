@@ -6,10 +6,21 @@ export interface SortStep {
   sorted?: number[];
 }
 
+export type DataPattern = 'random' | 'sorted' | 'reversed' | 'duplicates';
+
+export const DATA_PATTERN_LABELS: Record<DataPattern, string> = {
+  random: 'Random',
+  sorted: 'Sorted',
+  reversed: 'Reverse Sorted',
+  duplicates: 'Many Duplicates',
+};
+
 export interface SortingOptions {
   size?: number;
   min?: number;
   max?: number;
+  seed?: number;
+  pattern?: DataPattern;
   speed?: number;
   autoplay?: boolean;
 }

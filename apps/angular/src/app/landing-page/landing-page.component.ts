@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, computed, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
@@ -6,8 +6,40 @@ import { HlmButtonImports } from '@spartan-ng/helm/button';
 import { HlmCardImports } from '@spartan-ng/helm/card';
 
 import { SortingPlayer } from '../sorting/sorting-player';
-import { quickSortSteps } from '../sorting/sorting.algorithms';
+import {
+  bubbleSortSteps,
+  insertionSortSteps,
+  mergeSortSteps,
+  quickSortSteps,
+} from '../sorting/sorting.algorithms';
 import { SortingProgressChartComponent } from '../ui/sorting-progress-chart/sorting-progress-chart.component';
+
+const PREVIEW_SEED = 20260319;
+type SortingAlgorithmKey = 'bubble' | 'quick' | 'merge' | 'insertion';
+
+const SORTING_ALGORITHM_OPTIONS: Record<
+  SortingAlgorithmKey,
+  { label: string; steps: typeof bubbleSortSteps }
+> = {
+  bubble: {
+    label: 'Bubble Sort',
+    steps: bubbleSortSteps,
+  },
+  quick: {
+    label: 'Quick Sort',
+    steps: quickSortSteps,
+  },
+  merge: {
+    label: 'Merge Sort',
+    steps: mergeSortSteps,
+  },
+  insertion: {
+    label: 'Insertion Sort',
+    steps: insertionSortSteps,
+  },
+};
+
+const SORTING_ALGORITHM_ORDER: SortingAlgorithmKey[] = ['bubble', 'quick', 'merge', 'insertion'];
 
 @Component({
   selector: 'app-landing-page',
@@ -24,10 +56,19 @@ import { SortingProgressChartComponent } from '../ui/sorting-progress-chart/sort
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LandingPageComponent implements OnDestroy {
+  readonly algorithmOptions = SORTING_ALGORITHM_ORDER.map((value) => ({
+    value,
+    label: SORTING_ALGORITHM_OPTIONS[value].label,
+  }));
+  readonly selectedAlgorithm = signal<SortingAlgorithmKey>('quick');
+  readonly selectedAlgorithmLabel = computed(
+    () => SORTING_ALGORITHM_OPTIONS[this.selectedAlgorithm()].label,
+  );
   readonly quickSortPreview = new SortingPlayer(quickSortSteps, {
     size: 28,
     min: 10,
     max: 120,
+    seed: PREVIEW_SEED,
     autoplay: true,
     speed: 180,
   });
@@ -57,6 +98,14 @@ export class LandingPageComponent implements OnDestroy {
       complexity: 'Linearithmic average',
       palette: 'quick',
     },
+    {
+      shortLabel: 'IS',
+      title: 'Insertion Sort',
+      description:
+        'Incremental in-place algorithm that keeps a sorted prefix and inserts each next value into its correct position.',
+      complexity: 'Quadratic complexity',
+      palette: 'merge',
+    },
   ] as const;
 
   readonly features = [
@@ -74,8 +123,8 @@ export class LandingPageComponent implements OnDestroy {
     },
     {
       icon: '📊',
-      title: 'Multiple data sets',
-      description: 'Test with different array sizes and data patterns.',
+      title: 'Deterministic data sets',
+      description: 'Replay the same seeded input across multiple algorithms.',
       palette: 'accent',
     },
     {
@@ -88,6 +137,15 @@ export class LandingPageComponent implements OnDestroy {
 
   quickSortStepCount(): number {
     return Math.max(this.quickSortPreview.steps().length, 1);
+  }
+
+  updatePreviewAlgorithm(key: string) {
+    const nextKey = key as SortingAlgorithmKey;
+
+    this.selectedAlgorithm.set(nextKey);
+    this.quickSortPreview.setStepsFactory(SORTING_ALGORITHM_OPTIONS[nextKey].steps);
+    this.quickSortPreview.reconfigure({ seed: PREVIEW_SEED });
+    this.quickSortPreview.play();
   }
 
   ngOnDestroy() {

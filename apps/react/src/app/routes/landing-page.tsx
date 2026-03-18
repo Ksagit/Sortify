@@ -4,114 +4,114 @@ import { AlgorithmCards } from "src/components/landing-page/AlgorithmCards";
 import { FeaturesSection } from "src/components/landing-page/FeaturesSection";
 import { HeroSection } from "src/components/landing-page/HeroSection";
 import {
-	Card,
-	CardAction,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
+  Card,
+  CardAction,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "src/components/ui/card";
 import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "src/components/ui/select";
 import { useSorting } from "src/hooks/useSorting";
 import {
-	SORTING_ALGORITHM_ORDER,
-	SORTING_ALGORITHMS,
-	type SortingAlgorithmKey,
+  SORTING_ALGORITHM_ORDER,
+  SORTING_ALGORITHMS,
+  type SortingAlgorithmKey,
 } from "src/lib/sortingAlgorithms";
 
 export function meta() {
-	return [
-		{ title: "Sortify - Landing Page" },
-		{
-			name: "description",
-			content:
-				"Visualize and understand sorting algorithms with interactive animations. Learn bubble sort, merge sort, quick sort and more!",
-		},
-	];
+  return [
+    { title: "Sortify - Landing Page" },
+    {
+      name: "description",
+      content:
+        "Visualize and understand sorting algorithms with interactive animations. Learn bubble sort, merge sort, quick sort and more!",
+    },
+  ];
 }
 
 export default function LandingPage() {
-	const [selectedAlgorithm, setSelectedAlgorithm] =
-		useState<SortingAlgorithmKey>("quick");
-	const sorter = useSorting(SORTING_ALGORITHMS[selectedAlgorithm].steps, {
-		size: 28,
-		min: 10,
-		max: 120,
-		autoplay: true,
-		speed: 180,
-	});
+  const previewSeed = 20260319;
+  const [selectedAlgorithm, setSelectedAlgorithm] =
+    useState<SortingAlgorithmKey>("quick");
+  const sorter = useSorting(SORTING_ALGORITHMS[selectedAlgorithm].steps, {
+    size: 28,
+    min: 10,
+    max: 120,
+    seed: previewSeed,
+    autoplay: true,
+    speed: 180,
+  });
 
-	useEffect(() => {
-		sorter.play();
-	}, [selectedAlgorithm, sorter]);
+  useEffect(() => {
+    sorter.play();
+  }, [selectedAlgorithm, sorter]);
 
-	return (
-		<div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-muted to-background pb-10">
-			<HeroSection />
-			<div className="relative z-10 px-6">
-				<div className="mx-auto max-w-7xl">
-					<AlgorithmCards />
-					<div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
-						<FeaturesSection />
-						<Card>
-							<CardHeader className="border-b py-2">
-								<div className="flex items-center justify-between gap-2">
-									<CardTitle className="text-base">
-										{SORTING_ALGORITHMS[selectedAlgorithm].label}
-									</CardTitle>
-									<Select
-										value={selectedAlgorithm}
-										onValueChange={(value) =>
-											setSelectedAlgorithm(
-												value as SortingAlgorithmKey,
-											)
-										}
-									>
-										<SelectTrigger
-											className="h-7 w-[150px] text-[11px]"
-											aria-label="Select sorting algorithm"
-										>
-											<SelectValue />
-										</SelectTrigger>
-										<SelectContent>
-											{SORTING_ALGORITHM_ORDER.map((option) => (
-												<SelectItem key={option} value={option}>
-													{SORTING_ALGORITHMS[option].label}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-								</div>
-								<CardAction className="text-muted-foreground text-xs">
-									Step {sorter.index + 1}/{Math.max(sorter.steps.length, 1)}
-								</CardAction>
-							</CardHeader>
-							<CardContent>
-								<SortingProgressChart
-									title=""
-									progress={sorter.step}
-									compareColor="#f59e0b"
-									swapColor="#ef4444"
-									sortedColor="#10b981"
-									pivotColor="#3b82f6"
-									height={160}
-								/>
-							</CardContent>
-							<CardFooter className="border-t py-2">
-								<div className="text-muted-foreground text-xs">
-									n = {sorter.step.values.length}
-								</div>
-							</CardFooter>
-						</Card>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-muted to-background pb-10">
+      <HeroSection />
+      <div className="relative z-10 px-6">
+        <div className="mx-auto max-w-7xl">
+          <AlgorithmCards />
+          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+            <FeaturesSection />
+            <Card>
+              <CardHeader className="border-b py-2">
+                <div className="flex items-center justify-between gap-2">
+                  <CardTitle className="text-base">
+                    {SORTING_ALGORITHMS[selectedAlgorithm].label}
+                  </CardTitle>
+                  <Select
+                    value={selectedAlgorithm}
+                    onValueChange={(value) =>
+                      setSelectedAlgorithm(value as SortingAlgorithmKey)
+                    }
+                  >
+                    <SelectTrigger
+                      className="h-7 w-37.5 text-[11px]"
+                      aria-label="Select sorting algorithm"
+                    >
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {SORTING_ALGORITHM_ORDER.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {SORTING_ALGORITHMS[option].label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <CardAction className="text-muted-foreground text-xs">
+                  Step {sorter.index + 1}/{Math.max(sorter.steps.length, 1)}
+                </CardAction>
+              </CardHeader>
+              <CardContent>
+                <SortingProgressChart
+                  title=""
+                  progress={sorter.step}
+                  compareColor="#f59e0b"
+                  swapColor="#ef4444"
+                  sortedColor="#10b981"
+                  pivotColor="#3b82f6"
+                  height={160}
+                />
+              </CardContent>
+              <CardFooter className="border-t py-2">
+                <div className="text-muted-foreground text-xs">
+                  n = {sorter.step.values.length}
+                </div>
+              </CardFooter>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

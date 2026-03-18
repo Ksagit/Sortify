@@ -49,6 +49,13 @@ export class SortingProgressChartComponent {
     });
   });
 
+  readonly barCount = computed(() => this.progress().values?.length ?? 0);
+  readonly isDense = computed(() => this.barCount() >= 128);
+  readonly isUltraDense = computed(() => this.barCount() >= 192);
+  readonly gridTemplateColumns = computed(
+    () => `repeat(${Math.max(this.barCount(), 1)}, minmax(0, 1fr))`
+  );
+
   readonly legend = computed(() => [
     { label: 'Normal', color: this.barColor() },
     { label: 'Compare', color: this.compareColor() },

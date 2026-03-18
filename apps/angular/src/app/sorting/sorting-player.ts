@@ -1,12 +1,13 @@
 import { computed, signal } from '@angular/core';
 
-import { randomArray } from './sorting.algorithms';
+import { createInputArray } from './sorting.algorithms';
 import { SortStep, SortingOptions, SortingStepFactory } from './sorting.models';
 
 export class SortingPlayer {
   private readonly settings: Required<SortingOptions>;
   private readonly autoAdvance: boolean;
   private timerId: number | null = null;
+  private readonly stepsFactorySignal;
 
   readonly array;
   readonly index = signal(0);
@@ -16,20 +17,34 @@ export class SortingPlayer {
   readonly step;
   readonly isDone;
 
-  constructor(private readonly stepsFactory: SortingStepFactory, options: SortingOptions = {}) {
+  constructor(
+    stepsFactory: SortingStepFactory,
+    options: SortingOptions = {},
+  ) {
     this.settings = {
       size: options.size ?? 32,
       min: options.min ?? 10,
       max: options.max ?? 120,
+      seed: options.seed ?? 20260318,
+      pattern: options.pattern ?? 'random',
       speed: options.speed ?? 200,
-      autoplay: options.autoplay ?? true
+      autoplay: options.autoplay ?? true,
     };
 
     this.autoAdvance = this.settings.autoplay;
-    this.array = signal(randomArray(this.settings.size, this.settings.min, this.settings.max));
+    this.stepsFactorySignal = signal(stepsFactory);
+    this.array = signal(
+      createInputArray(
+        this.settings.size,
+        this.settings.min,
+        this.settings.max,
+        this.settings.seed,
+        this.settings.pattern,
+      ),
+    );
     this.isPlaying = signal(this.settings.autoplay);
     this.speed = signal(this.settings.speed);
-    this.steps = computed(() => this.stepsFactory(this.array()));
+    this.steps = computed(() => this.stepsFactorySignal()(this.array()));
     this.step = computed<SortStep>(() => {
       const steps = this.steps();
 
@@ -39,7 +54,9 @@ export class SortingPlayer {
 
       return steps[Math.min(this.index(), steps.length - 1)] ?? { values: [] };
     });
-    this.isDone = computed(() => this.steps().length > 0 && this.index() >= this.steps().length - 1);
+    this.isDone = computed(
+      () => this.steps().length > 0 && this.index() >= this.steps().length - 1,
+    );
 
     if (this.autoAdvance) {
       this.restartTimer();
@@ -89,6 +106,15 @@ export class SortingPlayer {
     }
   }
 
+  setStepsFactory(stepsFactory: SortingStepFactory) {
+    this.stepsFactorySignal.set(stepsFactory);
+    this.index.set(0);
+
+    if (this.autoAdvance && this.isPlaying()) {
+      this.restartTimer();
+    }
+  }
+
   restart() {
     this.index.set(0);
 
@@ -97,8 +123,35 @@ export class SortingPlayer {
     }
   }
 
-  shuffle() {
-    this.array.set(randomArray(this.settings.size, this.settings.min, this.settings.max));
+  reconfigure(options: Partial<SortingOptions>) {
+    this.settings.size = options.size ?? this.settings.size;
+    this.settings.min = options.min ?? this.settings.min;
+    this.settings.max = options.max ?? this.settings.max;
+    this.settings.seed = options.seed ?? this.settings.seed;
+    this.settings.pattern = options.pattern ?? this.settings.pattern;
+
+    this.array.set(
+      createInputArray(
+        this.settings.size,
+        this.settings.min,
+        this.settings.max,
+        this.settings.seed,
+        this.settings.pattern,
+      ),
+    );
+    this.index.set(0);
+
+    if (this.autoAdvance && this.isPlaying()) {
+      this.restartTimer();
+    }
+  }
+
+  shuffle(seed = this.settings.seed, pattern = this.settings.pattern) {
+    this.settings.seed = seed;
+    this.settings.pattern = pattern;
+    this.array.set(
+      createInputArray(this.settings.size, this.settings.min, this.settings.max, seed, pattern),
+    );
     this.index.set(0);
 
     if (this.autoAdvance && this.isPlaying()) {
@@ -121,7 +174,7 @@ export class SortingPlayer {
       return;
     }
 
-    this.timerId = window.setInterval(() => this.next(), Math.max(50, this.speed()));
+    this.timerId = window.setInterval(() => this.next(), Math.max(1, this.speed()));
   }
 
   private clearTimer() {
