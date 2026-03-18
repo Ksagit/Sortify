@@ -2,6 +2,21 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.2.
 
+## Deploying to Vercel
+
+This app is a client-side rendered Angular SPA inside a pnpm monorepo, so Vercel needs to build the Angular app directory and rewrite deep links back to `index.html`.
+
+Use these project settings in Vercel:
+
+```text
+Root Directory: apps/angular
+Install Command: pnpm install --frozen-lockfile
+Build Command: pnpm build
+Output Directory: dist/angular/browser
+```
+
+The repository also includes [vercel.json](./vercel.json), which rewrites direct requests like `/dashboard` to `index.html` so Angular Router can resolve the route in the browser.
+
 ## Development server
 
 To start a local development server, run:

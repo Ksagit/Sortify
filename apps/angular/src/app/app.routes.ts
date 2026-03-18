@@ -10,9 +10,14 @@ export const routes: Routes = [
     component: LandingPageComponent,
   },
   {
-    path: 'Dashboard',
+    path: 'dashboard',
     title: 'Sortify - Dashboard',
     component: DashboardComponent,
+  },
+  {
+    path: 'Dashboard',
+    redirectTo: 'dashboard',
+    pathMatch: 'full',
   },
   {
     path: '**',
