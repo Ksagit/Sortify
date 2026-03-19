@@ -11,10 +11,15 @@
 [x] - str 31 zrodla na poczatku wyliczanki to samo 32
 [x] - zrodla do rysunkow dodac numerek do tytulu rysunku zeby byl w bibliografii
 [x] - acessed w bibliografi na otwarcie czy cos 
+
 [ ] - 3 i 4 mozna polaczyc zlezy jak chce
 [ ] - metodyka moze do przemyslenia tytul rodzial 2
 [ ] - nie pasuje tytul rozdzialu 1 - ale to moze na potem
 
+[ ] - wersja przegladarki chrome ogolnie zweryfikowac srodowisko testowe
+[ ] - zapytac o prezentowanie projektow w rozdziale 3
+[ ] - spis rysonkow bez zrodel
+[ ] - zrodla do wyliczanki 2.1.1
 
 na marzec ja bym chcial calosc 2 + 2 projekty + polowa rodzialu 3
 zapytac o termin obrony przelom czerwca i lipca - pierwsze polowa lipca
