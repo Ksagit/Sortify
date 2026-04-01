@@ -8,10 +8,22 @@
     "dev:react": "turbo run dev --filter=@sortify/react",
     "dev:angular": "turbo run dev --filter=@sortify/angular",
     "build:thesis": "turbo run build --filter=@sortify/thesis",
+    "benchmark:install-browser": "playwright install chromium",
+    "benchmark:serve:react": "pnpm --filter @sortify/react build && node scripts/serve-static.js apps/react/build/client 4173",
+    "benchmark:serve:angular": "pnpm --filter @sortify/angular build && node scripts/serve-static.js apps/angular/dist/angular/browser 4200",
+    "benchmark:render": "playwright test -c playwright.benchmark.config.js",
+    "benchmark:render:headed": "playwright test -c playwright.benchmark.config.js --headed",
+    "benchmark:series": "node scripts/run-benchmark-series.js",
+    "benchmark:aggregate": "node scripts/aggregate-benchmark-series.js",
+    "benchmark:project-metrics": "node scripts/collect-project-metrics.js",
+    "benchmark:visualize": "node scripts/generate-benchmark-visualization.js",
+    "benchmark:report": "node scripts/run-benchmark-report.js",
     "lint": "turbo run lint",
     "test": "turbo run test"
   },
   "devDependencies": {
-    "turbo": "^2.5.6"
+    "@playwright/test": "^1.58.2",
+    "turbo": "^2.5.6",
+    "typescript": "^5.9.3"
   }
 }

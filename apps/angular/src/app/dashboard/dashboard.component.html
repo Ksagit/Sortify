@@ -1,4 +1,9 @@
-<div class="dashboard-page">
+<div
+  class="dashboard-page"
+  data-testid="dashboard-root"
+  [attr.data-benchmark-mode]="benchmarkMode ? 'true' : 'false'"
+  [attr.data-benchmark-ready]="benchmarkReady() ? 'true' : 'false'"
+>
   <div class="content-shell dashboard-shell">
     <header class="dashboard-header">
       <h1>
@@ -10,25 +15,25 @@
       </p>
     </header>
 
-    <section hlmCard class="control-panel surface-card">
+    <section hlmCard class="control-panel surface-card" data-testid="control-panel">
       <div class="control-panel__top">
         <div class="control-panel__actions">
-          <button hlmBtn type="button" (click)="togglePlayback()">
+          <button hlmBtn type="button" (click)="togglePlayback()" data-testid="play-toggle">
             {{ isPlaying() ? 'Pause' : 'Play' }}
           </button>
-          <button hlmBtn variant="outline" type="button" (click)="restart()">Restart</button>
-          <button hlmBtn variant="outline" type="button" (click)="shuffle()">Shuffle</button>
+          <button hlmBtn variant="outline" type="button" (click)="restart()" data-testid="restart-button">Restart</button>
+          <button hlmBtn variant="outline" type="button" (click)="shuffle()" data-testid="shuffle-button">Shuffle</button>
         </div>
 
         <label class="range-control">
           <span>Size</span>
-          <select class="pattern-select pattern-select--size" [value]="datasetSize()" (change)="updateDatasetSize($any($event.target).value)">
+          <select class="pattern-select pattern-select--size" [value]="datasetSize()" (change)="updateDatasetSize($any($event.target).value)" data-testid="dataset-size-select">
             @for (size of dataSizeOptions; track size) {
               <option [value]="size">n = {{ size }}</option>
             }
           </select>
           <span>Input</span>
-          <select class="pattern-select" [value]="dataPattern()" (change)="updateDataPattern($any($event.target).value)">
+          <select class="pattern-select" [value]="dataPattern()" (change)="updateDataPattern($any($event.target).value)" data-testid="data-pattern-select">
             @for (entry of dataPatternOptions; track entry.value) {
               <option [value]="entry.value">{{ entry.label }}</option>
             }
@@ -41,20 +46,22 @@
             [step]="1"
             [value]="sliderValue()"
             (valueChange)="updateSpeed($event)"
+            data-testid="delay-slider"
           />
-          <strong>{{ delay() }} ms</strong>
+          <strong data-testid="delay-value">{{ delay() }} ms</strong>
         </label>
       </div>
 
       <div class="status-grid">
         @for (algorithm of algorithms(); track algorithm.id) {
-          <section hlmCard size="sm" class="status-card">
+          <section hlmCard size="sm" class="status-card" [attr.data-testid]="'status-card-' + algorithm.id" [attr.data-algorithm]="algorithm.name" [attr.data-status]="statusLabel(algorithm.player).toLowerCase()">
             <span>{{ algorithm.name }}</span>
             <span
               hlmBadge
               [variant]="statusVariant(algorithm.player)"
               class="status-pill"
               [class]="'status-pill status-pill--' + statusLabel(algorithm.player).toLowerCase()"
+              [attr.data-testid]="'status-pill-' + algorithm.id"
             >
               <span class="status-pill__dot"></span>
               {{ statusLabel(algorithm.player) }}
@@ -66,7 +73,7 @@
 
     <section class="charts-grid">
       @for (algorithm of algorithms(); track algorithm.id) {
-        <article hlmCard class="chart-card surface-card">
+        <article hlmCard class="chart-card surface-card" [attr.data-testid]="'chart-card-' + algorithm.id" [attr.data-algorithm-key]="algorithm.key" [attr.data-status]="statusLabel(algorithm.player).toLowerCase()">
           <div class="chart-card__accent" [class]="'chart-card__accent chart-card__accent--' + algorithm.accent"></div>
           <header hlmCardHeader class="chart-card__header">
             <div class="chart-card__title-group">
@@ -77,25 +84,28 @@
                 class="pattern-select pattern-select--algorithm"
                 [value]="algorithm.key"
                 (change)="updateAlgorithm(algorithm.id, $any($event.target).value)"
+                [attr.data-testid]="'algorithm-select-' + algorithm.id"
               >
                 @for (entry of algorithmOptions; track entry.value) {
                   <option [value]="entry.value">{{ entry.label }}</option>
                 }
               </select>
-              <span>Step {{ algorithm.player.index() + 1 }}/{{ stepCount(algorithm.player) }}</span>
+              <span [attr.data-testid]="'step-counter-' + algorithm.id">Step {{ algorithm.player.index() + 1 }}/{{ stepCount(algorithm.player) }}</span>
             </div>
           </header>
 
           <div hlmCardContent class="chart-card__content">
-            <app-sorting-progress-chart
-              [title]="''"
-              [progress]="algorithm.player.step()"
-              [compareColor]="'#f59e0b'"
-              [swapColor]="'#ef4444'"
-              [sortedColor]="'#10b981'"
-              [pivotColor]="'#3b82f6'"
-              [height]="chartHeight()"
-            ></app-sorting-progress-chart>
+            <div [attr.data-testid]="'chart-container-' + algorithm.id">
+              <app-sorting-progress-chart
+                [title]="''"
+                [progress]="algorithm.player.step()"
+                [compareColor]="'#f59e0b'"
+                [swapColor]="'#ef4444'"
+                [sortedColor]="'#10b981'"
+                [pivotColor]="'#3b82f6'"
+                [height]="chartHeight()"
+              ></app-sorting-progress-chart>
+            </div>
           </div>
 
           <footer hlmCardFooter class="chart-card__footer">
@@ -106,6 +116,7 @@
               [variant]="statusVariant(algorithm.player)"
               class="chart-card__status"
               [class]="'chart-card__status chart-card__status--' + statusLabel(algorithm.player).toLowerCase()"
+              [attr.data-testid]="'chart-status-' + algorithm.id"
             >
               <span class="chart-card__status-dot"></span>
               {{ statusLabel(algorithm.player) }}

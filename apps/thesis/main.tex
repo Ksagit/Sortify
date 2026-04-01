@@ -654,10 +654,10 @@ Głównym założeniem projektowym platformy badawczej było stworzenie dwóch f
 Projektowana aplikacja musiała spełniać szereg zaawansowanych wymagań funkcjonalnych, które zostały podzielone na wymagania niskopoziomowe (związane z obliczeniami) oraz wysokopoziomowe (związane z interakcją). Do kluczowych funkcji należą:
 
 \begin{enumerate}
-    \item \textbf{Wielowątkowość logiczna i porównywanie równoległe}: Możliwość jednoczesnego uruchomienia wielu algorytmów w niezależnych kontenerach wizualnych. Użytkownik może wybrać różne algorytmy (np. Quick Sort vs Merge Sort) i obserwować ich zachowanie na tym samym zbiorze danych wejściowych. Wymaga to od frameworków efektywnego zarządzania wieloma niezależnymi strumieniami aktualizacji stanu bez interferencji między nimi.
-    \item \textbf{Determinizm algorytmów}: Każda implementacja algorytmu musi być całkowicie deterministyczna. Oznacza to, że dla danego ziarna (\textit{seed}) generatora liczb losowych oraz tej samej wielkości tablicy, zarówno wersja React, jak i Angular, muszą wygenerować identyczną sekwencję porównań i zamian. W finalnej implementacji warunek ten spełniono przez zastosowanie wspólnego, deterministycznego generatora danych wejściowych oraz jawnie przekazywanego seeda przy każdej inicjalizacji i przetasowaniu zbioru.
-    \item \textbf{Dynamiczne sterowanie czasem wykonania}: System zapewnia płynną regulację prędkości animacji w czasie rzeczywistym. Programista musi mieć możliwość modyfikacji opóźnienia (\textit{delay}) między krokami w zakresie od 1 ms (maksymalne obciążenie) do 1000 ms (tryb edukacyjny). Zmiana tego parametru nie może przerywać trwającej animacji ani powodować błędów synchronizacji w asynchronicznych funkcjach sterujących.
-    \item \textbf{Zarządzanie stanem początkowym danych}: Aplikacja musi umożliwiać generowanie danych o różnej charakterystyce: całkowicie losowe, już posortowane, posortowane odwrotnie oraz z dużą liczbą duplikatów. W finalnej implementacji funkcja ta została zrealizowana jako wspólny dla obu aplikacji wybór wzorca danych wejściowych w panelu sterowania dashboardu. Każdy z tych przypadków generuje inną liczbę kroków wizualizacji, co pozwala na testowanie stabilności frameworków przy skrajnie różnych obciążeniach.
+  \item \textbf{Wielowątkowość logiczna i porównywanie równoległe}: Możliwość jednoczesnego uruchomienia wielu algorytmów w niezależnych kontenerach wizualnych. Użytkownik może wybrać różne algorytmy (np. Quick Sort vs Merge Sort) i obserwować ich zachowanie na tym samym zbiorze danych wejściowych. Wymaga to od frameworków efektywnego zarządzania wieloma niezależnymi strumieniami aktualizacji stanu bez interferencji między nimi, co odpowiada scenariuszom porównawczym stosowanym w badaniach wydajności nowoczesnych frameworków frontendowych \cite{Evaluating_Frameworks}.
+  \item \textbf{Determinizm algorytmów}: Każda implementacja algorytmu musi być całkowicie deterministyczna. Oznacza to, że dla danego ziarna (\textit{seed}) generatora liczb losowych oraz tej samej wielkości tablicy, zarówno wersja React, jak i Angular, muszą wygenerować identyczną sekwencję porównań i zamian. W finalnej implementacji warunek ten spełniono przez zastosowanie wspólnego, deterministycznego generatora danych wejściowych oraz jawnie przekazywanego seeda przy każdej inicjalizacji i przetasowaniu zbioru, zamiast polegać na natywnym mechanizmie \texttt{Math.random()}, którego ziarno nie jest kontrolowane przez użytkownika \cite{MDN_Math_Random}.
+  \item \textbf{Dynamiczne sterowanie czasem wykonania}: System zapewnia płynną regulację prędkości animacji w czasie rzeczywistym. Programista musi mieć możliwość modyfikacji opóźnienia (\textit{delay}) między krokami w zakresie od 1 ms (maksymalne obciążenie) do 1000 ms (tryb edukacyjny). Zmiana tego parametru nie może przerywać trwającej animacji ani powodować błędów synchronizacji w asynchronicznych funkcjach sterujących, ponieważ interfejs edukacyjny powinien zachowywać tempo zgodne z ograniczeniami ludzkiej percepcji i nie tracić poczucia płynności interakcji \cite{Nielsen_Usability}.
+  \item \textbf{Zarządzanie stanem początkowym danych}: Aplikacja musi umożliwiać generowanie danych o różnej charakterystyce: całkowicie losowe, już posortowane, posortowane odwrotnie oraz z dużą liczbą duplikatów. W finalnej implementacji funkcja ta została zrealizowana jako wspólny dla obu aplikacji wybór wzorca danych wejściowych w panelu sterowania dashboardu. Każdy z tych przypadków generuje inną liczbę kroków wizualizacji, co pozwala na testowanie stabilności frameworków przy skrajnie różnych obciążeniach odpowiadających klasycznym przypadkom wejściowym analizowanym w literaturze poświęconej algorytmom sortowania \cite{Cormen_Intro, Knuth_Sorting}.
 \end{enumerate}
 
   Z punktu widzenia scenariuszy użycia oznaczało to konieczność zaprojektowania interfejsu, który jest jednocześnie demonstracyjny i eksperymentalny. Strona powitalna miała pełnić funkcję wprowadzającą i edukacyjną, pokazując ogólną ideę działania wizualizatora, natomiast dashboard badawczy musiał udostępniać wszystkie najważniejsze parametry eksperymentu: wybór algorytmu, rozmiaru danych, wzorca wejścia, prędkości animacji oraz możliwość ponownego uruchomienia przebiegu dla nowego seeda. Taki podział ról między widokami ogranicza ryzyko przeciążenia użytkownika nadmiarem kontrolek już na etapie wejścia do aplikacji, a jednocześnie zapewnia pełną sterowalność w części właściwej dla pomiarów.
@@ -818,13 +818,13 @@ Badanie zostało podzielone na konkretne scenariusze testowe, które różniły 
 
 Procedura pomiarowa dla każdego ze scenariuszy była rygorystycznie przestrzegana i składała się z następujących etapów \cite{Chrome_Runtime_Performance}:
 \begin{enumerate}
-    \item \textbf{Faza przygotowawcza (Warm-up)}: Przed startem właściwego pomiaru, dany algorytm był uruchamiany trzykrotnie na małym zbiorze danych. Miało to na celu wymuszenie na silniku V8 kompilacji JIT (\textit{Just-In-Time}) najczęściej używanych ścieżek kodu \cite{V8_Engine_Docs}, tak aby właściwy pomiar dotyczył zoptymalizowanej wersji binarnej, a nie interpretowanego kodu JavaScript.
-    \item \textbf{Inicjalizacja środowiska}: Wymuszenie operacji \textit{Garbage Collection} poprzez interfejs programistyczny DevTools w celu oczyszczenia sterty \cite{Chrome_Runtime_Performance}. Następnie następowało 5-sekundowe oczekiwanie na ustabilizowanie się obciążenia procesora do poziomu spoczynkowego.
-    \item \textbf{Rejestracja właściwa}: Uruchomienie profilera nagrywającego ścieżkę wydajności jednocześnie z wyzwoleniem algorytmu sortowania \cite{Chrome_Runtime_Performance}. Rejestracja trwała dokładnie do momentu osiągnięcia stanu końcowego (posortowana tablica).
-    \item \textbf{Eksport i czyszczenie}: Zapisanie surowych danych profilowania do formatu JSON oraz wykonanie zrzutu pamięci sterty \cite{Chrome_Runtime_Performance}.
+  \item \textbf{Uruchomienie buildów produkcyjnych i serwerów statycznych}: Każda seria pomiarowa była wykonywana wyłącznie na zoptymalizowanych artefaktach produkcyjnych React i Angular, serwowanych lokalnie bez narzutu trybu developerskiego.
+  \item \textbf{Inicjalizacja strony i stanu benchmarkowego}: Harness Playwright otwierał dashboard z ustalonym zestawem parametrów URL, czekał na publikację stanu gotowości \texttt{window.\_\_SORTIFY\_BENCHMARK\_\_} i dopiero od tego momentu rozpoczynał właściwą obserwację.
+  \item \textbf{Rejestracja właściwa}: W trakcie przebiegu równolegle zbierano metryki \textit{Performance.getMetrics} z Chrome DevTools Protocol oraz próbki czasu klatek przez \texttt{requestAnimationFrame}. Dodatkowo \texttt{PerformanceObserver} rejestrował zdarzenia \textit{long task}, co pozwalało wyliczyć \textit{Total Blocking Time}.
+  \item \textbf{Eksport danych}: Po osiągnięciu stanu końcowego zapisywano pełny wynik do formatu JSON, obejmujący zarówno końcowy snapshot algorytmów, jak i metryki runtime, pamięci, DOM, FPS oraz TBT.
 \end{enumerate}
 
-Wszystkie wyniki prezentowane w dalszej części pracy stanowią średnią arytmetyczną z 10 niezależnych pomiarów dla każdego scenariusza. W celu zapewnienia wysokiej wiarygodności statystycznej, dla każdej średniej obliczono również odchylenie standardowe oraz błąd standardowy. Wyniki, w których odchylenie standardowe przekraczało 15% średniej, były odrzucane i powtarzane, aby wyeliminować wpływ nagłych pików obciążenia systemowego działającego w tle. Takie podejście pozwoliło na uzyskanie danych o wysokiej powtarzalności, co jest kluczowe przy wyciąganiu wniosków o subtelnych różnicach między wydajnością React i Angular.
+Wszystkie wyniki prezentowane w dalszej części pracy dla scenariuszy referencyjnych stanowią średnią arytmetyczną z 10 niezależnych pomiarów dla każdego wariantu framework--scenariusz. Dla każdej średniej obliczono również odchylenie standardowe oraz błąd standardowy. Przyjęto próg interpretacyjny 15\% odchylenia względnego jako sygnał możliwej niestabilności środowiska; w przeprowadzonej serii żaden z kluczowych wskaźników czasu całkowitego nie przekroczył tej granicy, dlatego nie było potrzeby odrzucania przebiegów. Takie podejście pozwoliło na uzyskanie danych o wysokiej powtarzalności, co jest kluczowe przy wyciąganiu wniosków o subtelnych różnicach między wydajnością React i Angular.
 
 Sama procedura została zaprojektowana tak, aby możliwie wyraźnie oddzielić zjawiska jednorazowe od właściwego zachowania aplikacji. Faza przygotowawcza redukuje wpływ rozgrzewania silnika JavaScript, faza inicjalizacji ogranicza efekt wcześniejszej alokacji pamięci, a wielokrotne powtórzenia zmniejszają znaczenie przypadkowych odchyleń sprzętowo-systemowych. Dzięki temu pomiar nie sprowadza się do pojedynczego „snapshotu” wydajności, lecz ma charakter bardziej reprezentatywny dla rzeczywistego działania aplikacji w stabilnych warunkach.
 
@@ -843,7 +843,7 @@ Takie podejście ma istotną zaletę interpretacyjną. Uzyskane wyniki nie opisu
 Poza analizą czysto wydajnościową, która skupia się na parametrach technicznych działania aplikacji, niniejsza praca podejmuje próbę kompleksowej oceny obu technologii pod kątem ergonomii pracy i produktywności programisty. Jest to aspekt o znaczeniu strategicznym, często decydujący o długofalowym sukcesie projektu IT oraz kosztach jego utrzymania (\textit{Total Cost of Ownership}). Ocena produktywności jest procesem wielowymiarowym, łączącym twarde dane metryczne z subiektywnym odczuciem tzw. \textit{Developer Experience} (DX).
 
 \subsection{Kryteria oceny ilościowej i analiza artefaktów}
-W ramach oceny obiektywnej (ilościowej) przeanalizowano szereg mierzalnych parametrów, które bezpośrednio przekładają się na szybkość dostarczania funkcji oraz łatwość refaktoryzacji kodu \cite{Clean_Code_JS, Refactoring_Fowler}. Kluczowym wskaźnikiem jest złożoność kodu źródłowego, mierzona nie tylko przez \textit{Source Lines of Code} (SLOC), ale przede wszystkim poprzez analizę złożoności cyklomatycznej (\textit{Cyclomatic Complexity}) oraz złożoności kognitywnej (\textit{Cognitive Complexity}) \cite{Code_Complete}. Wykorzystanie narzędzi takich jak SonarQube pozwoliło na identyfikację fragmentów kodu, które mimo małej liczby linii, mogą być trudne w zrozumieniu i testowaniu ze względu na gęstą logikę warunkową.
+W ramach oceny obiektywnej (ilościowej) przeanalizowano szereg mierzalnych parametrów, które bezpośrednio przekładają się na szybkość dostarczania funkcji oraz łatwość refaktoryzacji kodu \cite{Clean_Code_JS, Refactoring_Fowler}. Kluczowym wskaźnikiem jest złożoność kodu źródłowego, mierzona nie tylko przez \textit{Source Lines of Code} (SLOC), ale przede wszystkim poprzez analizę złożoności cyklomatycznej (\textit{Cyclomatic Complexity}) oraz złożoności kognitywnej (\textit{Cognitive Complexity}) \cite{Code_Complete}. W aktualnym środowisku badawczym wykorzystano do tego celu własny analizator statyczny oparty na AST TypeScript, który identyfikuje funkcje, liczy punkty decyzyjne oraz agreguje hotspoty złożoności na poziomie plików i funkcji.
 
 Kolejnym badanym parametrem jest charakterystyka pakietu wynikowego (\textit{Bundle Analysis}). Analiza ta została pogłębiona o podział na kod aplikacji (\textit{first-party code}) oraz kod bibliotek zewnętrznych (\textit{third-party code}). Pozwala to ocenić, jaki procent końcowej wagi aplikacji wynika z narzutu samego frameworka, a jaki z implementacji logiki biznesowej. Weryfikacji poddano również czas budowania aplikacji (\textit{Build Time}) w dwóch trybach: "zimnym" (bez cache) oraz przyrostowym, co jest kluczowym parametrem wpływającym na płynność pracy dewelopera w codziennych zadaniach. Dodatkowo, przeanalizowano liczbę oraz wagę zależności zewnętrznych, co pozwala ocenić stopień izolacji projektu i potencjalne ryzyka związane z łańcuchem dostaw oprogramowania (\textit{Software Supply Chain Security}).
 
@@ -873,30 +873,208 @@ Ocena doświadczenia dewelopera obejmuje więc również jakość lokalnych komp
 \chapter{Wyniki badań, analiza porównawcza i wnioski}
 
 \section{Prezentacja wyników pomiarów wydajności renderowania}
+W niniejszym rozdziale przedstawiono wyniki uzyskane z aktualnej wersji zautomatyzowanego środowiska benchmarkowego przygotowanego dla obu aplikacji. Analizie poddano dwa scenariusze referencyjne: scenariusz bazowy \textit{baseline-random-32}, w którym równolegle wizualizowano cztery algorytmy dla 32 elementów danych losowych, oraz scenariusz obciążeniowy \textit{stress-duplicates-256}, w którym ten sam zestaw algorytmów pracował na 256 elementach z dużą liczbą duplikatów przy opóźnieniu animacji ustawionym na 1 ms. Oba przebiegi realizowano na produkcyjnych buildach aplikacji, a zbieranie danych odbywało się automatycznie z wykorzystaniem Playwright, Chrome DevTools Protocol oraz dodatkowego próbnika runtime opartego na \texttt{requestAnimationFrame} i \texttt{PerformanceObserver}, co pozwoliło zarejestrować również rytm klatek i metrykę \textit{Total Blocking Time}. Wszystkie wartości w tabelach \ref{tab:baseline-results} i \ref{tab:stress-results} są średnimi z 10 niezależnych przebiegów, a ich stabilność opisano dodatkowo w Tabeli \ref{tab:statistical-stability}.
+
+Z perspektywy interpretacyjnej istotne jest to, że testy uruchamiają cztery wizualizacje równolegle. Oznacza to, że całkowity czas scenariusza jest w praktyce determinowany przez najdłużej wykonujący się algorytm, czyli przez \textit{Bubble Sort}. W scenariuszu bazowym wygenerował on 724 kroki wizualizacji, natomiast w scenariuszu obciążeniowym aż 45 815 kroków. Dla porównania, \textit{Quick Sort} potrzebował odpowiednio 212 oraz 6 138 kroków, a \textit{Merge Sort} tylko 317 oraz 3 981. Tabela \ref{tab:step-counts} przedstawia pełny rozkład liczby kroków w obu scenariuszach.
+
+\begin{table}[htbp]
+\centering
+\caption{Liczba kroków wizualizacji dla badanych algorytmów w obu scenariuszach.}
+\label{tab:step-counts}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Algorytm} & \textbf{baseline-random-32} & \textbf{stress-duplicates-256} \\
+\hline
+Bubble Sort & 724 & 45 815 \\
+Quick Sort & 212 & 6 138 \\
+Merge Sort & 317 & 3 981 \\
+Insertion Sort & 593 & 28 581 \\
+\hline
+\end{tabular}
+\end{table}
+
+Już na poziomie czasu ściennego widać wyraźną przewagę implementacji React w obu scenariuszach. Dla zbioru 32-elementowego średni pełny przebieg zakończył się po 1 724,0 ms w React i po 2 938,2 ms w Angularze. Oznacza to, że React domknął eksperyment o około 41\% szybciej. W scenariuszu obciążeniowym różnica utrzymała się na zbliżonym poziomie: React potrzebował średnio 102 279,7 ms, natomiast Angular 183 393,7 ms. Warto zauważyć, że jest to wynik całego procesu animacji, a więc sumy kosztu obliczeń, narzutu frameworka, harmonogramowania kolejnych kroków oraz aktualizacji warstwy widoku.
+
+Wyniki metryk niskopoziomowych pokazują jednak bardziej złożony obraz. W obu scenariuszach Angular osiągał wyraźnie niższy skumulowany czas wykonywania skryptów JavaScript i niższy \textit{Task Duration}, mimo że całkowity czas ukończenia scenariusza był dłuższy. W scenariuszu bazowym \textit{Script Duration} wyniosło średnio 617,42 ms dla React oraz 95,30 ms dla Angulara. W scenariuszu obciążeniowym było to odpowiednio 43 440,00 ms oraz 8 215,31 ms. Oznacza to, że z perspektywy czystego kosztu wykonywania zadań na głównym wątku Angular był wyraźnie oszczędniejszy, ale nie przełożyło się to na szybsze domknięcie całej animacji. Zjawisko to sugeruje, że w badanym przypadku krytyczna była nie tylko suma czasu obliczeń, lecz także rytm dostarczania kolejnych aktualizacji widoku i sposób, w jaki framework współpracuje z mechanizmem timerów i cyklem renderowania przeglądarki.
+
+Rozszerzony pomiar płynności potwierdza tę interpretację. React utrzymywał w obu scenariuszach średnią częstotliwość odświeżania bliską 120 FPS, z percentylem 95 dla czasu klatki równym około 9 ms i niemal zerowym udziałem klatek przekraczających budżet 16,67 ms. Angular utrzymywał około 75--76 FPS, a odsetek klatek przekraczających ten próg wynosił średnio 34,14\% w scenariuszu bazowym i 32,44\% w scenariuszu obciążeniowym. Jednocześnie \textit{Total Blocking Time} pozostawało praktycznie zerowe: 0 ms dla wszystkich wariantów z wyjątkiem React w scenariuszu obciążeniowym, gdzie średnia wyniosła 0,9 ms. Oznacza to, że obserwowane opóźnienie Angulara nie wynikało z pojedynczych, bardzo długich blokad głównego wątku, lecz z kumulacji wielu krótszych operacji i mniej korzystnego rytmu dostarczania kolejnych aktualizacji interfejsu.
+
+\begin{table}[htbp]
+\centering
+\caption{Porównanie metryk wydajności dla scenariusza \textit{baseline-random-32}.}
+\label{tab:baseline-results}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Metryka} & \textbf{React} & \textbf{Angular} \\
+\hline
+Czas całkowity scenariusza [ms] & 1 724,00 & 2 938,20 \\
+Script Duration [ms] & 617,42 & 95,30 \\
+Task Duration [ms] & 866,46 & 332,63 \\
+Layout Duration [ms] & 47,70 & 44,85 \\
+Recalculate Styles [ms] & 59,45 & 53,74 \\
+First Meaningful Paint [ms] & 253,69 & 68,36 \\
+DOMContentLoaded [ms] & 178,53 & 24,47 \\
+Przybliżony FPS & 119,24 & 75,05 \\
+P95 czasu klatki [ms] & 8,96 & 18,33 \\
+Udział klatek > 16,67 ms [\%] & 0,38 & 34,14 \\
+TBT [ms] & 0 & 0 \\
+JS Heap Used [MB] & 11,45 & 4,89 \\
+Liczba nodów DOM & 2 994,40 & 635,00 \\
+Liczba nasłuchiwaczy zdarzeń & 6 545,30 & 36,00 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Porównanie metryk wydajności dla scenariusza \textit{stress-duplicates-256}.}
+\label{tab:stress-results}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Metryka} & \textbf{React} & \textbf{Angular} \\
+\hline
+Czas całkowity scenariusza [ms] & 102 279,70 & 183 393,70 \\
+Script Duration [ms] & 43 440,00 & 8 215,31 \\
+Task Duration [ms] & 61 158,03 & 23 174,64 \\
+Layout Duration [ms] & 5 098,47 & 4 548,19 \\
+Recalculate Styles [ms] & 2 651,40 & 2 036,04 \\
+First Meaningful Paint [ms] & 306,11 & 104,34 \\
+DOMContentLoaded [ms] & 190,84 & 40,53 \\
+Przybliżony FPS & 119,94 & 76,14 \\
+P95 czasu klatki [ms] & 9,10 & 17,29 \\
+Udział klatek > 16,67 ms [\%] & 0,01 & 32,44 \\
+TBT [ms] & 0,90 & 0,00 \\
+JS Heap Used [MB] & 149,21 & 140,29 \\
+Liczba nodów DOM & 76 336,20 & 1 531,00 \\
+Liczba nasłuchiwaczy zdarzeń & 143 402,80 & 36,00 \\
+\hline
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering
+\caption{Stabilność statystyczna wybranych metryk dla 10 przebiegów.}
+\label{tab:statistical-stability}
+\begin{tabular}{|l|l|r|r|r|r|}
+\hline
+\textbf{Scenariusz} & \textbf{Framework} & \textbf{Runtime $\mu$ [ms]} & \textbf{Runtime $\sigma$ [ms]} & \textbf{SEM [ms]} & \textbf{FPS $\mu$} \\
+\hline
+baseline-random-32 & React & 1 724,00 & 77,07 & 24,37 & 119,24 \\
+baseline-random-32 & Angular & 2 938,20 & 8,22 & 2,60 & 75,05 \\
+stress-duplicates-256 & React & 102 279,70 & 1 868,13 & 590,75 & 119,94 \\
+stress-duplicates-256 & Angular & 183 393,70 & 18,54 & 5,86 & 76,14 \\
+\hline
+\end{tabular}
+\end{table}
+
+Na podstawie Tabeli \ref{tab:baseline-results} oraz Tabeli \ref{tab:stress-results} można stwierdzić, że React uzyskał lepszy wynik końcowy w sensie czasu wykonania całej wizualizacji, natomiast Angular prezentował korzystniejsze wartości dla części metryk opisujących czysty koszt zadań wykonywanych na głównym wątku. W praktyce oznacza to, że sama suma czasu \textit{Script Duration} nie wystarcza do oceny odczuwalnej szybkości mechanizmu renderowania. Dla aplikacji typu wizualizator równie istotna jest zdolność frameworka do utrzymania wysokiej częstotliwości aktualizacji przy bardzo małych interwałach czasowych, co dobrze pokazują różnice w FPS i odsetku klatek przekraczających budżet czasowy 16,67 ms.
 
 \section{Analiza zużycia zasobów i płynności animacji}
+Najważniejszą obserwacją jakościową wynikającą z przeprowadzonych pomiarów jest rozbieżność między czasem ściennym a skumulowanym czasem zadań na głównym wątku. W obu scenariuszach Angular zużywał mniej czasu procesora na wykonywanie skryptów i zadań, ale mimo tego potrzebował wyraźnie więcej czasu na zakończenie pełnego przebiegu. Taka konfiguracja wyników oznacza, że ostateczny czas ukończenia animacji nie był zdeterminowany jedynie kosztem samego JavaScriptu, lecz również sposobem porcjowania kolejnych kroków wizualizacji, synchronizacją z event loopem oraz zdolnością frameworka do utrzymania krótkiego i regularnego cyklu odświeżania interfejsu.
+
+W scenariuszu bazowym różnica nie była jeszcze bardzo duża, ale już wtedy można było zauważyć odmienną charakterystykę obu rozwiązań. React wykonał więcej pracy na poziomie \textit{Script Duration} i \textit{Task Duration}, lecz mimo tego ukończył animację szybciej i utrzymał około 119 FPS przy P95 czasu klatki równym 8,96 ms. Angular z kolei osiągnął niższy koszt zadań, ale jego ścieżka wykonania była bardziej rozciągnięta w czasie, a P95 czasu klatki wzrósł średnio do 18,33 ms. W środowisku edukacyjnego wizualizatora, gdzie każdy krok algorytmu ma zostać możliwie szybko odwzorowany na ekranie, właśnie taki czas ścienny połączony z rytmem klatek jest wskaźnikiem najbardziej bezpośrednio związanym z odczuwaną płynnością.
+
+Scenariusz obciążeniowy uwidocznił to jeszcze wyraźniej. Dla 256 elementów i dużej liczby duplikatów React zakończył cały przebieg po około 102,3 s, podczas gdy Angular potrzebował około 183,4 s. Jednocześnie React zużył około 43,4 s na same skrypty, a Angular około 8,2 s. Różnica ta pokazuje, że Angular wykonywał relatywnie mniej pracy w samym kodzie JavaScript, ale nie był w stanie przełożyć tego na równie szybkie odtwarzanie kompletnej sekwencji stanów przy interwale 1 ms. W praktyce oznacza to, że w scenariuszach o bardzo dużej liczbie kroków i skrajnie małych odstępach czasowych przewagę uzyskuje niekoniecznie framework o najniższym koszcie obliczeń, lecz ten, który efektywniej domyka całą pętlę „stan -- render -- kolejny krok”.
+
+Metryki pamięciowe przyniosły bardziej niejednoznaczny obraz. W scenariuszu bazowym React zużywał więcej sterty JavaScript (11,45 MB wobec 4,89 MB), co jest zgodne z intuicją wynikającą z intensywnego tworzenia niemutowalnych struktur i z narzutu związanego z mechanizmem aktualizacji widoku. W scenariuszu obciążeniowym przewaga Angulara w tym aspekcie była nadal niewielka: React zakończył przebieg z wykorzystaniem około 149,21 MB sterty, a Angular około 140,29 MB. Wskazuje to, że przy dużych zbiorach i długim czasie wykonywania koszt pamięciowy zależy nie tylko od filozofii frameworka, ale również od sposobu odtwarzania kolejki kroków i czasu życia obiektów utrzymywanych przez runtime.
+
+Szczególnie interesujące są metryki opisujące strukturę dokumentu i warstwę zdarzeń. W scenariuszu obciążeniowym Chrome raportował średnio dla React 76 336 nodów i 143 403 nasłuchiwaczy, podczas gdy dla Angulara odpowiednio 1 531 nodów i 36 nasłuchiwaczy. Nie oznacza to automatycznie, że widoczne drzewo DOM Reacta było aż tak wielokrotnie większe; bardziej prawdopodobne jest, że metryki te odzwierciedlają również narzut runtime, obiektów pośrednich oraz inny model utrzymywania warstwy zdarzeń i struktur pomocniczych. Niezależnie od dokładnej przyczyny, liczby te dobrze ilustrują, że koszt frameworka nie powinien być oceniany wyłącznie przez liczbę widocznych elementów na ekranie.
+
+Warto również zwrócić uwagę na metryki \textit{First Meaningful Paint} i \textit{DOMContentLoaded}. W obu scenariuszach Angular uzyskał niższe wartości tych wskaźników, co sugeruje szybsze pojawienie się początkowego interfejsu. Różnice te były szczególnie wyraźne w scenariuszu bazowym, gdzie FMP wyniósł średnio 68,36 ms dla Angulara i 253,69 ms dla React. Z punktu widzenia aplikacji interaktywnej nie przekłada się to jednak bezpośrednio na szybsze zakończenie całej animacji. Wyniki te wzmacniają więc wniosek, że szybkość pierwszego wyrenderowania interfejsu i szybkość długotrwałego odtwarzania intensywnych zmian stanu to dwa różne wymiary wydajności.
+
+W kontekście metryki TBT szczególnie ważny jest fakt, że wszystkie warianty zakończyły się wynikiem zerowym albo bliskim zeru. Jedynie React w scenariuszu obciążeniowym wygenerował średnio 0,9 ms TBT, przy maksimum 2 ms w pojedynczym przebiegu. Oznacza to, że nawet scenariusz skrajny nie produkował klasycznych, długich blokad głównego wątku, a więc źródłem degradacji nie były typowe \textit{long tasks} blokujące interakcję, lecz bardziej subtelny problem: duża liczba krótkich operacji, które łącznie obniżają regularność odświeżania i wydłużają cały przebieg animacji. Z punktu widzenia metodologii pracy jest to cenna obserwacja, ponieważ pokazuje, że w aplikacjach wizualizacyjnych sama obecność lub brak TBT nie wystarcza do opisu odczuwanej płynności.
 
 \section{Porównanie implementacji i artefaktów końcowych}
+Na poziomie artefaktów produkcyjnych obie aplikacje okazały się zbliżone, ale nie identyczne. Katalog produkcyjny wersji React zajmował około 663 KB, podczas gdy katalog produkcyjny Angulara około 573 KB. React generował większą liczbę chunków JavaScript, z których największe miały rozmiary około 187,65 KB, 127,49 KB oraz 115,73 KB. Angular dostarczał bardziej skonsolidowany artefakt, w którym dominującym plikiem był jeden główny bundle \texttt{main} o rozmiarze około 338,48 KB. Oznacza to, że Angular okazał się lżejszy na poziomie łącznego katalogu wyjściowego, natomiast React mocniej rozkładał aplikację na oddzielne moduły i chunki ładowane przez router.
 
 \subsection{Porównanie rozmiarów i złożoności pakietów}
+Tabela \ref{tab:artifact-comparison} przedstawia syntetyczne porównanie najważniejszych parametrów implementacyjnych i artefaktowych obu aplikacji. Warto podkreślić, że różnice w liczbie zależności nie były duże, co wzmacnia wiarygodność benchmarku: przewaga lub słabość jednej z aplikacji nie wynikała z radykalnie odmiennej skali stosu pomocniczego, lecz z charakteru samego frameworka i przyjętego modelu organizacji kodu.
+
+\begin{table}[htbp]
+\centering
+\caption{Porównanie artefaktów produkcyjnych i wielkości implementacji.}
+\label{tab:artifact-comparison}
+\begin{tabular}{|l|r|r|}
+\hline
+\textbf{Metryka} & \textbf{React} & \textbf{Angular} \\
+\hline
+Rozmiar katalogu produkcyjnego & 663 KB & 573 KB \\
+Największy plik JavaScript & 187,65 KB & 338,48 KB \\
+Liczba plików źródłowych aplikacji & 16 & 21 \\
+Przybliżona liczba niepustych linii kodu & 1 820 & 2 004 \\
+Średnia liczba linii na plik & 113,75 & 95,43 \\
+Czas builda cold [ms] & 2 226 & 3 112 \\
+Czas builda warm [ms] & 2 033 & 2 336 \\
+Średnia złożoność cyklomatyczna funkcji & 1,87 & 2,18 \\
+Maks. złożoność cyklomatyczna funkcji & 13 & 13 \\
+Średnia złożoność kognitywna funkcji & 1,20 & 1,46 \\
+Maks. złożoność kognitywna funkcji & 26 & 26 \\
+Liczba zależności bezpośrednich & 12 & 13 \\
+Liczba zależności deweloperskich & 11 & 12 \\
+\hline
+\end{tabular}
+\end{table}
+
+Z punktu widzenia dystrybucji Angular wypadł więc korzystniej pod względem łącznego rozmiaru katalogu wyjściowego, ale równocześnie dostarczał bardziej scentralizowany pakiet główny. React tworzył artefakt większy, lecz jego struktura była bardziej modułowa. W praktyce oznacza to odmienny profil optymalizacyjny: Angular oferuje mniejszy całkowity ślad dystrybucyjny w tej konkretnej aplikacji, natomiast React lepiej wpisuje się w model wielochunkowego dostarczania kodu, charakterystyczny dla współczesnych aplikacji SPA.
+
+Jednocześnie pomiar czasu budowania pokazuje, że React zapewniał szybszy przebieg pełnej kompilacji. W aktualnym środowisku build produkcyjny React zamykał się po około 2,23 s przy pierwszym uruchomieniu, podczas gdy Angular potrzebował około 3,11 s. Przy kolejnym uruchomieniu różnica się zmniejszała, ale nadal pozostawała na korzyść Reacta. Oznacza to, że z perspektywy codziennej iteracji deweloperskiej React oferował nieco krótszy cykl „zmiana -- build -- weryfikacja”, natomiast Angular rekompensował to bardziej zwartym artefaktem i mniejszym rozmiarem dystrybucji.
+
+Automatyczna analiza złożoności pokazała natomiast niewielką przewagę Reacta także na poziomie struktury kodu funkcyjnego. Średnia złożoność cyklomatyczna funkcji wyniosła 1,87 w React i 2,18 w Angularze, natomiast średnia złożoność kognitywna odpowiednio 1,20 i 1,46. W obu aplikacjach maksimum osiągały funkcje implementujące \textit{Quick Sort} i rozbudowaną logikę sterowania przebiegiem benchmarku, co sugeruje, że główne hotspoty złożoności wynikają przede wszystkim z samej natury problemu algorytmicznego, a nie wyłącznie z wyboru frameworka.
 
 \subsection{Ocena łatwości rozwoju i produktywności programistycznej}
+Na poziomie implementacyjnym React okazał się rozwiązaniem nieco bardziej zwięzłym. Cała warstwa źródłowa wersji React obejmowała 16 plików i około 1 820 niepustych linii kodu, podczas gdy Angular 21 plików i około 2 004 linii. Różnica nie jest radykalna, ale pokazuje, że w badanym projekcie React pozwolił osiągnąć porównywalną funkcjonalność przy nieco mniejszej liczbie jednostek organizacyjnych oraz mniejszym wolumenie kodu.
+
+Nie oznacza to jednak automatycznie przewagi Reacta w każdej kategorii doświadczenia deweloperskiego. Wersja React była bardziej zwięzła, ale także silniej opierała się na niestandardowych hookach, lokalnym sterowaniu stanem oraz większej liczbie mechanizmów wynikających z samego runtime biblioteki. Angular był bardziej rozwlekły w warstwie plików i deklaracji, ale jednocześnie oferował bardziej przewidywalny, jawny model organizacji komponentów oraz bardziej jednorodną strukturę projektu. W praktyce oznacza to klasyczny kompromis między zwięzłością a standaryzacją.
+
+Pomocne okazało się również porównanie narzędzi deweloperskich. React Developer Tools dobrze wspierały inspekcję komponentów funkcyjnych i przepływu hooków, co ułatwiało śledzenie lokalnego stanu dashboardu. Angular DevTools oferowały bardziej uporządkowany wgląd w drzewo komponentów i zależności, ale w tym projekcie kluczowe znaczenie miały przede wszystkim natywne narzędzia Chrome oraz własne markery benchmarkowe. W praktyce oznacza to, że rozszerzenia frameworkowe poprawiały komfort debugowania, lecz przy profilowaniu wydajności decydująca była i tak wspólna warstwa diagnostyczna przeglądarki. Z perspektywy produktywności ważne jest przy tym, że największe hotspoty złożoności w obu implementacjach były zlokalizowane w plikach odpowiedzialnych za generowanie kroków sortowania oraz orkiestrację dashboardu, a więc w obszarach naturalnie najbardziej wrażliwych na błędy i regresje.
+
+W kontekście samego procesu budowania środowiska badawczego istotne jest również to, że automatyzacja benchmarków okazała się możliwa w obu ekosystemach bez potrzeby przepisywania logiki domenowej. Zarówno React, jak i Angular umożliwiły dołożenie warstwy kontrolnej opartej na parametrach URL i markerach testowych. Różnica polegała głównie na stylu implementacji: w React bardziej naturalne było rozszerzenie logiki hooków i komponentów funkcyjnych, natomiast w Angularze rozwiązanie to zostało wprowadzone w sposób bardziej deklaratywny przez sygnały oraz metody komponentu dashboardu.
 
 \subsection{Porównawcza analiza zastosowania TypeScript w obu frameworkach}
+Obie aplikacje zostały przygotowane z wykorzystaniem TypeScript, ale rola systemu typów w obu frameworkach była nieco inna. W React TypeScript pełnił funkcję stabilizującą kontrakty hooków, struktur \texttt{SortStep}, map algorytmów oraz parametrów dashboardu. Silne typowanie było szczególnie przydatne podczas rozszerzania warstwy benchmarkowej o konfigurację scenariuszy, selektory i publikowanie stanu do obiektu \texttt{window.\_\_SORTIFY\_BENCHMARK\_\_}. W tej wersji największą zaletą TypeScript była elastyczność: można było stosunkowo łatwo rozszerzać interfejsy i lokalny stan bez konieczności naruszania szerszego modelu aplikacji.
+
+W Angularze TypeScript był jeszcze głębiej wbudowany w sposób organizacji systemu. Typowane sygnały, klasa \texttt{SortingPlayer}, konfiguracja komponentów \textit{standalone} oraz jawne modele opcji powodowały, że struktura aplikacji była bardziej eksplicytna. Ceną za tę przewidywalność była większa liczba deklaracji i nieco większa objętość kodu. Z perspektywy projektu badawczego można uznać, że React wykorzystywał TypeScript bardziej jako narzędzie zwiększające zwinność i bezpieczeństwo zmian, natomiast Angular jako integralny element architektury aplikacji.
+
+Na poziomie praktycznym oznacza to, że oba frameworki zapewniają wysoki poziom bezpieczeństwa typów, ale robią to w odmienny sposób. React pozostawia większą swobodę w modelowaniu lokalnych abstrakcji, podczas gdy Angular mocniej prowadzi dewelopera w stronę spójnego stylu organizacji kodu. W kontekście rozbudowy środowiska benchmarkowego oba podejścia okazały się skuteczne, lecz wersja React wymagała mniejszej liczby formalnych elementów pośrednich.
 
 \section{Dyskusja wyników i odpowiedzi na pytania badawcze}
 
 \subsection{Odpowiedzi na główne i szczegółowe pytania badawcze}
+Na podstawie przeprowadzonych testów można odpowiedzieć twierdząco na główne pytanie badawcze: architektura frameworka ma istotny wpływ na zachowanie aplikacji w scenariuszach dynamicznej wizualizacji algorytmów sortowania. W badanym projekcie React osiągał krótszy czas ukończenia całej animacji zarówno w scenariuszu bazowym, jak i obciążeniowym. Jednocześnie Angular cechował się niższym skumulowanym kosztem zadań JavaScript oraz mniejszym śladem warstwy DOM i zdarzeń.
+
+Pierwsze pytanie szczegółowe dotyczyło tego, czy różnice między frameworkami nasilają się wraz ze wzrostem obciążenia. Wyniki wskazują, że tak. W scenariuszu 32-elementowym różnica wyniosła około 1,2 s, natomiast w scenariuszu 256-elementowym wzrosła do ponad 80 s. Oznacza to, że im większa liczba kroków i im bardziej agresywna częstotliwość odświeżania, tym wyraźniej ujawniają się różnice w praktycznej sprawności mechanizmów synchronizacji stanu z widokiem.
+
+Drugie pytanie szczegółowe dotyczyło relacji między kosztem czystych obliczeń a czasem odczuwanym przez użytkownika. Odpowiedź brzmi: relacja ta nie jest liniowa. Angular wykonywał mniej pracy na poziomie \textit{Script Duration} i \textit{Task Duration}, ale nie przekładało się to na szybsze zakończenie scenariusza. W przypadku wizualizatora bardziej miarodajnym wskaźnikiem okazał się więc całkowity czas ukończenia pełnej sekwencji zmian, a nie sama suma czasu wykonywania skryptów.
+
+Trzecie pytanie dotyczyło kosztu pamięciowego i strukturalnego. Wyniki pokazują, że sytuacja jest mieszana. Dla małego scenariusza React zużywał więcej pamięci, natomiast dla dużego scenariusza nieznaczną przewagę w oszczędności pamięci uzyskał właśnie React. Jednocześnie metryki CDP wskazały na zdecydowanie większą liczbę nodów i nasłuchiwaczy w wariancie React, co sugeruje wyższy narzut runtime po stronie struktur pomocniczych.
+
+Ostatnie pytanie szczegółowe dotyczyło kosztu implementacyjnego. W badanym projekcie React okazał się bardziej zwięzły pod względem liczby plików i linii kodu, osiągał krótszy czas budowania i nieco niższą średnią złożoność funkcji, podczas gdy Angular dostarczył mniejszy katalog produkcyjny oraz bardziej jednorodną strukturę projektu. Nie ma więc podstaw, by uznać jedną z technologii za bezwzględnie lepszą pod każdym względem; obie ujawniają przewagę w innych wymiarach analizy.
 
 \subsection{Porównanie mocnych i słabych stron React i Angular w kontekście dynamicznych wizualizacji}
+Najmocniejszą stroną Reacta w badanym zastosowaniu była zdolność do szybkiego domykania pełnej sekwencji animacji, nawet przy bardzo dużej liczbie kroków. W praktyce oznacza to, że dla narzędzi, w których kluczowa jest całkowita długość odtwarzania procesu i szybkość przejścia przez kompletną sekwencję stanów, React może okazać się wyborem korzystniejszym. Słabością tego podejścia jest jednak wyraźnie wyższy narzut na warstwę wykonywania zadań i większa liczba struktur obserwowanych przez narzędzia diagnostyczne przeglądarki.
+
+Angular z kolei wykazał się bardzo dobrą kontrolą nad kosztem skryptów i bardziej zwartym obrazem warstwy DOM oraz zdarzeń. Jest to istotna zaleta w kontekście systemów wymagających przewidywalnej architektury i czytelnego, silnie standaryzowanego modelu rozwoju. Słabością w badanym scenariuszu była jednak dłuższa całkowita długość odtwarzania animacji przy bardzo dużym obciążeniu, co obniżało praktyczną sprawność wizualizatora jako narzędzia dynamicznej prezentacji algorytmów.
+
+Warto również podkreślić, że przewaga Reacta nie była przewagą uniwersalną, a przewaga Angulara nie ograniczała się wyłącznie do „porządku architektonicznego”. Wyniki sugerują raczej, że React lepiej radzi sobie z końcową przepustowością odtwarzania szybkich zmian, natomiast Angular zapewnia bardziej oszczędny profil wykonania na poziomie cząstkowych zadań i struktur środowiska uruchomieniowego.
 
 \section{Wnioski i rekomendacje}
 
 \subsection{Implikacje praktyczne dla deweloperów i architektów}
+Z praktycznego punktu widzenia otrzymane wyniki prowadzą do wniosku, że wybór frameworka powinien być uzależniony od tego, która metryka jest dla projektu krytyczna. Jeżeli priorytetem jest możliwie szybkie zakończenie całej animacji lub procesu wizualnego przy bardzo gęstych aktualizacjach stanu, obecne wyniki wskazują na przewagę Reacta. Jeżeli natomiast istotniejsze są bardziej zwarte artefakty produkcyjne, niższy skumulowany koszt zadań JavaScript oraz bardziej przewidywalny model organizacji aplikacji, Angular pozostaje bardzo mocnym kandydatem.
+
+Dla architektów systemów frontendowych oznacza to, że nie należy utożsamiać wydajności wyłącznie z jednym wskaźnikiem. Aplikacja może zużywać mniej czasu procesora na wykonanie skryptów, ale mimo to kończyć scenariusz później. W praktyce projektowej konieczne jest więc równoczesne monitorowanie czasu całkowitego, kosztu skryptów, pamięci, rozmiaru artefaktów i organizacji kodu.
 
 \subsection{Implikacje teoretyczne dla inżynierii oprogramowania}
+Na poziomie teoretycznym przeprowadzone badanie wzmacnia tezę, że wydajność współczesnych frameworków frontendowych jest zjawiskiem wielowymiarowym. Nie istnieje pojedyncza metryka, która w sposób pełny oddawałaby zachowanie aplikacji pod obciążeniem. Wyniki pokazują, że różne warstwy systemu -- logika algorytmu, model zarządzania stanem, harmonogramowanie, renderowanie oraz charakterystyka artefaktu produkcyjnego -- mogą prowadzić do odmiennych, a czasem pozornie sprzecznych wniosków.
+
+Badanie wskazuje również, że analiza wydajności frameworka w oderwaniu od konkretnego typu aplikacji ma ograniczoną wartość poznawczą. W zastosowaniu takim jak wizualizator algorytmów, gdzie liczba aktualizacji jest bardzo duża, a interwały między nimi ekstremalnie małe, kluczowe stają się cechy niekoniecznie dominujące w innych klasach aplikacji, na przykład w klasycznych formularzach biznesowych czy panelach administracyjnych. Oznacza to, że ocena technologii powinna być zawsze osadzona w kontekście problemu, który ma zostać rozwiązany.
 
 \subsection{Ograniczenia przeprowadzonego badania}
+Przedstawione wyniki należy interpretować z uwzględnieniem kilku ograniczeń. Po pierwsze, aktualna seria benchmarków obejmuje dwa scenariusze referencyjne, które dobrze ilustrują zachowanie systemu przy obciążeniu niskim i wysokim, ale nie wyczerpują całej przestrzeni możliwych konfiguracji wejściowych. Po drugie, choć dla tych dwóch scenariuszy wykonano pełną serię 10 powtórzeń i obliczono miary statystyczne, analogiczna procedura nie została jeszcze przeprowadzona dla całej matrycy rozmiarów danych, wzorców wejścia i tempa animacji.
+
+Po trzecie, wszystkie pomiary przeprowadzono na jednej platformie sprzętowo-programowej, co ogranicza możliwość bezpośredniego uogólnienia wyników na inne klasy urządzeń, zwłaszcza słabsze komputery mobilne czy środowiska o odmiennych parametrach energetycznych. Po czwarte, benchmark dotyczy specyficznej klasy aplikacji: wizualizatora algorytmów działającego w modelu \textit{snapshot-based}. Wyniki nie powinny więc być traktowane jako uniwersalna ocena Reacta i Angulara we wszystkich zastosowaniach frontendowych.
+
+Mimo tych ograniczeń uzyskane dane mają istotną wartość poznawczą, ponieważ pokazują realne zachowanie dwóch dojrzałych frameworków w praktycznym i wymagającym scenariuszu. Jednocześnie stanowią dobrą podstawę do dalszego rozszerzania eksperymentu o kolejne scenariusze, bardziej szczegółową analizę trace'ów per frame, pełne porównanie rozkładów klatek oraz dopracowanie modeli złożoności o metryki specyficzne dla szablonów Angular i JSX.
 
 \clearpage
 \phantomsection

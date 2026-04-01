@@ -2,7 +2,7 @@
   "name": "@sortify/thesis",
   "private": true,
   "scripts": {
-    "build": "mkdir -p dist && latexmk -xelatex -interaction=nonstopmode -file-line-error -outdir=dist main.tex",
+    "build": "mkdir -p dist && latexmk -g -xelatex -interaction=nonstopmode -file-line-error -outdir=dist main.tex",
     "clean": "latexmk -C -outdir=dist && rm -rf dist"
   }
 }

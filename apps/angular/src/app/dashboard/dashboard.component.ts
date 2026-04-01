@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, computed, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, computed, effect, signal } from '@angular/core';
 
 import { HlmBadgeImports } from '@spartan-ng/helm/badge';
 import { HlmButtonImports } from '@spartan-ng/helm/button';
@@ -20,6 +20,20 @@ const SPEED_MAX = 1000;
 const DASHBOARD_SEED = 20260318;
 const DATASET_SIZE_OPTIONS = [32, 64, 100, 128, 256] as const;
 type SortingAlgorithmKey = 'bubble' | 'quick' | 'merge' | 'insertion';
+
+type DashboardConfig = {
+  benchmarkMode: boolean;
+  autoplay: boolean;
+  delay: number;
+  seed: number;
+  size: (typeof DATASET_SIZE_OPTIONS)[number];
+  pattern: DataPattern;
+  algorithms: SortingAlgorithmKey[];
+};
+
+type BenchmarkWindow = Window & {
+  __SORTIFY_BENCHMARK__?: unknown;
+};
 
 const SORTING_ALGORITHM_OPTIONS: Record<
   SortingAlgorithmKey,
@@ -49,6 +63,106 @@ const SORTING_ALGORITHM_OPTIONS: Record<
 
 const SORTING_ALGORITHM_ORDER: SortingAlgorithmKey[] = ['bubble', 'quick', 'merge', 'insertion'];
 
+const DEFAULT_DASHBOARD_CONFIG: DashboardConfig = {
+  benchmarkMode: false,
+  autoplay: true,
+  delay: 200,
+  seed: DASHBOARD_SEED,
+  size: DATASET_SIZE_OPTIONS[0],
+  pattern: 'random',
+  algorithms: [...SORTING_ALGORITHM_ORDER],
+};
+
+function parseBooleanParam(value: string | null, fallback: boolean) {
+  if (value === null) {
+    return fallback;
+  }
+
+  const normalized = value.trim().toLowerCase();
+
+  if (['1', 'true', 'yes', 'on'].includes(normalized)) {
+    return true;
+  }
+
+  if (['0', 'false', 'no', 'off'].includes(normalized)) {
+    return false;
+  }
+
+  return fallback;
+}
+
+function parseIntegerParam(value: string | null, fallback: number, min: number, max: number) {
+  if (value === null) {
+    return fallback;
+  }
+
+  const parsed = Number(value);
+
+  if (!Number.isFinite(parsed)) {
+    return fallback;
+  }
+
+  return Math.min(max, Math.max(min, Math.trunc(parsed)));
+}
+
+function parseSizeParam(value: string | null) {
+  const parsed = Number(value);
+
+  if (!DATASET_SIZE_OPTIONS.includes(parsed as (typeof DATASET_SIZE_OPTIONS)[number])) {
+    return DEFAULT_DASHBOARD_CONFIG.size;
+  }
+
+  return parsed as (typeof DATASET_SIZE_OPTIONS)[number];
+}
+
+function parsePatternParam(value: string | null) {
+  if (value && value in DATA_PATTERN_LABELS) {
+    return value as DataPattern;
+  }
+
+  return DEFAULT_DASHBOARD_CONFIG.pattern;
+}
+
+function parseAlgorithmsParam(value: string | null) {
+  if (!value) {
+    return [...DEFAULT_DASHBOARD_CONFIG.algorithms];
+  }
+
+  const parsed = value
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter((entry): entry is SortingAlgorithmKey => entry in SORTING_ALGORITHM_OPTIONS);
+
+  if (!parsed.length) {
+    return [...DEFAULT_DASHBOARD_CONFIG.algorithms];
+  }
+
+  return SORTING_ALGORITHM_ORDER.map((_, index) => parsed[index] ?? SORTING_ALGORITHM_ORDER[index]);
+}
+
+function readInitialDashboardConfig(): DashboardConfig {
+  if (typeof window === 'undefined') {
+    return DEFAULT_DASHBOARD_CONFIG;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+
+  return {
+    benchmarkMode: parseBooleanParam(params.get('benchmark'), DEFAULT_DASHBOARD_CONFIG.benchmarkMode),
+    autoplay: parseBooleanParam(params.get('autoplay'), DEFAULT_DASHBOARD_CONFIG.autoplay),
+    delay: parseIntegerParam(params.get('delay'), DEFAULT_DASHBOARD_CONFIG.delay, SPEED_MIN, SPEED_MAX),
+    seed: parseIntegerParam(
+      params.get('seed'),
+      DEFAULT_DASHBOARD_CONFIG.seed,
+      0,
+      Number.MAX_SAFE_INTEGER,
+    ),
+    size: parseSizeParam(params.get('size')),
+    pattern: parsePatternParam(params.get('pattern')),
+    algorithms: parseAlgorithmsParam(params.get('algorithms')),
+  };
+}
+
 @Component({
   selector: 'app-dashboard',
   standalone: true,
@@ -64,6 +178,7 @@ const SORTING_ALGORITHM_ORDER: SortingAlgorithmKey[] = ['bubble', 'quick', 'merg
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DashboardComponent implements OnDestroy {
+  private readonly initialConfig = readInitialDashboardConfig();
   readonly dataPatternLabels = DATA_PATTERN_LABELS;
   readonly dataSizeOptions = DATASET_SIZE_OPTIONS;
   readonly algorithmOptions = SORTING_ALGORITHM_ORDER.map((value) => ({
@@ -75,44 +190,46 @@ export class DashboardComponent implements OnDestroy {
     label,
   }));
   readonly bubble = new SortingPlayer(bubbleSortSteps, {
-    size: DATASET_SIZE_OPTIONS[0],
+    size: this.initialConfig.size,
     min: 10,
     max: 120,
-    seed: DASHBOARD_SEED,
-    pattern: 'random',
+    seed: this.initialConfig.seed,
+    pattern: this.initialConfig.pattern,
     autoplay: false,
   });
   readonly quick = new SortingPlayer(quickSortSteps, {
-    size: DATASET_SIZE_OPTIONS[0],
+    size: this.initialConfig.size,
     min: 10,
     max: 120,
-    seed: DASHBOARD_SEED,
-    pattern: 'random',
+    seed: this.initialConfig.seed,
+    pattern: this.initialConfig.pattern,
     autoplay: false,
   });
   readonly merge = new SortingPlayer(mergeSortSteps, {
-    size: DATASET_SIZE_OPTIONS[0],
+    size: this.initialConfig.size,
     min: 10,
     max: 120,
-    seed: DASHBOARD_SEED,
-    pattern: 'random',
+    seed: this.initialConfig.seed,
+    pattern: this.initialConfig.pattern,
     autoplay: false,
   });
   readonly insertion = new SortingPlayer(insertionSortSteps, {
-    size: DATASET_SIZE_OPTIONS[0],
+    size: this.initialConfig.size,
     min: 10,
     max: 120,
-    seed: DASHBOARD_SEED,
-    pattern: 'random',
+    seed: this.initialConfig.seed,
+    pattern: this.initialConfig.pattern,
     autoplay: false,
   });
   readonly speedBounds = { min: SPEED_MIN, max: SPEED_MAX };
+  readonly benchmarkMode = this.initialConfig.benchmarkMode;
+  readonly benchmarkReady = signal(false);
 
-  readonly isPlaying = signal(true);
-  readonly delay = signal(200);
-  readonly datasetSize = signal<(typeof DATASET_SIZE_OPTIONS)[number]>(DATASET_SIZE_OPTIONS[0]);
-  readonly dataPattern = signal<DataPattern>('random');
-  readonly selectedAlgorithms = signal<SortingAlgorithmKey[]>([...SORTING_ALGORITHM_ORDER]);
+  readonly isPlaying = signal(this.initialConfig.autoplay);
+  readonly delay = signal(this.initialConfig.delay);
+  readonly datasetSize = signal<(typeof DATASET_SIZE_OPTIONS)[number]>(this.initialConfig.size);
+  readonly dataPattern = signal<DataPattern>(this.initialConfig.pattern);
+  readonly selectedAlgorithms = signal<SortingAlgorithmKey[]>([...this.initialConfig.algorithms]);
   readonly sliderValue = computed(() => [SPEED_MIN + SPEED_MAX - this.delay()]);
   readonly chartHeight = computed(() => {
     const size = this.datasetSize();
@@ -142,12 +259,16 @@ export class DashboardComponent implements OnDestroy {
       player: this.players[index],
     })),
   );
-  private currentSeed = DASHBOARD_SEED;
+  private currentSeed = this.initialConfig.seed;
   private timerId: number | null = null;
 
   constructor() {
     this.syncPlayers();
     this.restartTimer();
+    effect(() => {
+      this.publishBenchmarkSnapshot();
+    });
+    this.benchmarkReady.set(true);
   }
 
   togglePlayback() {
@@ -256,6 +377,38 @@ export class DashboardComponent implements OnDestroy {
   ngOnDestroy() {
     this.clearTimer();
     this.players.forEach((player) => player.destroy());
+  }
+
+  private publishBenchmarkSnapshot() {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const benchmarkWindow = window as BenchmarkWindow;
+    const algorithms = this.algorithms();
+
+    benchmarkWindow.__SORTIFY_BENCHMARK__ = {
+      framework: 'angular',
+      ready: this.benchmarkReady(),
+      benchmarkMode: this.benchmarkMode,
+      autoplay: this.isPlaying(),
+      delay: this.delay(),
+      datasetSeed: this.currentSeed,
+      datasetSize: this.datasetSize(),
+      dataPattern: this.dataPattern(),
+      selectedAlgorithms: this.selectedAlgorithms(),
+      completed: algorithms.every((algorithm) => algorithm.player.isDone()),
+      sorters: algorithms.map((algorithm) => ({
+        id: algorithm.id,
+        key: algorithm.key,
+        label: algorithm.name,
+        index: algorithm.player.index(),
+        stepCount: algorithm.player.steps().length,
+        isDone: algorithm.player.isDone(),
+        isPlaying: algorithm.player.isPlaying(),
+        status: this.statusLabel(algorithm.player),
+      })),
+    };
   }
 
   private syncPlayers() {
