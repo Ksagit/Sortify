@@ -10,6 +10,7 @@
 \usepackage{microtype}
 \usepackage[hidelinks]{hyperref}
 \usepackage[polish]{babel}
+\usepackage{pdflscape}
 \usepackage{setspace}
 \usepackage{fancyhdr}
 
@@ -871,6 +872,61 @@ W badanym projekcie produktywność nie była rozumiana wyłącznie jako szybko�
 Ocena doświadczenia dewelopera obejmuje więc również jakość lokalnych kompromisów projektowych. Framework może przyspieszać start projektu, ale jednocześnie utrudniać niskopoziomowe strojenie wydajności, albo odwrotnie — dawać dużą swobodę optymalizacyjną kosztem większej liczby decyzji podejmowanych ręcznie. Właśnie w takich punktach ujawnia się praktyczna wartość ekosystemu, dokumentacji oraz konwencji narzucanych przez dane narzędzie. Rozdział ten ma więc stanowić pomost między czysto technicznym benchmarkiem a rzeczywistą perspektywą zespołu wytwarzającego i utrzymującego aplikację.
 
 \chapter{Wyniki badań, analiza porównawcza i wnioski}
+
+\section{Prezentacja aplikacji benchmarkowych}
+Przed omówieniem wyników pomiarów zasadne jest krótkie przedstawienie aplikacji, na których przeprowadzano benchmarki. Obie wersje systemu, przygotowane odpowiednio w React i Angularze, zostały zaprojektowane jako funkcjonalnie równoważne środowiska badawcze. Oznacza to nie tylko wykorzystanie tych samych algorytmów i parametrów eksperymentu, ale również zachowanie zbliżonej struktury interfejsu użytkownika. Taka spójność ma znaczenie metodologiczne, ponieważ ogranicza wpływ odmiennych decyzji projektowych dotyczących UI na obserwowane różnice wydajnościowe.
+
+W obu implementacjach wyróżniono dwa podstawowe widoki: stronę startową oraz dashboard badawczy. Strona startowa pełni funkcję informacyjną i wprowadzającą. Zawiera syntetyczny opis celu aplikacji, podstawowe informacje o wizualizacji algorytmów oraz podgląd sposobu prezentacji danych. Dzięki temu użytkownik jeszcze przed rozpoczęciem eksperymentu może zrozumieć logikę działania narzędzia, znaczenie kodowania kolorystycznego oraz ogólny charakter porównywanych algorytmów. Widok ten porządkuje kontekst badania i pełni rolę warstwy objaśniającej, a nie właściwego środowiska pomiarowego.
+
+Zasadnicza część eksperymentu realizowana jest w dashboardzie badawczym. Widok ten koncentruje wszystkie elementy sterujące przebiegiem testu, takie jak uruchamianie i zatrzymywanie animacji, wybór rozmiaru danych, charakterystyki wejścia oraz tempa odtwarzania. Najistotniejszą część dashboardu stanowi zestaw czterech równoległych kart prezentujących przebieg działania poszczególnych algorytmów na tym samym zbiorze wejściowym. Takie rozwiązanie pozwala obserwować różnice w dynamice sortowania w sposób synchroniczny i porównywalny, a jednocześnie zapewnia jednakowe warunki interakcji w obu frameworkach. Z perspektywy badawczej oznacza to, że porównanie dotyczy przede wszystkim zachowania mechanizmów renderowania i aktualizacji widoku, a nie różnic wynikających z odmiennej organizacji samego interfejsu.
+
+\clearpage
+\begin{landscape}
+\thispagestyle{plain}
+\captionsetup{hypcap=false}
+\begin{center}
+  \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{images/react-landing.png}
+  \captionof{figure}{Strona startowa aplikacji benchmarkowej zaimplementowanej w React.}
+  \label{fig:react-landing}
+  \source{Opracowanie własne}
+\end{center}
+\end{landscape}
+
+\clearpage
+\begin{landscape}
+\thispagestyle{plain}
+\captionsetup{hypcap=false}
+\begin{center}
+  \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{images/angular-landing.png}
+  \captionof{figure}{Strona startowa aplikacji benchmarkowej zaimplementowanej w Angularze.}
+  \label{fig:angular-landing}
+  \source{Opracowanie własne}
+\end{center}
+\end{landscape}
+
+\clearpage
+\begin{landscape}
+\thispagestyle{plain}
+\captionsetup{hypcap=false}
+\begin{center}
+  \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{images/react-home.png}
+  \captionof{figure}{Dashboard badawczy aplikacji benchmarkowej w React z czterema równoległymi wizualizacjami.}
+  \label{fig:react-dashboard}
+  \source{Opracowanie własne}
+\end{center}
+\end{landscape}
+
+\clearpage
+\begin{landscape}
+\thispagestyle{plain}
+\captionsetup{hypcap=false}
+\begin{center}
+  \includegraphics[width=\linewidth,height=0.82\textheight,keepaspectratio]{images/angular-home.png}
+  \captionof{figure}{Dashboard badawczy aplikacji benchmarkowej w Angularze z czterema równoległymi wizualizacjami.}
+  \label{fig:angular-dashboard}
+  \source{Opracowanie własne}
+\end{center}
+\end{landscape}
 
 \section{Prezentacja wyników pomiarów wydajności renderowania}
 W niniejszym rozdziale przedstawiono wyniki uzyskane z aktualnej wersji zautomatyzowanego środowiska benchmarkowego przygotowanego dla obu aplikacji. Analizie poddano dwa scenariusze referencyjne: scenariusz bazowy \textit{baseline-random-32}, w którym równolegle wizualizowano cztery algorytmy dla 32 elementów danych losowych, oraz scenariusz obciążeniowy \textit{stress-duplicates-256}, w którym ten sam zestaw algorytmów pracował na 256 elementach z dużą liczbą duplikatów przy opóźnieniu animacji ustawionym na 1 ms. Oba przebiegi realizowano na produkcyjnych buildach aplikacji, a zbieranie danych odbywało się automatycznie z wykorzystaniem Playwright, Chrome DevTools Protocol oraz dodatkowego próbnika runtime opartego na \texttt{requestAnimationFrame} i \texttt{PerformanceObserver}, co pozwoliło zarejestrować również rytm klatek i metrykę \textit{Total Blocking Time}. Wszystkie wartości w tabelach \ref{tab:baseline-results} i \ref{tab:stress-results} są średnimi z 10 niezależnych przebiegów, a ich stabilność opisano dodatkowo w Tabeli \ref{tab:statistical-stability}.
