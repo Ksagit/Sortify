@@ -1,6 +1,12 @@
-export const AlgorithmCards = () => {
+export const AlgorithmCards = ({
+  reducedMargin = false,
+}: {
+  reducedMargin?: boolean;
+}) => {
   return (
-    <div className="mb-24 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4">
+    <div
+      className={`${reducedMargin ? "mb-4" : "mb-24"} mx-auto grid max-w-400 grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-4`}
+    >
       <div className="group rounded-2xl border border-border bg-linear-to-br from-card/90 to-card/70 p-8 shadow-xl backdrop-blur-md transition-all duration-500 hover:scale-105 hover:from-card hover:to-card/90 hover:shadow-2xl hover:shadow-chart-1/20">
         <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-linear-to-br from-chart-1 to-destructive shadow-lg transition-all duration-300 group-hover:rotate-6 group-hover:shadow-xl">
           <span className="font-bold text-white text-xl">BS</span>

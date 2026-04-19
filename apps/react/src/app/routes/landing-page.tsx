@@ -54,12 +54,12 @@ export default function LandingPage() {
   }, [selectedAlgorithm, sorter]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-linear-to-br from-muted to-background pb-10">
-      <HeroSection />
+    <div className="relative h-screen overflow-hidden bg-linear-to-br from-muted to-background pb-0">
+      <HeroSection reducedPadding />
       <div className="relative z-10 px-6">
+        <AlgorithmCards reducedMargin />
         <div className="mx-auto max-w-7xl">
-          <AlgorithmCards />
-          <div className="grid grid-cols-1 items-center gap-16 lg:grid-cols-2">
+          <div className="grid grid-cols-1 items-center gap-4 lg:grid-cols-2">
             <FeaturesSection />
             <Card>
               <CardHeader className="border-b py-2">

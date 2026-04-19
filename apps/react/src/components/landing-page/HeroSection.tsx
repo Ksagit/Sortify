@@ -1,13 +1,19 @@
 import { Link } from "react-router";
 import { Button } from "src/components/ui/button";
 
-export const HeroSection = () => {
+export const HeroSection = ({
+  reducedPadding = false,
+}: {
+  reducedPadding?: boolean;
+}) => {
   return (
-    <section className="relative z-10 px-6 pt-20 pb-32">
+    <section
+      className={`relative z-10 px-6 ${reducedPadding ? "pt-4 pb-4" : "pt-20 pb-32"}`}
+    >
       <div className="mx-auto max-w-4xl text-center">
         <h1 className="mb-6 font-semibold text-5xl text-foreground leading-tight md:text-7xl">
           Visualize{" "}
-          <span className="bg-gradient-to-r from-primary via-sky-500 to-purple-500 bg-clip-text text-transparent">
+          <span className="bg-linear-to-r from-primary via-sky-500 to-purple-500 bg-clip-text text-transparent">
             Sorting Algorithms
           </span>
         </h1>
@@ -19,7 +25,7 @@ export const HeroSection = () => {
           <Link to="/dashboard">
             <Button
               size="lg"
-              className="min-w-[200px] transform bg-gradient-to-r from-primary to-chart-1 px-8 py-6 font-semibold text-lg text-primary-foreground shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-primary/25"
+              className="min-w-50 transform bg-linear-to-r from-primary to-chart-1 px-8 py-6 font-semibold text-lg text-primary-foreground shadow-2xl transition-all duration-300 hover:scale-105 hover:shadow-primary/25"
             >
               Start Visualizing
             </Button>

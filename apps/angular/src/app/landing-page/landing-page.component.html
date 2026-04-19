@@ -8,25 +8,46 @@
         Visualize
         <span class="gradient-text">Sorting Algorithms</span>
       </h1>
+
       <p>
-        Interactive animations that make complex sorting algorithms easy to understand. Watch data come to life as it gets sorted step by step.
+        Interactive animations that make complex sorting algorithms easy to
+        understand. Watch data come to life as it gets sorted step by step.
       </p>
-      <a hlmBtn size="lg" class="hero-button" routerLink="/dashboard">Start Visualizing</a>
+
+      <a
+        hlmBtn
+        size="lg"
+        class="hero-button"
+        routerLink="/dashboard"
+      >
+        Start Visualizing
+      </a>
     </div>
   </section>
 
   <section class="content-shell algorithm-grid">
     @for (card of algorithmCards; track card.title) {
-      <article hlmCard class="feature-card" [class]="'feature-card feature-card--' + card.palette">
+      <article
+        hlmCard
+        class="feature-card"
+        [class.feature-card--bubble]="card.palette === 'bubble'"
+        [class.feature-card--merge]="card.palette === 'merge'"
+        [class.feature-card--quick]="card.palette === 'quick'"
+      >
         <div hlmCardHeader class="feature-card__header">
           <div class="feature-card__badge">{{ card.shortLabel }}</div>
+
           <div>
             <h2 hlmCardTitle>{{ card.title }}</h2>
           </div>
         </div>
+
         <div hlmCardContent class="feature-card__content">
           <p>{{ card.description }}</p>
-          <span hlmBadge variant="secondary" class="complexity-badge">{{ card.complexity }}</span>
+
+          <span hlmBadge variant="secondary" class="complexity-badge">
+            {{ card.complexity }}
+          </span>
         </div>
       </article>
     }
@@ -42,9 +63,20 @@
       <div class="insight-list">
         @for (feature of features; track feature.title) {
           <div class="insight-item">
-            <div class="insight-item__icon" [class]="'insight-item__icon insight-item__icon--' + feature.palette">
+            <div
+              class="insight-item__icon"
+              [class.insight-item__icon--primary]="
+                feature.palette === 'primary'
+              "
+              [class.insight-item__icon--secondary]="
+                feature.palette === 'secondary'
+              "
+              [class.insight-item__icon--accent]="feature.palette === 'accent'"
+              [class.insight-item__icon--danger]="feature.palette === 'danger'"
+            >
               {{ feature.icon }}
             </div>
+
             <div>
               <h3>{{ feature.title }}</h3>
               <p>{{ feature.description }}</p>
@@ -58,17 +90,23 @@
       <header hlmCardHeader>
         <div class="preview-card__header-row">
           <h3 hlmCardTitle>{{ selectedAlgorithmLabel() }}</h3>
+
           <select
             class="preview-card__select"
             [value]="selectedAlgorithm()"
             (change)="updatePreviewAlgorithm($any($event.target).value)"
           >
             @for (entry of algorithmOptions; track entry.value) {
-              <option [value]="entry.value">{{ entry.label }}</option>
+              <option [value]="entry.value">
+                {{ entry.label }}
+              </option>
             }
           </select>
         </div>
-        <span>Step {{ quickSortPreview.index() + 1 }}/{{ quickSortStepCount() }}</span>
+
+        <span>
+          Step {{ quickSortPreview.index() + 1 }}/{{ quickSortStepCount() }}
+        </span>
       </header>
 
       <div hlmCardContent class="preview-card__body">
@@ -83,7 +121,9 @@
         ></app-sorting-progress-chart>
       </div>
 
-      <footer hlmCardFooter>n = {{ quickSortPreview.step().values.length }}</footer>
+      <footer hlmCardFooter>
+        n = {{ quickSortPreview.step().values.length }}
+      </footer>
     </article>
   </section>
 </div>
