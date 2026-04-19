@@ -23,6 +23,7 @@
 *.tmp
 *.temp
 /dist/
+!/dist/main.pdf
 
 # System and editor files
 .DS_Store
