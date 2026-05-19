@@ -1,4 +1,4 @@
-# Sortify Thesis Workspace
+# Sortify
 
 Repozytorium zawiera materiały do pracy magisterskiej oraz dwa porównywane projekty frontendowe: aplikację w React i aplikację w Angularze. Obie implementacje rozwiązują ten sam problem: wizualizację algorytmów sortowania w kontrolowanych, deterministycznych warunkach, tak aby można było porównywać zachowanie frameworków przy intensywnych aktualizacjach interfejsu.
 
