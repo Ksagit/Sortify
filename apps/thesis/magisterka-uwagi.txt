@@ -1,7 +1,6 @@
 [x] -  zrodal do kodu zrodlowego (opracowanie wlasne)
 [x] - cos nie tak z numerami stron
 [x] - 2.1 za krotki - kilka stron 2.2.x tez za krotkie
-
 [x] - usunac streszcenie
 [x] - we wstepie ogolna charakterystyka zrodle
 [x] - ai czy w jakim zakresie 
@@ -11,15 +10,30 @@
 [x] - str 31 zrodla na poczatku wyliczanki to samo 32
 [x] - zrodla do rysunkow dodac numerek do tytulu rysunku zeby byl w bibliografii
 [x] - acessed w bibliografi na otwarcie czy cos 
-
 [x] - 3 i 4 mozna polaczyc zlezy jak chce
-[ ] - metodyka moze do przemyslenia tytul rodzial 2
-[ ] - nie pasuje tytul rozdzialu 1 - ale to moze na potem
-
-[ ] - wersja przegladarki chrome ogolnie zweryfikowac srodowisko testowe
-[ ] - zapytac o prezentowanie projektow w rozdziale 3
-[ ] - spis rysonkow bez zrodel
+[x] - metodyka moze do przemyslenia tytul rodzial 2
+[x] - nie pasuje tytul rozdzialu 1 - ale to moze na potem
+[x] - wersja przegladarki chrome ogolnie zweryfikowac srodowisko testowe
+[x] - zapytac o prezentowanie projektow w rozdziale 3
+[x] - spis rysonkow bez zrodel
 [x] - zrodla do wyliczanki 2.1.1
+[x] - dokaldniejszy tytul 1.4.1 architektura i kluczowe koncepcje czego
 
-na marzec ja bym chcial calosc 2 + 2 projekty + polowa rodzialu 3
-zapytac o termin obrony przelom czerwca i lipca - pierwsze polowa lipca
+[x] - rozdzial cyfra i bez tego rozdzial pierwaszy tyko cyfra + tytul
+[x] - R1 - lepszy tytuł opisujący zawartość całego rozdziału
+[x] - pierwsze zdanie wstępu - źródło !!
+[x] - w celu pracy (wstęp) - bez 'dogłębnej'
+[x] - reconciliation (pl. rekonsyliacja) - odwrotnie - napisać po polsku, a w nawiasie po ang. najlepiej ze źródłem
+[x] - we wstępie więcej źródeł
+[x] - we wstępie info o rozdziałach wcześniej, np. po zakresie. Info o źródłach i AI powinno być ostatnie we wstępie
+[x] - React jest jedną z najpopularniejszych bibliotek frontendowych wykorzystywanych do budowy interfejsów użytkownika we współczesnych aplikacjach webowych' - po istotnych stwierdzeniach powinno pojawić się źródło. Źródła można powtarzać (jeżeli zachodzi taka konieczność), mogą pojawiać się w środku tekstu (czasami Pan stosuje), nie tylko na końcu akapitu (najczęściej Pan stosuje)
+[x] - hooki, probsy i inne takie - praca powinna być w j. polskim. Rozumiem, że są terminy, które trudno przetłumaczyć, ale tam gdzie to jest możliwe - należy to robić.
+[x] - żadna część pracy nie powinna się kończyć rysunkiem
+[x] - Ostatni akapit 1.5.2. - brak źródła - o  NgRx nigdzie nic nie ma
+[x] - Jeżeli cała lista punktowana jest stworzona na podstawie źródła (źródeł) - to odwołanie do nich na początku. Jeżeli poszczególne punkty są z różnych źródeł - to po każdym z punktów odwołanie
+[x] - pod tabelami powinno być źródło
+[x] - skoro praca ma wstęp do powinna też mieć zakończenie - albo napisać 1 str. zakończenia, albo 3.6 potraktować jako zakończenie (ale chyba pierwsze rozwiązanie lepsze)
+[x] - tam gdzie w wykorzystywanych materiałach pojawia się nazwisko autora - należy w opisie bibliograficznym je wykorzystać (np. poz. [15])
+[x] - uporządkować bibliografię
+[x] - spis rysunków bez źródeł - tylko numer, tytuł, strona
+[x] - w pracy są tabele - powinien też być spis tabel na wzór spisu rysunków
